@@ -1,0 +1,4 @@
+02-disable_delay_test
+0006-s390-Check-infmname-with-IS_ARRAY_ZERO-too.patch
+0007-XFAIL-netlink_crypto.patch
+0008-XFAIL-nlattr_crypto_user_alg.patch
