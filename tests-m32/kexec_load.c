@@ -2,20 +2,17 @@
  * Check decoding of kexec_load syscall.
  *
  * Copyright (c) 2016 Eugene Syromyatnikov <evgsyr@gmail.com>
- * Copyright (c) 2016-2019 The strace developers.
+ * Copyright (c) 2016-2021 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
 #include "tests.h"
-
 #include "scno.h"
 
-#ifdef __NR_kexec_load
-
-# include <stdio.h>
-# include <unistd.h>
+#include <stdio.h>
+#include <unistd.h>
 
 struct strval {
 	kernel_ulong_t val;
@@ -63,7 +60,6 @@ main(void)
 	const char *errstr;
 	long rc;
 	struct segm *segms = tail_alloc(SEGMS_ARRAY_SIZE);
-	unsigned int i;
 
 	fill_memory(segms, SEGMS_ARRAY_SIZE);
 	segms[0].buf = segms[0].mem = NULL;
@@ -93,7 +89,7 @@ main(void)
 	       "memsz=%zu}, ",
 	       (unsigned long) bogus_entry, (unsigned long) NUM_SEGMS_CUT,
 	       segms[0].bufsz, segms[0].memsz);
-	for (i = 1; i < NUM_SEGMS_UNCUT_MAX; i++)
+	for (unsigned int i = 1; i < NUM_SEGMS_UNCUT_MAX; ++i)
 		printf("{buf=%p, bufsz=%zu, mem=%p, memsz=%zu}, ",
 		       segms[i].buf, segms[i].bufsz,
 		       segms[i].mem, segms[i].memsz);
@@ -105,7 +101,8 @@ main(void)
 	errstr = sprintrc(rc);
 	printf("kexec_load(%#lx, %lu, [",
 	       (unsigned long) bogus_entry, (unsigned long) NUM_SEGMS_CUT);
-	for (i = NUM_SEGMS - NUM_SEGMS_UNCUT_MAX; i < NUM_SEGMS; i++)
+	for (unsigned int i = NUM_SEGMS - NUM_SEGMS_UNCUT_MAX;
+	     i < NUM_SEGMS; ++i)
 		printf("{buf=%p, bufsz=%zu, mem=%p, memsz=%zu}, ",
 		       segms[i].buf, segms[i].bufsz,
 		       segms[i].mem, segms[i].memsz);
@@ -120,7 +117,7 @@ main(void)
 	errstr = sprintrc(rc);
 	printf("kexec_load(%#lx, %lu, [",
 	       (unsigned long) bogus_entry, (unsigned long) NUM_SEGMS_UNCUT);
-	for (i = NUM_SEGMS - NUM_SEGMS_UNCUT; i < NUM_SEGMS; i++)
+	for (unsigned int i = NUM_SEGMS - NUM_SEGMS_UNCUT; i < NUM_SEGMS; ++i)
 		printf("{buf=%p, bufsz=%zu, mem=%p, memsz=%zu}%s",
 		       segms[i].buf, segms[i].bufsz,
 		       segms[i].mem, segms[i].memsz,
@@ -132,7 +129,7 @@ main(void)
 	errstr = sprintrc(rc);
 	printf("kexec_load(%#lx, %lu, [",
 	       (unsigned long) bogus_entry, (unsigned long) NUM_SEGMS_CUT);
-	for (i = 1; i < NUM_SEGMS_UNCUT_MAX + 1; i++)
+	for (unsigned int i = 1; i < NUM_SEGMS_UNCUT_MAX + 1; ++i)
 		printf("{buf=%p, bufsz=%zu, mem=%p, memsz=%zu}, ",
 		       segms[i].buf, segms[i].bufsz,
 		       segms[i].mem, segms[i].memsz);
@@ -142,9 +139,3 @@ main(void)
 
 	return 0;
 }
-
-#else
-
-SKIP_MAIN_UNDEFINED("__NR_kexec_load");
-
-#endif

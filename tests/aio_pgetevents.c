@@ -1,8 +1,8 @@
 /*
  * Check decoding of io_pgetevents syscall.
  *
- * Copyright (c) 2015-2016 Dmitry V. Levin <ldv@altlinux.org>
- * Copyright (c) 2015-2019 The strace developers.
+ * Copyright (c) 2015-2016 Dmitry V. Levin <ldv@strace.io>
+ * Copyright (c) 2015-2021 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -12,7 +12,7 @@
 #include <unistd.h>
 #include "scno.h"
 
-#if defined __NR_io_setup && defined __NR_io_pgetevents
+#ifdef __NR_io_pgetevents
 
 # include <fcntl.h>
 # include <inttypes.h>
@@ -23,7 +23,7 @@
 
 # include <linux/aio_abi.h>
 
-# if !HAVE_STRUCT___AIO_SIGSET
+# ifndef HAVE_STRUCT___AIO_SIGSET
 struct __aio_sigset {
 	sigset_t *sigmask;
 	size_t sigsetsize;
@@ -164,6 +164,6 @@ main(void)
 
 #else
 
-SKIP_MAIN_UNDEFINED("__NR_io_setup && __NR_io_pgetevents")
+SKIP_MAIN_UNDEFINED("__NR_io_pgetevents")
 
 #endif

@@ -1,8 +1,8 @@
 /*
  * Check decoding of sockaddr structures
  *
- * Copyright (c) 2016 Dmitry V. Levin <ldv@altlinux.org>
- * Copyright (c) 2016-2020 The strace developers.
+ * Copyright (c) 2016 Dmitry V. Levin <ldv@strace.io>
+ * Copyright (c) 2016-2022 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -24,7 +24,11 @@
 #include <linux/if_ether.h>
 #include <linux/if_packet.h>
 #include <linux/x25.h>
-#include <linux/ipx.h>
+#if defined HAVE_LINUX_IPX_H
+# include <linux/ipx.h>
+#elif defined HAVE_NETIPX_IPX_H
+# include <netipx/ipx.h>
+#endif
 #ifdef HAVE_BLUETOOTH_BLUETOOTH_H
 # include <bluetooth/bluetooth.h>
 # include <bluetooth/hci.h>
@@ -269,6 +273,7 @@ check_in6(void)
 	printf("connect(-1, %p, %u) = %d EBADF (%m)\n", in6, len, ret);
 }
 
+#if defined HAVE_LINUX_IPX_H || defined HAVE_NETIPX_IPX_H
 static void
 check_ipx(void)
 {
@@ -281,20 +286,26 @@ check_ipx(void)
 		.sipx_node = "ABCDEF",
 		.sipx_type = -1
 	};
-	void *ipx = tail_memdup(&c_ipx, sizeof(c_ipx));
+	struct sockaddr_ipx *ipx = tail_memdup(&c_ipx, sizeof(c_ipx));
 	unsigned int len = sizeof(c_ipx);
-	int ret = connect(-1, ipx, len);
-	pidns_print_leader();
-	printf("connect(-1, {sa_family=AF_IPX, sipx_port=htons(%u)"
-	       ", sipx_network=htonl(%#x)"
-	       ", sipx_node=[%#02x, %#02x, %#02x, %#02x, %#02x, %#02x]"
-	       ", sipx_type=%#02x}, %u) = %d EBADF (%m)\n",
-	       h_port, h_network,
-	       c_ipx.sipx_node[0], c_ipx.sipx_node[1],
-	       c_ipx.sipx_node[2], c_ipx.sipx_node[3],
-	       c_ipx.sipx_node[4], c_ipx.sipx_node[5],
-	       c_ipx.sipx_type, len, ret);
+
+	for (size_t i = 0; i < 2; i++) {
+		ipx->sipx_zero = i ? 0x42 : 0;
+		int ret = connect(-1, (void *) ipx, len);
+		pidns_print_leader();
+		printf("connect(-1, {sa_family=AF_IPX, sipx_port=htons(%u)"
+		       ", sipx_network=htonl(%#x)"
+		       ", sipx_node=[%#02x, %#02x, %#02x, %#02x, %#02x, %#02x]"
+		       ", sipx_type=%#02x%s}, %u) = %d EBADF (%m)\n",
+		       h_port, h_network,
+		       c_ipx.sipx_node[0], c_ipx.sipx_node[1],
+		       c_ipx.sipx_node[2], c_ipx.sipx_node[3],
+		       c_ipx.sipx_node[4], c_ipx.sipx_node[5],
+		       c_ipx.sipx_type, i ? ", sipx_zero=0x42" : "",
+		       len, ret);
+	}
 }
+#endif /* HAVE_LINUX_IPX_H || defined HAVE_NETIPX_IPX_H */
 
 /* for a bit more compact AX.25 address definitions */
 #define AX25_ADDR(c_, s_) \
@@ -348,7 +359,7 @@ check_ax25(void)
 	rc = connect(-1, sax_void, sizeof(struct sockaddr_ax25));
 	pidns_print_leader();
 	printf("connect(-1, {sa_family=AF_AX25, fsa_ax25={sax25_call=VALID-13"
-	       ", sax25_ndigis=8}, fsa_digipeater=[/* ??? */]}, %zu) = %s\n",
+	       ", sax25_ndigis=8}, fsa_digipeater=[...]}, %zu) = %s\n",
 	       sizeof(struct sockaddr_ax25), sprintrc(rc));
 
 	sax->fsa_ax25.sax25_ndigis = 0;
@@ -369,7 +380,7 @@ check_ax25(void)
 	       ", {ax25_call=\"\\xa6\\xa6\\x92\\x88\\x40\\x40\\x20\""
 	           "} /* SSID-0 */"
 	       ", *"
-	       ", /* ??? */], ...}, %zu) = %s\n",
+	       ", ...], ...}, %zu) = %s\n",
 	       size, sprintrc(rc));
 
 	sax->fsa_digipeater[2].ax25_call[6] = 0x4;
@@ -384,7 +395,7 @@ check_ax25(void)
 	           "} /* SSID-0 */"
 	       ", {ax25_call=\"\\x40\\x40\\x40\\x40\\x40\\x40\\x04\"} /* -2 */"
 	       ", {ax25_call=\"\\x9c\\xaa\\x98\\x98\\x00\\x00\\x06\"}"
-	       ", /* ??? */]}, %zu) = %s\n",
+	       ", ...]}, %zu) = %s\n",
 	       size, sprintrc(rc));
 
 	memcpy(sax->fsa_digipeater, aux_addrs, sizeof(aux_addrs));
@@ -488,7 +499,23 @@ check_nl(void)
 	nl->nl_pid = 1234567890;
 	nl->nl_groups = 0xfacefeed;
 	unsigned int len = sizeof(*nl);
-	int ret = connect(-1, (void *) nl, len);
+
+	int ret = connect(-1, (void *) nl, len - 1);
+	pidns_print_leader();
+	printf("connect(-1, {sa_family=AF_NETLINK, sa_data=\"\\377\\377"
+	       BE_LE("I\\226\\2\\322", "\\322\\2\\226I")
+	       BE_LE("\\372\\316\\376", "\\355\\376\\316")
+	       "\"}, %u) = %d EBADF (%m)\n",
+	       len - 1, ret);
+
+	ret = connect(-1, (void *) nl, len);
+	pidns_print_leader();
+	printf("connect(-1, {sa_family=AF_NETLINK, nl_pad=%#x, nl_pid=%d"
+	       ", nl_groups=%#08x}, %u) = %d EBADF (%m)\n",
+	       nl->nl_pad, nl->nl_pid, nl->nl_groups, len, ret);
+
+	nl->nl_pad = 0;
+	ret = connect(-1, (void *) nl, len);
 	pidns_print_leader();
 	printf("connect(-1, {sa_family=AF_NETLINK, nl_pid=%d"
 	       ", nl_groups=%#08x}, %u) = %d EBADF (%m)\n",
@@ -496,6 +523,7 @@ check_nl(void)
 
 	nl = ((void *) nl) - 4;
 	nl->nl_family = AF_NETLINK;
+	nl->nl_pad = 0;
 	nl->nl_pid = getpid();
 	nl->nl_groups = 0xfacefeed;
 	len = sizeof(*nl) + 4;
@@ -663,9 +691,9 @@ check_l2(void)
 	int ret = connect(-1, l2, len);
 	pidns_print_leader();
 	printf("connect(-1, {sa_family=AF_BLUETOOTH"
-	       ", l2_psm=htobs(L2CAP_PSM_DYN_START + %hu)"
+	       ", l2_psm=htobs(L2CAP_PSM_DYN_START+%hu)"
 	       ", l2_bdaddr=%02x:%02x:%02x:%02x:%02x:%02x"
-	       ", l2_cid=htobs(L2CAP_CID_DYN_START + %hu)"
+	       ", l2_cid=htobs(L2CAP_CID_DYN_START+%hu)"
 # ifdef HAVE_STRUCT_SOCKADDR_L2_L2_BDADDR_TYPE
 	       ", l2_bdaddr_type=0xce /* BDADDR_??? */"
 # endif
@@ -773,7 +801,9 @@ main(void)
 	check_un();
 	check_in();
 	check_in6();
+#if defined HAVE_LINUX_IPX_H || defined HAVE_NETIPX_IPX_H
 	check_ipx();
+#endif
 	check_ax25();
 	check_x25();
 	check_nl();

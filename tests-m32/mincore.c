@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016 Dmitry V. Levin <ldv@altlinux.org>
- * Copyright (c) 2016-2018 The strace developers.
+ * Copyright (c) 2016 Dmitry V. Levin <ldv@strace.io>
+ * Copyright (c) 2016-2021 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -14,13 +14,11 @@ static void
 print_mincore(const unsigned int pages, void *const addr,
 	      const size_t size, unsigned char *const vec)
 {
-	unsigned int i;
-
 	if (mincore(addr, size, vec))
 		perror_msg_and_skip("mincore");
 
 	printf("mincore(%p, %zu, [", addr, size);
-	for (i = 0; i < pages; ++i) {
+	for (unsigned int i = 0; i < pages; ++i) {
 		if (i)
 			printf(", ");
 		if (i >= DEFAULT_STRLEN) {

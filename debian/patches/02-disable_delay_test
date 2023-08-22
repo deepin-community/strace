@@ -1,5 +1,17 @@
---- a/tests/delay.test	2020-04-07 00:51:10.782252775 +0000
-+++ b/tests/delay.test	2020-04-07 00:53:23.795013702 +0000
+From: Steve McIntyre <93sam@debian.org>
+Date: Wed, 9 Aug 2023 16:53:22 +0800
+Subject: disable_delay_test
+
+---
+ tests-m32/delay.test  | 2 ++
+ tests-mx32/delay.test | 2 ++
+ tests/delay.test      | 2 ++
+ 3 files changed, 6 insertions(+)
+
+diff --git a/tests-m32/delay.test b/tests-m32/delay.test
+index f74e27f..0c8d9a9 100755
+--- a/tests-m32/delay.test
++++ b/tests-m32/delay.test
 @@ -9,6 +9,8 @@
  
  . "${srcdir=.}/init.sh"
@@ -9,8 +21,10 @@
  while read -r denter dexit denter_us dexit_us; do
  	[ -n "$denter" ] || continue
  
---- a/tests-m32/delay.test	2020-04-07 00:51:10.782252775 +0000
-+++ b/tests-m32/delay.test	2020-04-07 00:53:23.795013702 +0000
+diff --git a/tests-mx32/delay.test b/tests-mx32/delay.test
+index f74e27f..0c8d9a9 100755
+--- a/tests-mx32/delay.test
++++ b/tests-mx32/delay.test
 @@ -9,6 +9,8 @@
  
  . "${srcdir=.}/init.sh"
@@ -20,8 +34,10 @@
  while read -r denter dexit denter_us dexit_us; do
  	[ -n "$denter" ] || continue
  
---- a/tests-mx32/delay.test	2020-04-07 00:51:10.782252775 +0000
-+++ b/tests-mx32/delay.test	2020-04-07 00:53:23.795013702 +0000
+diff --git a/tests/delay.test b/tests/delay.test
+index f74e27f..0c8d9a9 100755
+--- a/tests/delay.test
++++ b/tests/delay.test
 @@ -9,6 +9,8 @@
  
  . "${srcdir=.}/init.sh"

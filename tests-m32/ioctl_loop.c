@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2016 JingPiao Chen <chenjingpiao@gmail.com>
  * Copyright (c) 2016 Eugene Syromyatnikov <evgsyr@gmail.com>
- * Copyright (c) 2016-2020 The strace developers.
+ * Copyright (c) 2016-2021 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -21,16 +21,6 @@
 #include <linux/ioctl.h>
 #include <linux/loop.h>
 #include "print_fields.h"
-
-#ifdef HAVE_STRUCT_LOOP_CONFIG
-typedef struct loop_config struct_loop_config;
-#else
-# include "types/loop.h"
-#endif
-
-#define XLAT_MACROS_ONLY
-#include "xlat/loop_cmds.h"
-#undef XLAT_MACROS_ONLY
 
 #ifndef ABBREV
 # define ABBREV 0
@@ -78,7 +68,8 @@ print_loop_info(struct loop_info * const info, bool print_encrypt,
 	else
 		printf("%#x /* LO_FLAGS_??? */", info->lo_flags);
 
-	PRINT_FIELD_CSTRING(", ", *info, lo_name);
+	printf(", ");
+	PRINT_FIELD_CSTRING(*info, lo_name);
 
 	if (VERBOSE || print_encrypt)
 		printf(", lo_encrypt_key=\"%.*s\"",
@@ -140,10 +131,12 @@ print_loop_info64(struct loop_info64 * const info64, bool print_encrypt,
 		printf("%s", flags);
 	else
 		printf("%#x /* LO_FLAGS_??? */", info64->lo_flags);
-	PRINT_FIELD_CSTRING(", ", *info64, lo_file_name);
+	printf(", ");
+	PRINT_FIELD_CSTRING(*info64, lo_file_name);
 
 	if (VERBOSE || print_encrypt) {
-		PRINT_FIELD_CSTRING(", ", *info64, lo_crypt_name);
+		printf(", ");
+		PRINT_FIELD_CSTRING(*info64, lo_crypt_name);
 		printf(", lo_encrypt_key=\"%.*s\"",
 		       encrypt_key ? (int) strlen(encrypt_key) :
 		       (int) sizeof(info64->lo_encrypt_key),
@@ -162,7 +155,7 @@ print_loop_info64(struct loop_info64 * const info64, bool print_encrypt,
 }
 
 static void
-print_loop_config(struct_loop_config *config, bool print_reserved)
+print_loop_config(struct loop_config *config, bool print_reserved)
 {
 #if ABBREV
 	printf("%p", config);
@@ -194,7 +187,7 @@ main(void)
 
 	TAIL_ALLOC_OBJECT_CONST_PTR(struct loop_info, info);
 	TAIL_ALLOC_OBJECT_CONST_PTR(struct loop_info64, info64);
-	TAIL_ALLOC_OBJECT_CONST_PTR(struct_loop_config, config);
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct loop_config, config);
 
 	/* Unknown loop commands */
 	sys_ioctl(-1, unknown_loop_cmd, magic);

@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2016 Dmitry V. Levin <ldv@altlinux.org>
- * Copyright (c) 2016-2020 The strace developers.
+ * Copyright (c) 2016 Dmitry V. Levin <ldv@strace.io>
+ * Copyright (c) 2016-2022 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -30,14 +30,6 @@
 # include "gcc_compat.h"
 # include "macros.h"
 
-/*
- * The printf-like function to use in header files
- * shared between strace and its tests.
- */
-# ifndef STRACE_PRINTF
-#  define STRACE_PRINTF printf
-# endif
-
 /* Tests of "strace -v" are expected to define VERBOSE to 1. */
 # ifndef VERBOSE
 #  define VERBOSE 0
@@ -57,44 +49,68 @@
 #  define XLAT_KNOWN(val_, str_) STRINGIFY_VAL(val_)
 #  define XLAT_UNKNOWN(val_, dflt_) STRINGIFY_VAL(val_)
 
+#  define XLAT_KNOWN_FMT(val_, str_) val_
+#  define XLAT_UNKNOWN_FMT(val_, dflt_) val_
+
 #  define XLAT_FMT "%#x"
+#  define XLAT_FMT_D "%d"
+#  define XLAT_FMT_U "%u"
+#  define XLAT_FMT_L "%#lx"
+#  define XLAT_FMT_LL "%#llx"
 #  define XLAT_ARGS(a_) (a_)
+#  define XLAT_ARGS_U(a_) (unsigned int) (a_)
 #  define XLAT_SEL(v_, s_) v_
 
-#  define ABBR(s_) ""
-#  define RAW(s_) s_
-#  define VERB(s_) ""
-#  define NABBR(s_) s_
-#  define NRAW(s_) ""
-#  define NVERB(s_) s_
+#  define ABBR(...)
+#  define RAW(...) __VA_ARGS__
+#  define VERB(...)
+#  define NABBR(...) __VA_ARGS__
+#  define NRAW(...)
+#  define NVERB(...) __VA_ARGS__
 # elif XLAT_VERBOSE
 #  define XLAT_KNOWN(val_, str_) STRINGIFY_VAL(val_) " /* " str_ " */"
 #  define XLAT_UNKNOWN(val_, dflt_) STRINGIFY_VAL(val_) " /* " dflt_ " */"
 
+#  define XLAT_KNOWN_FMT(val_, str_) val_ " /* " str_ " */"
+#  define XLAT_UNKNOWN_FMT(val_, dflt_) val_ " /* " dflt_ " */"
+
 #  define XLAT_FMT "%#x /* %s */"
+#  define XLAT_FMT_D "%d /* %s */"
+#  define XLAT_FMT_U "%u /* %s */"
+#  define XLAT_FMT_L "%#lx /* %s */"
+#  define XLAT_FMT_LL "%#llx /* %s */"
 #  define XLAT_ARGS(a_) a_, #a_
+#  define XLAT_ARGS_U(a_) (unsigned int) (a_), #a_
 #  define XLAT_SEL(v_, s_) v_, s_
 
-#  define ABBR(s_) ""
-#  define RAW(s_) ""
-#  define VERB(s_) s_
-#  define NABBR(s_) s_
-#  define NRAW(s_) s_
-#  define NVERB(s_) ""
+#  define ABBR(...)
+#  define RAW(...)
+#  define VERB(...) __VA_ARGS__
+#  define NABBR(...) __VA_ARGS__
+#  define NRAW(...) __VA_ARGS__
+#  define NVERB(...)
 # else /* !XLAT_RAW && !XLAT_VERBOSE */
 #  define XLAT_KNOWN(val_, str_) str_
 #  define XLAT_UNKNOWN(val_, dflt_) STRINGIFY_VAL(val_) " /* " dflt_ " */"
 
+#  define XLAT_KNOWN_FMT(val_, str_) str_
+#  define XLAT_UNKNOWN_FMT(val_, dflt_) val_ " /* " dflt_ " */"
+
 #  define XLAT_FMT "%s"
+#  define XLAT_FMT_D "%s"
+#  define XLAT_FMT_U "%s"
+#  define XLAT_FMT_L "%s"
+#  define XLAT_FMT_LL "%s"
 #  define XLAT_ARGS(a_) #a_
+#  define XLAT_ARGS_U(a_) #a_
 #  define XLAT_SEL(v_, s_) s_
 
-#  define ABBR(s_) s_
-#  define RAW(s_) ""
-#  define VERB(s_) ""
-#  define NABBR(s_) ""
-#  define NRAW(s_) s_
-#  define NVERB(s_) s_
+#  define ABBR(...) __VA_ARGS__
+#  define RAW(...)
+#  define VERB(...)
+#  define NABBR(...)
+#  define NRAW(...) __VA_ARGS__
+#  define NVERB(...) __VA_ARGS__
 # endif /* XLAT_RAW, XLAT_VERBOSE */
 
 # define XLAT_STR(v_) sprintxlat(#v_, v_, NULL)
@@ -102,10 +118,22 @@
 # define ARG_XLAT_KNOWN(val_, str_) val_, XLAT_KNOWN(val_, str_)
 # define ARG_XLAT_UNKNOWN(val_, str_) val_, XLAT_UNKNOWN(val_, str_)
 
+# define ENUM_KNOWN(val_, enum_) enum_, XLAT_KNOWN(val_, #enum_)
+
 # ifndef DEFAULT_STRLEN
 /* Default maximum # of bytes printed in printstr et al. */
 #  define DEFAULT_STRLEN 32
 # endif
+
+struct strval8 {
+	uint8_t val;
+	const char *str;
+};
+
+struct strval16 {
+	uint16_t val;
+	const char *str;
+};
 
 struct strval32 {
 	uint32_t val;
@@ -140,13 +168,37 @@ void perror_msg_and_skip(const char *, ...)
 #  define perror_msg_and_fail(fmt_, ...) \
 	perror_msg_and_fail("%s:%d: " fmt_, __FILE__, __LINE__, ##__VA_ARGS__)
 # endif
-# ifndef perror_msg_and_fail
+# ifndef error_msg_and_fail
 #  define error_msg_and_fail(fmt_, ...) \
 	error_msg_and_fail("%s:%d: " fmt_, __FILE__, __LINE__, ##__VA_ARGS__)
 # endif
 
 /* Stat the specified file and skip the test if the stat call failed. */
 void skip_if_unavailable(const char *);
+
+/*
+ * Obtain a file descriptor corresponding to the specified directory name,
+ * die on failure.
+ */
+int get_dir_fd(const char *dir_path);
+
+/*
+ * Obtain a path corresponding to the specified file descriptor,
+ * die on failure.
+ */
+char *get_fd_path(int fd) ATTRIBUTE_MALLOC;
+
+/*
+ * Create the specified directory and chdir into it,
+ * die on chdir failure.
+ */
+void create_and_enter_subdir(const char *subdir);
+
+/*
+ * Leave from the directory entered by create_and_enter_subdir,
+ * remove that directory, die on failure.
+ */
+void leave_and_remove_subdir(void);
 
 /*
  * Obtain an exclusive lock on dirname(path_name)/lock_name file
@@ -160,18 +212,10 @@ int lock_file_by_dirname(const char *path_name, const char *lock_name);
  * and followed also by an unmapped page.
  */
 void *tail_alloc(const size_t)
-	ATTRIBUTE_MALLOC
-# ifndef HAVE_BROKEN_CC
-	ATTRIBUTE_ALLOC_SIZE((1))
-# endif
-	;
+	ATTRIBUTE_MALLOC;
 /* Allocate memory using tail_alloc, then memcpy. */
 void *tail_memdup(const void *, const size_t)
-	ATTRIBUTE_MALLOC
-# ifndef HAVE_BROKEN_CC
-	ATTRIBUTE_ALLOC_SIZE((2))
-# endif
-	;
+	ATTRIBUTE_MALLOC;
 
 # define midtail_alloc(after_, before_) \
 	((void *) ((char *) tail_alloc(((before_) + (after_))) + (before_)))
@@ -185,12 +229,28 @@ void *tail_memdup(const void *, const size_t)
 	type_name *const type_ptr = tail_alloc(sizeof(*type_ptr))
 
 /*
+ * Allocate an array of the specified type at the end
+ * of a mapped memory region.
+ * Assign its address to the specified constant pointer.
+ */
+# define TAIL_ALLOC_OBJECT_CONST_ARR(type_name, type_ptr, cnt)	\
+	type_name *const type_ptr = tail_alloc(sizeof(*type_ptr) * (cnt))
+
+/*
  * Allocate an object of the specified type at the end
  * of a mapped memory region.
  * Assign its address to the specified variable pointer.
  */
 # define TAIL_ALLOC_OBJECT_VAR_PTR(type_name, type_ptr)		\
 	type_name *type_ptr = tail_alloc(sizeof(*type_ptr))
+
+/*
+ * Allocate an array of the specified type at the end
+ * of a mapped memory region.
+ * Assign its address to the specified variable pointer.
+ */
+# define TAIL_ALLOC_OBJECT_VAR_ARR(type_name, type_ptr, cnt)	\
+	type_name *type_ptr = tail_alloc(sizeof(*type_ptr) * (cnt))
 
 /**
  * Fill memory (pointed by ptr, having size bytes) with different bytes (with
@@ -211,6 +271,13 @@ void fill_memory32_ex(void *ptr, size_t size, uint32_t start,
 		      unsigned int period);
 /** Shortcut for fill_memory32_ex(ptr, size, 0x80a0c0e0, 0x80000000) */
 void fill_memory32(void *ptr, size_t size);
+/** Variant of fill_memory_ex for arrays of 64-bit (8-byte) values. */
+void fill_memory64_ex(void *ptr, size_t size, uint64_t start, uint64_t period);
+/**
+ * Shortcut for
+ * fill_memory64_ex(ptr, size, 0x8090a0b0c0d0e0f0, 0x8000000000000000)
+ */
+void fill_memory64(void *ptr, size_t size);
 
 
 /* Close stdin, move stdout to a non-standard descriptor, and print. */
@@ -262,6 +329,9 @@ void print_time_t_nsec(time_t, unsigned long long, int);
 
 /* Print time_t and microseconds in symbolic format. */
 void print_time_t_usec(time_t, unsigned long long, int);
+
+/* Put a formatted clock_t string representation into a string. */
+const char *clock_t_str(uint64_t val, char *str, size_t str_size);
 
 /* Read an int from the file. */
 int read_int_from_file(const char *, int *);
@@ -329,6 +399,9 @@ const char *sprintxval_verbose(const struct xlat *, const unsigned long long,
 int socketcall(const int nr, const int call,
 	       long a1, long a2, long a3, long a4, long a5);
 
+/* Invoke a prctl syscall with very specific arguments for use as a marker.  */
+long prctl_marker(void);
+
 /* Call chdir and print strace output depending on flags. */
 void test_status_chdir(const char *dir, bool print_success, bool print_fail);
 
@@ -394,9 +467,11 @@ f8ill_ptr_to_kulong(const void *const ptr)
 # define SKIP_MAIN_UNDEFINED(arg) \
 	int main(void) { error_msg_and_skip("undefined: %s", arg); }
 
-# if WORDS_BIGENDIAN
+# ifdef WORDS_BIGENDIAN
+#  define BE_LE(be_, le_) be_
 #  define LL_PAIR(HI, LO) (HI), (LO)
 # else
+#  define BE_LE(be_, le_) le_
 #  define LL_PAIR(HI, LO) (LO), (HI)
 # endif
 # define LL_VAL_TO_PAIR(llval) LL_PAIR((long) ((llval) >> 32), (long) (llval))

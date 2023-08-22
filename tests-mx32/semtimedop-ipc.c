@@ -1,7 +1,7 @@
 /*
  * Check decoding of semtimedop ipc call.
  *
- * Copyright (c) 2020 The strace developers.
+ * Copyright (c) 2020-2021 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -17,7 +17,6 @@
 # if SIZEOF_LONG > 4
 #  define semtimedop_timespec_t kernel_timespec64_t
 # else
-#  include "arch_defs.h"
 #  define semtimedop_timespec_t kernel_timespec32_t
 # endif
 

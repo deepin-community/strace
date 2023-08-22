@@ -1,13 +1,35 @@
+strace (6.4-0.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * New upstream version 6.4 (Closes: #1030587, #1042045)
+  * Temporary enable testsuite non fatal on riscv64 due to known
+    kernel issues.
+
+ -- Bo YU <tsu.yubo@gmail.com>  Wed, 09 Aug 2023 15:57:38 +0000
+
+strace (6.1-0.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+
+  [ Steve McIntyre ]
+  * Add reference to LGPL-2.1 in /usr/share/common/licenses
+  * Update copyright date (Closes: #985226)
+
+  [ Balint Reczey ]
+  * New upstream version 5.11 (Closes: #997274)
+  * Refresh patches
+  * Adjust packaging to new upstream source layout
+
+  [ Andreas Henriksson ]
+  * New upstream release 6.1
+  * Bump year of strace copyright
+  * Drop d/p/0006-s390-Check-infmname-with-IS_ARRAY_ZERO-too.patch
+  * Use dh_autoreconf instead of ./bootstrap
+  * Make tests non-fatal on mips{,64}el
+
+ -- Andreas Henriksson <andreas@fatal.se>  Mon, 30 Jan 2023 17:18:03 +0100
+
 strace (5.10-1) unstable; urgency=medium
-
-  * New upstream version 5.10.
-  * Removed the old mips test workaround, now fixed upstream
-  * Disable failing tests for nlattr_crypto_user_alg and
-    netlink_crypto
-
- -- Steve McIntyre <93sam@debian.org>  Fri, 01 Jan 2021 15:14:54 +0000
-
-strace (5.9-1) UNRELEASED; urgency=medium
 
   [ Balint Reczey ]
   * debian/gitlab-ci.yml: Add simple Salsa CI configuration
@@ -16,8 +38,12 @@ strace (5.9-1) UNRELEASED; urgency=medium
 
   [ Steve McIntyre ]
   * Tweak Description slightly.
+  * New upstream version 5.10.
+  * Removed the old mips test workaround, now fixed upstream
+  * Disable failing tests for nlattr_crypto_user_alg and
+    netlink_crypto
 
- -- Steve McIntyre <93sam@debian.org>  Thu, 31 Dec 2020 15:43:06 +0900
+ -- Steve McIntyre <93sam@debian.org>  Fri, 01 Jan 2021 15:14:54 +0000
 
 strace (5.5-3) unstable; urgency=medium
 

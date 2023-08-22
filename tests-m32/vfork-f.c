@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-2018 Dmitry V. Levin <ldv@altlinux.org>
+ * Copyright (c) 2015-2021 Dmitry V. Levin <ldv@strace.io>
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 
-static inline int
+static int
 logit_(const char *const str)
 {
 	return !chdir(str);

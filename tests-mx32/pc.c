@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2015-2020 Dmitry V. Levin <ldv@altlinux.org>
+ * Copyright (c) 2015-2020 Dmitry V. Levin <ldv@strace.io>
+ * Copyright (c) 2015-2021 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -14,6 +15,7 @@
 #include <sys/mman.h>
 #include <sys/wait.h>
 #include <sys/sendfile.h>
+#include <sys/prctl.h>
 
 int main(void)
 {
@@ -57,6 +59,9 @@ int main(void)
 			addr -= size;
 			size <<= 1;
 		}
+
+		/* Avoid creating core dumps */
+		(void) prctl(PR_SET_DUMPABLE, 0, 0, 0, 0);
 
 		/* SIGSEGV is expected */
 		(void) munmap((void *) addr, size);
