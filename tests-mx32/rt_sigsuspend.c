@@ -1,8 +1,8 @@
 /*
- * This file is part of rt_sigsuspend strace test.
+ * Check decoding of rt_sigsuspend syscall.
  *
- * Copyright (c) 2016 Dmitry V. Levin <ldv@altlinux.org>
- * Copyright (c) 2016-2019 The strace developers.
+ * Copyright (c) 2016 Dmitry V. Levin <ldv@strace.io>
+ * Copyright (c) 2016-2021 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -11,15 +11,13 @@
 #include "tests.h"
 #include "scno.h"
 
-#ifdef __NR_rt_sigsuspend
-
-# include <assert.h>
-# include <errno.h>
-# include <signal.h>
-# include <stdio.h>
-# include <stdint.h>
-# include <string.h>
-# include <unistd.h>
+#include <assert.h>
+#include <errno.h>
+#include <signal.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+#include <unistd.h>
 
 static long
 k_sigsuspend(const sigset_t *const set, const unsigned long size)
@@ -31,9 +29,7 @@ static void
 iterate(const char *const text, const int sig,
 	const void *const set, unsigned int size)
 {
-	const void *mask;
-
-	for (mask = set;; size >>= 1, mask += size) {
+	for (const void *mask = set;; size >>= 1, mask += size) {
 		raise(sig);
 		assert(k_sigsuspend(mask, size) == -1);
 		if (EINTR == errno) {
@@ -138,9 +134,3 @@ main(void)
 	tprintf("+++ exited with 0 +++\n");
 	return 0;
 }
-
-#else
-
-SKIP_MAIN_UNDEFINED("__NR_rt_sigsuspend")
-
-#endif

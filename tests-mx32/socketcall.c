@@ -1,8 +1,8 @@
 /*
  * Check decoding of socketcall syscall.
  *
- * Copyright (c) 2016-2018 Dmitry V. Levin <ldv@altlinux.org>
- * Copyright (c) 2016-2019 The strace developers.
+ * Copyright (c) 2016-2018 Dmitry V. Levin <ldv@strace.io>
+ * Copyright (c) 2016-2021 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -59,8 +59,7 @@ main(void)
 	const unsigned long *const args = tail_alloc(sizeof(*args) * 6);
 	efault = tail_alloc(1) + 1;
 
-	int i;
-	for (i = sc_min - 3; i <= sc_max + 3; ++i) {
+	for (int i = sc_min - 3; i <= sc_max + 3; ++i) {
 		test_socketcall(i, efault);
 		test_socketcall(i, args);
 	}

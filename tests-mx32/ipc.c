@@ -1,8 +1,8 @@
 /*
  * Check decoding of ipc syscall.
  *
- * Copyright (c) 2016-2018 Dmitry V. Levin <ldv@altlinux.org>
- * Copyright (c) 2016-2019 The strace developers.
+ * Copyright (c) 2016-2018 Dmitry V. Levin <ldv@strace.io>
+ * Copyright (c) 2016-2021 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -66,8 +66,7 @@ main(void)
 		perror_msg_and_skip("ipc");
 	printf("semctl(0, 0, IPC_RMID, %p) = -1 EFAULT (%m)\n", efault);
 
-	unsigned short call;
-	for (call = 0; call <= 40; call += 10) {
+	for (unsigned short call = 0; call <= 40; call += 10) {
 		ipc_call0(0, call);
 		ipc_call0(42, call);
 	}

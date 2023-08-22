@@ -1,7 +1,7 @@
 /*
  * Check decoding of semtimedop syscall.
  *
- * Copyright (c) 2020 The strace developers.
+ * Copyright (c) 2019-2021 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -16,7 +16,6 @@
 # define SYSCALL_NAME "semtimedop"
 
 # ifdef __NR_semtimedop_time64
-#  include "arch_defs.h"
 #  define semtimedop_timespec_t kernel_timespec32_t
 # else
 #  define semtimedop_timespec_t kernel_timespec64_t

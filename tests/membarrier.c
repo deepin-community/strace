@@ -1,6 +1,8 @@
 /*
- * Copyright (c) 2015-2017 Dmitry V. Levin <ldv@altlinux.org>
- * Copyright (c) 2015-2020 The strace developers.
+ * Check decoding of membarrier syscall.
+ *
+ * Copyright (c) 2015-2017 Dmitry V. Levin <ldv@strace.io>
+ * Copyright (c) 2015-2023 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -9,12 +11,10 @@
 #include "tests.h"
 #include "scno.h"
 
-#ifdef __NR_membarrier
-
-# include <assert.h>
-# include <errno.h>
-# include <stdio.h>
-# include <unistd.h>
+#include <assert.h>
+#include <errno.h>
+#include <stdio.h>
+#include <unistd.h>
 
 int
 main(void)
@@ -52,6 +52,14 @@ main(void)
 			       "MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED";
 			break;
 
+		case 2|4|8|16|512:
+			text = "MEMBARRIER_CMD_GLOBAL_EXPEDITED|"
+			       "MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED|"
+			       "MEMBARRIER_CMD_PRIVATE_EXPEDITED|"
+			       "MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED|"
+			       "MEMBARRIER_CMD_GET_REGISTRATIONS";
+			break;
+
 		case 2|4|8|16|32|64:
 			text = "MEMBARRIER_CMD_GLOBAL_EXPEDITED|"
 			       "MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED|"
@@ -72,6 +80,36 @@ main(void)
 			       "MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ";
 			break;
 
+		case 2|4|8|16|128|256:
+			text = "MEMBARRIER_CMD_GLOBAL_EXPEDITED|"
+			       "MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED|"
+			       "MEMBARRIER_CMD_PRIVATE_EXPEDITED|"
+			       "MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED|"
+			       "MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ|"
+			       "MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ";
+			break;
+		case 2|4|8|16|128|256|512:
+			text = "MEMBARRIER_CMD_GLOBAL_EXPEDITED|"
+			       "MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED|"
+			       "MEMBARRIER_CMD_PRIVATE_EXPEDITED|"
+			       "MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED|"
+			       "MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ|"
+			       "MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ|"
+			       "MEMBARRIER_CMD_GET_REGISTRATIONS";
+			break;
+
+		case 2|4|8|16|32|64|128|256|512:
+			text = "MEMBARRIER_CMD_GLOBAL_EXPEDITED|"
+			       "MEMBARRIER_CMD_REGISTER_GLOBAL_EXPEDITED|"
+			       "MEMBARRIER_CMD_PRIVATE_EXPEDITED|"
+			       "MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED|"
+			       "MEMBARRIER_CMD_PRIVATE_EXPEDITED_SYNC_CORE|"
+			       "MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_SYNC_CORE|"
+			       "MEMBARRIER_CMD_PRIVATE_EXPEDITED_RSEQ|"
+			       "MEMBARRIER_CMD_REGISTER_PRIVATE_EXPEDITED_RSEQ|"
+			       "MEMBARRIER_CMD_GET_REGISTRATIONS";
+			break;
+
 		default:
 			error_msg_and_fail("membarrier returned %#x, does"
 					   " the test have to be updated?", rc);
@@ -89,9 +127,3 @@ main(void)
 	puts("+++ exited with 0 +++");
 	return 0;
 }
-
-#else
-
-SKIP_MAIN_UNDEFINED("__NR_membarrier")
-
-#endif

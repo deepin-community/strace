@@ -1,8 +1,8 @@
 /*
  * This file is part of ioctl_block strace test.
  *
- * Copyright (c) 2016 Dmitry V. Levin <ldv@altlinux.org>
- * Copyright (c) 2016-2020 The strace developers.
+ * Copyright (c) 2016 Dmitry V. Levin <ldv@strace.io>
+ * Copyright (c) 2016-2021 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -18,9 +18,8 @@
 #include <sys/ioctl.h>
 #include <linux/fs.h>
 #include <linux/blkpg.h>
-#ifdef HAVE_STRUCT_BLK_USER_TRACE_SETUP
-# include <linux/blktrace_api.h>
-#endif
+#include <linux/blkzoned.h>
+#include <linux/blktrace_api.h>
 #include "xlat.h"
 
 static const unsigned int magic = 0xdeadbeef;
@@ -29,15 +28,9 @@ static const unsigned long lmagic = (unsigned long) 0xdeadbeefbadc0dedULL;
 static struct xlat_data block_argless[] = {
 	XLAT(BLKRRPART),
 	XLAT(BLKFLSBUF),
-#ifdef BLKTRACESTART
 	XLAT(BLKTRACESTART),
-#endif
-#ifdef BLKTRACESTOP
 	XLAT(BLKTRACESTOP),
-#endif
-#ifdef BLKTRACETEARDOWN
 	XLAT(BLKTRACETEARDOWN),
-#endif
 };
 
 #define TEST_NULL_ARG(cmd)						\
@@ -64,36 +57,17 @@ main(void)
 	TEST_NULL_ARG(BLKSECTGET);
 	TEST_NULL_ARG(BLKSECTGET);
 	TEST_NULL_ARG(BLKSSZGET);
-#ifdef BLKALIGNOFF
 	TEST_NULL_ARG(BLKALIGNOFF);
-#endif
-#ifdef BLKDISCARD
 	TEST_NULL_ARG(BLKDISCARD);
-#endif
-#ifdef BLKDISCARDZEROES
 	TEST_NULL_ARG(BLKDISCARDZEROES);
-#endif
-#ifdef BLKIOMIN
 	TEST_NULL_ARG(BLKIOMIN);
-#endif
-#ifdef BLKIOOPT
 	TEST_NULL_ARG(BLKIOOPT);
-#endif
-#ifdef BLKPBSZGET
 	TEST_NULL_ARG(BLKPBSZGET);
-#endif
-#ifdef BLKROTATIONAL
 	TEST_NULL_ARG(BLKROTATIONAL);
-#endif
-#ifdef BLKSECDISCARD
 	TEST_NULL_ARG(BLKSECDISCARD);
-#endif
-#ifdef BLKZEROOUT
 	TEST_NULL_ARG(BLKZEROOUT);
-#endif
-#if defined BLKTRACESETUP && defined HAVE_STRUCT_BLK_USER_TRACE_SETUP
+	TEST_NULL_ARG(BLKGETDISKSEQ);
 	TEST_NULL_ARG(BLKTRACESETUP);
-#endif
 
 	ioctl(-1, BLKRASET, lmagic);
 	pidns_print_leader();
@@ -118,26 +92,20 @@ main(void)
 	pair_int64[0] = 0xdeadbeefbadc0dedULL;
 	pair_int64[1] = 0xfacefeedcafef00dULL;
 
-#ifdef BLKDISCARD
 	ioctl(-1, BLKDISCARD, pair_int64);
 	pidns_print_leader();
 	printf("ioctl(-1, BLKDISCARD, [%" PRIu64 ", %" PRIu64 "])"
 	       " = -1 EBADF (%m)\n", pair_int64[0], pair_int64[1]);
-#endif
 
-#ifdef BLKSECDISCARD
 	ioctl(-1, BLKSECDISCARD, pair_int64);
 	pidns_print_leader();
 	printf("ioctl(-1, BLKSECDISCARD, [%" PRIu64 ", %" PRIu64 "])"
 	       " = -1 EBADF (%m)\n", pair_int64[0], pair_int64[1]);
-#endif
 
-#ifdef BLKZEROOUT
 	ioctl(-1, BLKZEROOUT, pair_int64);
 	pidns_print_leader();
 	printf("ioctl(-1, BLKZEROOUT, [%" PRIu64 ", %" PRIu64 "])"
 	       " = -1 EBADF (%m)\n", pair_int64[0], pair_int64[1]);
-#endif
 
 	TAIL_ALLOC_OBJECT_CONST_PTR(struct blkpg_ioctl_arg, blkpg);
 	blkpg->op = 3;
@@ -173,7 +141,6 @@ main(void)
 	       (int) sizeof(bp->devname) - 1, bp->devname,
 	       (int) sizeof(bp->volname) - 1, bp->volname);
 
-#if defined BLKTRACESETUP && defined HAVE_STRUCT_BLK_USER_TRACE_SETUP
 	TAIL_ALLOC_OBJECT_CONST_PTR(struct blk_user_trace_setup, buts);
 	fill_memory(buts, sizeof(*buts));
 	buts->pid = getpid();
@@ -186,10 +153,8 @@ main(void)
 	       buts->act_mask, buts->buf_size, buts->buf_nr,
 	       buts->start_lba, buts->end_lba, buts->pid,
 	       pidns_pid2str(PT_TGID));
-#endif
 
-	unsigned int i;
-	for (i = 0; i < ARRAY_SIZE(block_argless); ++i) {
+	for (unsigned int i = 0; i < ARRAY_SIZE(block_argless); ++i) {
 		ioctl(-1, (unsigned long) block_argless[i].val, lmagic);
 		pidns_print_leader();
 		printf("ioctl(-1, %s) = -1 EBADF (%m)\n", block_argless[i].str);

@@ -2,7 +2,7 @@
  * Check decoding of clock_gettime, clock_settime, and
  * clock_getres syscalls.
  *
- * Copyright (c) 2020 The strace developers.
+ * Copyright (c) 2015-2021 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -26,7 +26,6 @@
 # if defined __NR_clock_gettime64 \
   || defined __NR_clock_settime64 \
   || defined __NR_clock_getres_time64
-#  include "arch_defs.h"
 #  define clock_timespec_t kernel_timespec32_t
 # else
 #  define clock_timespec_t kernel_timespec64_t

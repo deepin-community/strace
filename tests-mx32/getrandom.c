@@ -1,6 +1,8 @@
 /*
- * Copyright (c) 2015-2018 Dmitry V. Levin <ldv@altlinux.org>
- * Copyright (c) 2015-2019 The strace developers.
+ * Check decoding of getrandom syscall.
+ *
+ * Copyright (c) 2015-2018 Dmitry V. Levin <ldv@strace.io>
+ * Copyright (c) 2015-2021 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -9,15 +11,21 @@
 #include "tests.h"
 #include "scno.h"
 
-#ifdef __NR_getrandom
-
-# include <stdio.h>
-# include <unistd.h>
+#include <stdio.h>
+#include <unistd.h>
 
 int
 main(void)
 {
 	unsigned char buf[4];
+
+	/*
+	 * syscall/printf are in the inverted order to trigger tcache
+	 * initialisation first see glibc-2.33.9000-879-gfc859c3.
+	 */
+	printf("getrandom(NULL, 0, 0) = 0\n");
+	if (syscall(__NR_getrandom, 0, 0, 0) != 0)
+		perror_msg_and_skip("getrandom(NULL, 0, 0)");
 
 	if (syscall(__NR_getrandom, buf, sizeof(buf) - 1, 0) != sizeof(buf) - 1)
 		perror_msg_and_skip("getrandom");
@@ -37,9 +45,3 @@ main(void)
 	puts("+++ exited with 0 +++");
 	return 0;
 }
-
-#else
-
-SKIP_MAIN_UNDEFINED("__NR_getrandom")
-
-#endif

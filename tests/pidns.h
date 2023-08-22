@@ -2,9 +2,10 @@
  * Test PID namespace translation
  *
  * Copyright (c) 2020 Ákos Uzonyi <uzonyi.akos@gmail.com>
+ * Copyright (c) 2020-2022 The strace developers.
  * All rights reserved.
  *
- * SPDX-License-Identifier: LGPL-2.1-or-later
+ * SPDX-License-Identifier: GPL-2.0-or-later
  */
 #ifndef STRACE_PIDNS_H
 # define STRACE_PIDNS_H
