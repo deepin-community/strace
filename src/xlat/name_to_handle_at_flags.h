@@ -15,12 +15,15 @@
 
 DIAG_PUSH_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 static const struct xlat_data name_to_handle_at_flags_xdata[] = {
+ XLAT(AT_HANDLE_FID),
+ #define XLAT_VAL_0 ((unsigned) (AT_HANDLE_FID))
+ #define XLAT_STR_0 STRINGIFY(AT_HANDLE_FID)
  XLAT(AT_SYMLINK_FOLLOW),
- #define XLAT_VAL_0 ((unsigned) (AT_SYMLINK_FOLLOW))
- #define XLAT_STR_0 STRINGIFY(AT_SYMLINK_FOLLOW)
+ #define XLAT_VAL_1 ((unsigned) (AT_SYMLINK_FOLLOW))
+ #define XLAT_STR_1 STRINGIFY(AT_SYMLINK_FOLLOW)
  XLAT(AT_EMPTY_PATH),
- #define XLAT_VAL_1 ((unsigned) (AT_EMPTY_PATH))
- #define XLAT_STR_1 STRINGIFY(AT_EMPTY_PATH)
+ #define XLAT_VAL_2 ((unsigned) (AT_EMPTY_PATH))
+ #define XLAT_STR_2 STRINGIFY(AT_EMPTY_PATH)
 };
 static
 const struct xlat name_to_handle_at_flags[1] = { {
@@ -34,6 +37,9 @@ const struct xlat name_to_handle_at_flags[1] = { {
 #  ifdef XLAT_VAL_1
   | XLAT_VAL_1
 #  endif
+#  ifdef XLAT_VAL_2
+  | XLAT_VAL_2
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -41,6 +47,9 @@ const struct xlat name_to_handle_at_flags[1] = { {
 #  endif
 #  ifdef XLAT_STR_1
   + sizeof(XLAT_STR_1)
+#  endif
+#  ifdef XLAT_STR_2
+  + sizeof(XLAT_STR_2)
 #  endif
   ,
 } };
@@ -50,6 +59,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_0
 #  undef XLAT_STR_1
 #  undef XLAT_VAL_1
+#  undef XLAT_STR_2
+#  undef XLAT_VAL_2
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

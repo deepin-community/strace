@@ -41,6 +41,10 @@ secontext_EXECUTABLES = \
   fchmodat--secontext_full \
   fchmodat--secontext_full_mismatch \
   fchmodat--secontext_mismatch \
+  fchmodat2--secontext \
+  fchmodat2--secontext_full \
+  fchmodat2--secontext_full_mismatch \
+  fchmodat2--secontext_mismatch \
   fchownat--secontext \
   fchownat--secontext_full \
   fchownat--secontext_full_mismatch \
@@ -107,6 +111,10 @@ fchmodat__secontext_LDADD = $(LDADD) $(libselinux_LDADD)
 fchmodat__secontext_full_LDADD = $(LDADD) $(libselinux_LDADD)
 fchmodat__secontext_full_mismatch_LDADD = $(LDADD) $(libselinux_LDADD)
 fchmodat__secontext_mismatch_LDADD = $(LDADD) $(libselinux_LDADD)
+fchmodat2__secontext_LDADD = $(LDADD) $(libselinux_LDADD)
+fchmodat2__secontext_full_LDADD = $(LDADD) $(libselinux_LDADD)
+fchmodat2__secontext_full_mismatch_LDADD = $(LDADD) $(libselinux_LDADD)
+fchmodat2__secontext_mismatch_LDADD = $(LDADD) $(libselinux_LDADD)
 fchownat__secontext_LDADD = $(LDADD) $(libselinux_LDADD)
 fchownat__secontext_full_LDADD = $(LDADD) $(libselinux_LDADD)
 fchownat__secontext_full_mismatch_LDADD = $(LDADD) $(libselinux_LDADD)

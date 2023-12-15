@@ -516,6 +516,22 @@ static_assert((unsigned long long) (PR_GET_MEMORY_MERGE)
 #undef XLAT_PREV_VAL
 #define XLAT_PREV_VAL (PR_GET_MEMORY_MERGE)
 #if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (PR_RISCV_V_SET_CONTROL)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: PR_RISCV_V_SET_CONTROL"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (PR_RISCV_V_SET_CONTROL)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (PR_RISCV_V_GET_CONTROL)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: PR_RISCV_V_GET_CONTROL"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (PR_RISCV_V_GET_CONTROL)
+#if defined XLAT_PREV_VAL
 static_assert((unsigned long long) (PR_GET_AUXV)
       > (unsigned long long) (XLAT_PREV_VAL),
       "Incorrect order in #sorted xlat: PR_GET_AUXV"
@@ -743,15 +759,21 @@ static const struct xlat_data prctl_options_xdata[] = {
  XLAT(PR_GET_MEMORY_MERGE),
  #define XLAT_VAL_63 ((unsigned) (PR_GET_MEMORY_MERGE))
  #define XLAT_STR_63 STRINGIFY(PR_GET_MEMORY_MERGE)
+ XLAT(PR_RISCV_V_SET_CONTROL),
+ #define XLAT_VAL_64 ((unsigned) (PR_RISCV_V_SET_CONTROL))
+ #define XLAT_STR_64 STRINGIFY(PR_RISCV_V_SET_CONTROL)
+ XLAT(PR_RISCV_V_GET_CONTROL),
+ #define XLAT_VAL_65 ((unsigned) (PR_RISCV_V_GET_CONTROL))
+ #define XLAT_STR_65 STRINGIFY(PR_RISCV_V_GET_CONTROL)
  XLAT(PR_GET_AUXV),
- #define XLAT_VAL_64 ((unsigned) (PR_GET_AUXV))
- #define XLAT_STR_64 STRINGIFY(PR_GET_AUXV)
+ #define XLAT_VAL_66 ((unsigned) (PR_GET_AUXV))
+ #define XLAT_STR_66 STRINGIFY(PR_GET_AUXV)
  XLAT(PR_SET_VMA),
- #define XLAT_VAL_65 ((unsigned) (PR_SET_VMA))
- #define XLAT_STR_65 STRINGIFY(PR_SET_VMA)
+ #define XLAT_VAL_67 ((unsigned) (PR_SET_VMA))
+ #define XLAT_STR_67 STRINGIFY(PR_SET_VMA)
  XLAT(PR_SET_PTRACER),
- #define XLAT_VAL_66 ((unsigned) (PR_SET_PTRACER))
- #define XLAT_STR_66 STRINGIFY(PR_SET_PTRACER)
+ #define XLAT_VAL_68 ((unsigned) (PR_SET_PTRACER))
+ #define XLAT_STR_68 STRINGIFY(PR_SET_PTRACER)
 };
 static
 const struct xlat prctl_options[1] = { {
@@ -960,6 +982,12 @@ const struct xlat prctl_options[1] = { {
 #  ifdef XLAT_VAL_66
   | XLAT_VAL_66
 #  endif
+#  ifdef XLAT_VAL_67
+  | XLAT_VAL_67
+#  endif
+#  ifdef XLAT_VAL_68
+  | XLAT_VAL_68
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -1163,6 +1191,12 @@ const struct xlat prctl_options[1] = { {
 #  ifdef XLAT_STR_66
   + sizeof(XLAT_STR_66)
 #  endif
+#  ifdef XLAT_STR_67
+  + sizeof(XLAT_STR_67)
+#  endif
+#  ifdef XLAT_STR_68
+  + sizeof(XLAT_STR_68)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -1301,6 +1335,10 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_65
 #  undef XLAT_STR_66
 #  undef XLAT_VAL_66
+#  undef XLAT_STR_67
+#  undef XLAT_VAL_67
+#  undef XLAT_STR_68
+#  undef XLAT_VAL_68
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

@@ -405,6 +405,13 @@ static_assert(BPF_PROG_LOAD_struct_size == expected_BPF_PROG_LOAD_struct_size,
 		      "BPF_OBJ_PIN_struct.file_flags offset mismatch");
 # endif /* HAVE_UNION_BPF_ATTR_FILE_FLAGS */
 
+# ifdef HAVE_UNION_BPF_ATTR_PATH_FD
+	static_assert(sizeof_field(struct BPF_OBJ_PIN_struct, path_fd) == sizeof_field(union bpf_attr, path_fd),
+		      "BPF_OBJ_PIN_struct.path_fd size mismatch");
+	static_assert(offsetof(struct BPF_OBJ_PIN_struct, path_fd) == offsetof(union bpf_attr, path_fd),
+		      "BPF_OBJ_PIN_struct.path_fd offset mismatch");
+# endif /* HAVE_UNION_BPF_ATTR_PATH_FD */
+
 static_assert(BPF_OBJ_PIN_struct_size == expected_BPF_OBJ_PIN_struct_size,
 	      "BPF_OBJ_PIN_struct_size mismatch");
 
@@ -1392,5 +1399,66 @@ static_assert(BPF_LINK_UPDATE_struct_size == expected_BPF_LINK_UPDATE_struct_siz
 
 static_assert(BPF_LINK_GET_FD_BY_ID_struct_size == expected_BPF_LINK_GET_FD_BY_ID_struct_size,
 	      "BPF_LINK_GET_FD_BY_ID_struct_size mismatch");
+
+# ifdef HAVE_UNION_BPF_ATTR_ENABLE_STATS_TYPE
+	static_assert(sizeof_field(struct BPF_ENABLE_STATS_struct, type) == sizeof_field(union bpf_attr, enable_stats.type),
+		      "BPF_ENABLE_STATS_struct.type size mismatch");
+	static_assert(offsetof(struct BPF_ENABLE_STATS_struct, type) == offsetof(union bpf_attr, enable_stats.type),
+		      "BPF_ENABLE_STATS_struct.type offset mismatch");
+# endif /* HAVE_UNION_BPF_ATTR_ENABLE_STATS_TYPE */
+
+static_assert(BPF_ENABLE_STATS_struct_size == expected_BPF_ENABLE_STATS_struct_size,
+	      "BPF_ENABLE_STATS_struct_size mismatch");
+
+# ifdef HAVE_UNION_BPF_ATTR_ITER_CREATE_LINK_FD
+	static_assert(sizeof_field(struct BPF_ITER_CREATE_struct, link_fd) == sizeof_field(union bpf_attr, iter_create.link_fd),
+		      "BPF_ITER_CREATE_struct.link_fd size mismatch");
+	static_assert(offsetof(struct BPF_ITER_CREATE_struct, link_fd) == offsetof(union bpf_attr, iter_create.link_fd),
+		      "BPF_ITER_CREATE_struct.link_fd offset mismatch");
+# endif /* HAVE_UNION_BPF_ATTR_ITER_CREATE_LINK_FD */
+
+# ifdef HAVE_UNION_BPF_ATTR_ITER_CREATE_FLAGS
+	static_assert(sizeof_field(struct BPF_ITER_CREATE_struct, flags) == sizeof_field(union bpf_attr, iter_create.flags),
+		      "BPF_ITER_CREATE_struct.flags size mismatch");
+	static_assert(offsetof(struct BPF_ITER_CREATE_struct, flags) == offsetof(union bpf_attr, iter_create.flags),
+		      "BPF_ITER_CREATE_struct.flags offset mismatch");
+# endif /* HAVE_UNION_BPF_ATTR_ITER_CREATE_FLAGS */
+
+static_assert(BPF_ITER_CREATE_struct_size == expected_BPF_ITER_CREATE_struct_size,
+	      "BPF_ITER_CREATE_struct_size mismatch");
+
+# ifdef HAVE_UNION_BPF_ATTR_LINK_DETACH_LINK_FD
+	static_assert(sizeof_field(struct BPF_LINK_DETACH_struct, link_fd) == sizeof_field(union bpf_attr, link_detach.link_fd),
+		      "BPF_LINK_DETACH_struct.link_fd size mismatch");
+	static_assert(offsetof(struct BPF_LINK_DETACH_struct, link_fd) == offsetof(union bpf_attr, link_detach.link_fd),
+		      "BPF_LINK_DETACH_struct.link_fd offset mismatch");
+# endif /* HAVE_UNION_BPF_ATTR_LINK_DETACH_LINK_FD */
+
+static_assert(BPF_LINK_DETACH_struct_size == expected_BPF_LINK_DETACH_struct_size,
+	      "BPF_LINK_DETACH_struct_size mismatch");
+
+# ifdef HAVE_UNION_BPF_ATTR_PROG_BIND_MAP_PROG_FD
+	static_assert(sizeof_field(struct BPF_PROG_BIND_MAP_struct, prog_fd) == sizeof_field(union bpf_attr, prog_bind_map.prog_fd),
+		      "BPF_PROG_BIND_MAP_struct.prog_fd size mismatch");
+	static_assert(offsetof(struct BPF_PROG_BIND_MAP_struct, prog_fd) == offsetof(union bpf_attr, prog_bind_map.prog_fd),
+		      "BPF_PROG_BIND_MAP_struct.prog_fd offset mismatch");
+# endif /* HAVE_UNION_BPF_ATTR_PROG_BIND_MAP_PROG_FD */
+
+# ifdef HAVE_UNION_BPF_ATTR_PROG_BIND_MAP_MAP_FD
+	static_assert(sizeof_field(struct BPF_PROG_BIND_MAP_struct, map_fd) == sizeof_field(union bpf_attr, prog_bind_map.map_fd),
+		      "BPF_PROG_BIND_MAP_struct.map_fd size mismatch");
+	static_assert(offsetof(struct BPF_PROG_BIND_MAP_struct, map_fd) == offsetof(union bpf_attr, prog_bind_map.map_fd),
+		      "BPF_PROG_BIND_MAP_struct.map_fd offset mismatch");
+# endif /* HAVE_UNION_BPF_ATTR_PROG_BIND_MAP_MAP_FD */
+
+# ifdef HAVE_UNION_BPF_ATTR_PROG_BIND_MAP_FLAGS
+	static_assert(sizeof_field(struct BPF_PROG_BIND_MAP_struct, flags) == sizeof_field(union bpf_attr, prog_bind_map.flags),
+		      "BPF_PROG_BIND_MAP_struct.flags size mismatch");
+	static_assert(offsetof(struct BPF_PROG_BIND_MAP_struct, flags) == offsetof(union bpf_attr, prog_bind_map.flags),
+		      "BPF_PROG_BIND_MAP_struct.flags offset mismatch");
+# endif /* HAVE_UNION_BPF_ATTR_PROG_BIND_MAP_FLAGS */
+
+static_assert(BPF_PROG_BIND_MAP_struct_size == expected_BPF_PROG_BIND_MAP_struct_size,
+	      "BPF_PROG_BIND_MAP_struct_size mismatch");
 
 #endif /* HAVE_LINUX_BPF_H */

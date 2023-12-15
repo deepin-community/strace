@@ -267,6 +267,38 @@ static_assert((unsigned long long) (V4L2_CTRL_TYPE_HEVC_DECODE_PARAMS)
 #endif
 #undef XLAT_PREV_VAL
 #define XLAT_PREV_VAL (V4L2_CTRL_TYPE_HEVC_DECODE_PARAMS)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (V4L2_CTRL_TYPE_AV1_SEQUENCE)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: V4L2_CTRL_TYPE_AV1_SEQUENCE"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (V4L2_CTRL_TYPE_AV1_SEQUENCE)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (V4L2_CTRL_TYPE_AV1_TILE_GROUP_ENTRY)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: V4L2_CTRL_TYPE_AV1_TILE_GROUP_ENTRY"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (V4L2_CTRL_TYPE_AV1_TILE_GROUP_ENTRY)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (V4L2_CTRL_TYPE_AV1_FRAME)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: V4L2_CTRL_TYPE_AV1_FRAME"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (V4L2_CTRL_TYPE_AV1_FRAME)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (V4L2_CTRL_TYPE_AV1_FILM_GRAIN)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: V4L2_CTRL_TYPE_AV1_FILM_GRAIN"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (V4L2_CTRL_TYPE_AV1_FILM_GRAIN)
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -378,6 +410,18 @@ static const struct xlat_data v4l2_control_types_xdata[] = {
  XLAT(V4L2_CTRL_TYPE_HEVC_DECODE_PARAMS),
  #define XLAT_VAL_32 ((unsigned) (V4L2_CTRL_TYPE_HEVC_DECODE_PARAMS))
  #define XLAT_STR_32 STRINGIFY(V4L2_CTRL_TYPE_HEVC_DECODE_PARAMS)
+ XLAT(V4L2_CTRL_TYPE_AV1_SEQUENCE),
+ #define XLAT_VAL_33 ((unsigned) (V4L2_CTRL_TYPE_AV1_SEQUENCE))
+ #define XLAT_STR_33 STRINGIFY(V4L2_CTRL_TYPE_AV1_SEQUENCE)
+ XLAT(V4L2_CTRL_TYPE_AV1_TILE_GROUP_ENTRY),
+ #define XLAT_VAL_34 ((unsigned) (V4L2_CTRL_TYPE_AV1_TILE_GROUP_ENTRY))
+ #define XLAT_STR_34 STRINGIFY(V4L2_CTRL_TYPE_AV1_TILE_GROUP_ENTRY)
+ XLAT(V4L2_CTRL_TYPE_AV1_FRAME),
+ #define XLAT_VAL_35 ((unsigned) (V4L2_CTRL_TYPE_AV1_FRAME))
+ #define XLAT_STR_35 STRINGIFY(V4L2_CTRL_TYPE_AV1_FRAME)
+ XLAT(V4L2_CTRL_TYPE_AV1_FILM_GRAIN),
+ #define XLAT_VAL_36 ((unsigned) (V4L2_CTRL_TYPE_AV1_FILM_GRAIN))
+ #define XLAT_STR_36 STRINGIFY(V4L2_CTRL_TYPE_AV1_FILM_GRAIN)
 };
 #  if !(defined HAVE_M32_MPERS || defined HAVE_MX32_MPERS)
 static
@@ -486,6 +530,18 @@ const struct xlat v4l2_control_types[1] = { {
 #  ifdef XLAT_VAL_32
   | XLAT_VAL_32
 #  endif
+#  ifdef XLAT_VAL_33
+  | XLAT_VAL_33
+#  endif
+#  ifdef XLAT_VAL_34
+  | XLAT_VAL_34
+#  endif
+#  ifdef XLAT_VAL_35
+  | XLAT_VAL_35
+#  endif
+#  ifdef XLAT_VAL_36
+  | XLAT_VAL_36
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -587,6 +643,18 @@ const struct xlat v4l2_control_types[1] = { {
 #  ifdef XLAT_STR_32
   + sizeof(XLAT_STR_32)
 #  endif
+#  ifdef XLAT_STR_33
+  + sizeof(XLAT_STR_33)
+#  endif
+#  ifdef XLAT_STR_34
+  + sizeof(XLAT_STR_34)
+#  endif
+#  ifdef XLAT_STR_35
+  + sizeof(XLAT_STR_35)
+#  endif
+#  ifdef XLAT_STR_36
+  + sizeof(XLAT_STR_36)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -657,6 +725,14 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_31
 #  undef XLAT_STR_32
 #  undef XLAT_VAL_32
+#  undef XLAT_STR_33
+#  undef XLAT_VAL_33
+#  undef XLAT_STR_34
+#  undef XLAT_VAL_34
+#  undef XLAT_STR_35
+#  undef XLAT_VAL_35
+#  undef XLAT_STR_36
+#  undef XLAT_VAL_36
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

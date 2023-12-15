@@ -547,6 +547,40 @@ static_assert((unsigned long long) (NT_PPC_PKEY)
 #undef XLAT_PREV_VAL
 #define XLAT_PREV_VAL (NT_PPC_PKEY)
 #endif
+#if defined(NT_PPC_DEXCR) || (defined(HAVE_DECL_NT_PPC_DEXCR) && HAVE_DECL_NT_PPC_DEXCR)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((NT_PPC_DEXCR) == (0x111), "NT_PPC_DEXCR != 0x111");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define NT_PPC_DEXCR 0x111
+#endif
+#if defined(NT_PPC_DEXCR) || (defined(HAVE_DECL_NT_PPC_DEXCR) && HAVE_DECL_NT_PPC_DEXCR)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (NT_PPC_DEXCR)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: NT_PPC_DEXCR"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (NT_PPC_DEXCR)
+#endif
+#if defined(NT_PPC_HASHKEYR) || (defined(HAVE_DECL_NT_PPC_HASHKEYR) && HAVE_DECL_NT_PPC_HASHKEYR)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((NT_PPC_HASHKEYR) == (0x112), "NT_PPC_HASHKEYR != 0x112");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define NT_PPC_HASHKEYR 0x112
+#endif
+#if defined(NT_PPC_HASHKEYR) || (defined(HAVE_DECL_NT_PPC_HASHKEYR) && HAVE_DECL_NT_PPC_HASHKEYR)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (NT_PPC_HASHKEYR)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: NT_PPC_HASHKEYR"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (NT_PPC_HASHKEYR)
+#endif
 #if defined(NT_386_TLS) || (defined(HAVE_DECL_NT_386_TLS) && HAVE_DECL_NT_386_TLS)
 DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
 static_assert((NT_386_TLS) == (0x200), "NT_386_TLS != 0x200");
@@ -1454,147 +1488,153 @@ static const struct xlat_data nt_descriptor_types_xdata[] = {
  XLAT(NT_PPC_PKEY),
  #define XLAT_VAL_31 ((unsigned) (NT_PPC_PKEY))
  #define XLAT_STR_31 STRINGIFY(NT_PPC_PKEY)
+ XLAT(NT_PPC_DEXCR),
+ #define XLAT_VAL_32 ((unsigned) (NT_PPC_DEXCR))
+ #define XLAT_STR_32 STRINGIFY(NT_PPC_DEXCR)
+ XLAT(NT_PPC_HASHKEYR),
+ #define XLAT_VAL_33 ((unsigned) (NT_PPC_HASHKEYR))
+ #define XLAT_STR_33 STRINGIFY(NT_PPC_HASHKEYR)
  XLAT(NT_386_TLS),
- #define XLAT_VAL_32 ((unsigned) (NT_386_TLS))
- #define XLAT_STR_32 STRINGIFY(NT_386_TLS)
+ #define XLAT_VAL_34 ((unsigned) (NT_386_TLS))
+ #define XLAT_STR_34 STRINGIFY(NT_386_TLS)
  XLAT(NT_386_IOPERM),
- #define XLAT_VAL_33 ((unsigned) (NT_386_IOPERM))
- #define XLAT_STR_33 STRINGIFY(NT_386_IOPERM)
+ #define XLAT_VAL_35 ((unsigned) (NT_386_IOPERM))
+ #define XLAT_STR_35 STRINGIFY(NT_386_IOPERM)
  XLAT(NT_X86_XSTATE),
- #define XLAT_VAL_34 ((unsigned) (NT_X86_XSTATE))
- #define XLAT_STR_34 STRINGIFY(NT_X86_XSTATE)
+ #define XLAT_VAL_36 ((unsigned) (NT_X86_XSTATE))
+ #define XLAT_STR_36 STRINGIFY(NT_X86_XSTATE)
  XLAT(NT_S390_HIGH_GPRS),
- #define XLAT_VAL_35 ((unsigned) (NT_S390_HIGH_GPRS))
- #define XLAT_STR_35 STRINGIFY(NT_S390_HIGH_GPRS)
+ #define XLAT_VAL_37 ((unsigned) (NT_S390_HIGH_GPRS))
+ #define XLAT_STR_37 STRINGIFY(NT_S390_HIGH_GPRS)
  XLAT(NT_S390_TIMER),
- #define XLAT_VAL_36 ((unsigned) (NT_S390_TIMER))
- #define XLAT_STR_36 STRINGIFY(NT_S390_TIMER)
+ #define XLAT_VAL_38 ((unsigned) (NT_S390_TIMER))
+ #define XLAT_STR_38 STRINGIFY(NT_S390_TIMER)
  XLAT(NT_S390_TODCMP),
- #define XLAT_VAL_37 ((unsigned) (NT_S390_TODCMP))
- #define XLAT_STR_37 STRINGIFY(NT_S390_TODCMP)
+ #define XLAT_VAL_39 ((unsigned) (NT_S390_TODCMP))
+ #define XLAT_STR_39 STRINGIFY(NT_S390_TODCMP)
  XLAT(NT_S390_TODPREG),
- #define XLAT_VAL_38 ((unsigned) (NT_S390_TODPREG))
- #define XLAT_STR_38 STRINGIFY(NT_S390_TODPREG)
+ #define XLAT_VAL_40 ((unsigned) (NT_S390_TODPREG))
+ #define XLAT_STR_40 STRINGIFY(NT_S390_TODPREG)
  XLAT(NT_S390_CTRS),
- #define XLAT_VAL_39 ((unsigned) (NT_S390_CTRS))
- #define XLAT_STR_39 STRINGIFY(NT_S390_CTRS)
+ #define XLAT_VAL_41 ((unsigned) (NT_S390_CTRS))
+ #define XLAT_STR_41 STRINGIFY(NT_S390_CTRS)
  XLAT(NT_S390_PREFIX),
- #define XLAT_VAL_40 ((unsigned) (NT_S390_PREFIX))
- #define XLAT_STR_40 STRINGIFY(NT_S390_PREFIX)
+ #define XLAT_VAL_42 ((unsigned) (NT_S390_PREFIX))
+ #define XLAT_STR_42 STRINGIFY(NT_S390_PREFIX)
  XLAT(NT_S390_LAST_BREAK),
- #define XLAT_VAL_41 ((unsigned) (NT_S390_LAST_BREAK))
- #define XLAT_STR_41 STRINGIFY(NT_S390_LAST_BREAK)
+ #define XLAT_VAL_43 ((unsigned) (NT_S390_LAST_BREAK))
+ #define XLAT_STR_43 STRINGIFY(NT_S390_LAST_BREAK)
  XLAT(NT_S390_SYSTEM_CALL),
- #define XLAT_VAL_42 ((unsigned) (NT_S390_SYSTEM_CALL))
- #define XLAT_STR_42 STRINGIFY(NT_S390_SYSTEM_CALL)
+ #define XLAT_VAL_44 ((unsigned) (NT_S390_SYSTEM_CALL))
+ #define XLAT_STR_44 STRINGIFY(NT_S390_SYSTEM_CALL)
  XLAT(NT_S390_TDB),
- #define XLAT_VAL_43 ((unsigned) (NT_S390_TDB))
- #define XLAT_STR_43 STRINGIFY(NT_S390_TDB)
+ #define XLAT_VAL_45 ((unsigned) (NT_S390_TDB))
+ #define XLAT_STR_45 STRINGIFY(NT_S390_TDB)
  XLAT(NT_S390_VXRS_LOW),
- #define XLAT_VAL_44 ((unsigned) (NT_S390_VXRS_LOW))
- #define XLAT_STR_44 STRINGIFY(NT_S390_VXRS_LOW)
+ #define XLAT_VAL_46 ((unsigned) (NT_S390_VXRS_LOW))
+ #define XLAT_STR_46 STRINGIFY(NT_S390_VXRS_LOW)
  XLAT(NT_S390_VXRS_HIGH),
- #define XLAT_VAL_45 ((unsigned) (NT_S390_VXRS_HIGH))
- #define XLAT_STR_45 STRINGIFY(NT_S390_VXRS_HIGH)
+ #define XLAT_VAL_47 ((unsigned) (NT_S390_VXRS_HIGH))
+ #define XLAT_STR_47 STRINGIFY(NT_S390_VXRS_HIGH)
  XLAT(NT_S390_GS_CB),
- #define XLAT_VAL_46 ((unsigned) (NT_S390_GS_CB))
- #define XLAT_STR_46 STRINGIFY(NT_S390_GS_CB)
+ #define XLAT_VAL_48 ((unsigned) (NT_S390_GS_CB))
+ #define XLAT_STR_48 STRINGIFY(NT_S390_GS_CB)
  XLAT(NT_S390_GS_BC),
- #define XLAT_VAL_47 ((unsigned) (NT_S390_GS_BC))
- #define XLAT_STR_47 STRINGIFY(NT_S390_GS_BC)
+ #define XLAT_VAL_49 ((unsigned) (NT_S390_GS_BC))
+ #define XLAT_STR_49 STRINGIFY(NT_S390_GS_BC)
  XLAT(NT_S390_RI_CB),
- #define XLAT_VAL_48 ((unsigned) (NT_S390_RI_CB))
- #define XLAT_STR_48 STRINGIFY(NT_S390_RI_CB)
+ #define XLAT_VAL_50 ((unsigned) (NT_S390_RI_CB))
+ #define XLAT_STR_50 STRINGIFY(NT_S390_RI_CB)
  XLAT(NT_S390_PV_CPU_DATA),
- #define XLAT_VAL_49 ((unsigned) (NT_S390_PV_CPU_DATA))
- #define XLAT_STR_49 STRINGIFY(NT_S390_PV_CPU_DATA)
+ #define XLAT_VAL_51 ((unsigned) (NT_S390_PV_CPU_DATA))
+ #define XLAT_STR_51 STRINGIFY(NT_S390_PV_CPU_DATA)
  XLAT(NT_ARM_VFP),
- #define XLAT_VAL_50 ((unsigned) (NT_ARM_VFP))
- #define XLAT_STR_50 STRINGIFY(NT_ARM_VFP)
+ #define XLAT_VAL_52 ((unsigned) (NT_ARM_VFP))
+ #define XLAT_STR_52 STRINGIFY(NT_ARM_VFP)
  XLAT(NT_ARM_TLS),
- #define XLAT_VAL_51 ((unsigned) (NT_ARM_TLS))
- #define XLAT_STR_51 STRINGIFY(NT_ARM_TLS)
+ #define XLAT_VAL_53 ((unsigned) (NT_ARM_TLS))
+ #define XLAT_STR_53 STRINGIFY(NT_ARM_TLS)
  XLAT(NT_ARM_HW_BREAK),
- #define XLAT_VAL_52 ((unsigned) (NT_ARM_HW_BREAK))
- #define XLAT_STR_52 STRINGIFY(NT_ARM_HW_BREAK)
+ #define XLAT_VAL_54 ((unsigned) (NT_ARM_HW_BREAK))
+ #define XLAT_STR_54 STRINGIFY(NT_ARM_HW_BREAK)
  XLAT(NT_ARM_HW_WATCH),
- #define XLAT_VAL_53 ((unsigned) (NT_ARM_HW_WATCH))
- #define XLAT_STR_53 STRINGIFY(NT_ARM_HW_WATCH)
+ #define XLAT_VAL_55 ((unsigned) (NT_ARM_HW_WATCH))
+ #define XLAT_STR_55 STRINGIFY(NT_ARM_HW_WATCH)
  XLAT(NT_ARM_SYSTEM_CALL),
- #define XLAT_VAL_54 ((unsigned) (NT_ARM_SYSTEM_CALL))
- #define XLAT_STR_54 STRINGIFY(NT_ARM_SYSTEM_CALL)
+ #define XLAT_VAL_56 ((unsigned) (NT_ARM_SYSTEM_CALL))
+ #define XLAT_STR_56 STRINGIFY(NT_ARM_SYSTEM_CALL)
  XLAT(NT_ARM_SVE),
- #define XLAT_VAL_55 ((unsigned) (NT_ARM_SVE))
- #define XLAT_STR_55 STRINGIFY(NT_ARM_SVE)
+ #define XLAT_VAL_57 ((unsigned) (NT_ARM_SVE))
+ #define XLAT_STR_57 STRINGIFY(NT_ARM_SVE)
  XLAT(NT_ARM_PAC_MASK),
- #define XLAT_VAL_56 ((unsigned) (NT_ARM_PAC_MASK))
- #define XLAT_STR_56 STRINGIFY(NT_ARM_PAC_MASK)
+ #define XLAT_VAL_58 ((unsigned) (NT_ARM_PAC_MASK))
+ #define XLAT_STR_58 STRINGIFY(NT_ARM_PAC_MASK)
  XLAT(NT_ARM_PACA_KEYS),
- #define XLAT_VAL_57 ((unsigned) (NT_ARM_PACA_KEYS))
- #define XLAT_STR_57 STRINGIFY(NT_ARM_PACA_KEYS)
+ #define XLAT_VAL_59 ((unsigned) (NT_ARM_PACA_KEYS))
+ #define XLAT_STR_59 STRINGIFY(NT_ARM_PACA_KEYS)
  XLAT(NT_ARM_PACG_KEYS),
- #define XLAT_VAL_58 ((unsigned) (NT_ARM_PACG_KEYS))
- #define XLAT_STR_58 STRINGIFY(NT_ARM_PACG_KEYS)
+ #define XLAT_VAL_60 ((unsigned) (NT_ARM_PACG_KEYS))
+ #define XLAT_STR_60 STRINGIFY(NT_ARM_PACG_KEYS)
  XLAT(NT_ARM_TAGGED_ADDR_CTRL),
- #define XLAT_VAL_59 ((unsigned) (NT_ARM_TAGGED_ADDR_CTRL))
- #define XLAT_STR_59 STRINGIFY(NT_ARM_TAGGED_ADDR_CTRL)
+ #define XLAT_VAL_61 ((unsigned) (NT_ARM_TAGGED_ADDR_CTRL))
+ #define XLAT_STR_61 STRINGIFY(NT_ARM_TAGGED_ADDR_CTRL)
  XLAT(NT_ARM_PAC_ENABLED_KEYS),
- #define XLAT_VAL_60 ((unsigned) (NT_ARM_PAC_ENABLED_KEYS))
- #define XLAT_STR_60 STRINGIFY(NT_ARM_PAC_ENABLED_KEYS)
+ #define XLAT_VAL_62 ((unsigned) (NT_ARM_PAC_ENABLED_KEYS))
+ #define XLAT_STR_62 STRINGIFY(NT_ARM_PAC_ENABLED_KEYS)
  XLAT(NT_ARM_SSVE),
- #define XLAT_VAL_61 ((unsigned) (NT_ARM_SSVE))
- #define XLAT_STR_61 STRINGIFY(NT_ARM_SSVE)
+ #define XLAT_VAL_63 ((unsigned) (NT_ARM_SSVE))
+ #define XLAT_STR_63 STRINGIFY(NT_ARM_SSVE)
  XLAT(NT_ARM_ZA),
- #define XLAT_VAL_62 ((unsigned) (NT_ARM_ZA))
- #define XLAT_STR_62 STRINGIFY(NT_ARM_ZA)
+ #define XLAT_VAL_64 ((unsigned) (NT_ARM_ZA))
+ #define XLAT_STR_64 STRINGIFY(NT_ARM_ZA)
  XLAT(NT_METAG_CBUF),
- #define XLAT_VAL_63 ((unsigned) (NT_METAG_CBUF))
- #define XLAT_STR_63 STRINGIFY(NT_METAG_CBUF)
+ #define XLAT_VAL_65 ((unsigned) (NT_METAG_CBUF))
+ #define XLAT_STR_65 STRINGIFY(NT_METAG_CBUF)
  XLAT(NT_METAG_RPIPE),
- #define XLAT_VAL_64 ((unsigned) (NT_METAG_RPIPE))
- #define XLAT_STR_64 STRINGIFY(NT_METAG_RPIPE)
+ #define XLAT_VAL_66 ((unsigned) (NT_METAG_RPIPE))
+ #define XLAT_STR_66 STRINGIFY(NT_METAG_RPIPE)
  XLAT(NT_METAG_TLS),
- #define XLAT_VAL_65 ((unsigned) (NT_METAG_TLS))
- #define XLAT_STR_65 STRINGIFY(NT_METAG_TLS)
+ #define XLAT_VAL_67 ((unsigned) (NT_METAG_TLS))
+ #define XLAT_STR_67 STRINGIFY(NT_METAG_TLS)
  XLAT(NT_ARC_V2),
- #define XLAT_VAL_66 ((unsigned) (NT_ARC_V2))
- #define XLAT_STR_66 STRINGIFY(NT_ARC_V2)
+ #define XLAT_VAL_68 ((unsigned) (NT_ARC_V2))
+ #define XLAT_STR_68 STRINGIFY(NT_ARC_V2)
  XLAT(NT_VMCOREDD),
- #define XLAT_VAL_67 ((unsigned) (NT_VMCOREDD))
- #define XLAT_STR_67 STRINGIFY(NT_VMCOREDD)
+ #define XLAT_VAL_69 ((unsigned) (NT_VMCOREDD))
+ #define XLAT_STR_69 STRINGIFY(NT_VMCOREDD)
  XLAT(NT_MIPS_DSP),
- #define XLAT_VAL_68 ((unsigned) (NT_MIPS_DSP))
- #define XLAT_STR_68 STRINGIFY(NT_MIPS_DSP)
+ #define XLAT_VAL_70 ((unsigned) (NT_MIPS_DSP))
+ #define XLAT_STR_70 STRINGIFY(NT_MIPS_DSP)
  XLAT(NT_MIPS_FP_MODE),
- #define XLAT_VAL_69 ((unsigned) (NT_MIPS_FP_MODE))
- #define XLAT_STR_69 STRINGIFY(NT_MIPS_FP_MODE)
+ #define XLAT_VAL_71 ((unsigned) (NT_MIPS_FP_MODE))
+ #define XLAT_STR_71 STRINGIFY(NT_MIPS_FP_MODE)
  XLAT(NT_MIPS_MSA),
- #define XLAT_VAL_70 ((unsigned) (NT_MIPS_MSA))
- #define XLAT_STR_70 STRINGIFY(NT_MIPS_MSA)
+ #define XLAT_VAL_72 ((unsigned) (NT_MIPS_MSA))
+ #define XLAT_STR_72 STRINGIFY(NT_MIPS_MSA)
  XLAT(NT_LOONGARCH_CPUCFG),
- #define XLAT_VAL_71 ((unsigned) (NT_LOONGARCH_CPUCFG))
- #define XLAT_STR_71 STRINGIFY(NT_LOONGARCH_CPUCFG)
+ #define XLAT_VAL_73 ((unsigned) (NT_LOONGARCH_CPUCFG))
+ #define XLAT_STR_73 STRINGIFY(NT_LOONGARCH_CPUCFG)
  XLAT(NT_LOONGARCH_CSR),
- #define XLAT_VAL_72 ((unsigned) (NT_LOONGARCH_CSR))
- #define XLAT_STR_72 STRINGIFY(NT_LOONGARCH_CSR)
+ #define XLAT_VAL_74 ((unsigned) (NT_LOONGARCH_CSR))
+ #define XLAT_STR_74 STRINGIFY(NT_LOONGARCH_CSR)
  XLAT(NT_LOONGARCH_LSX),
- #define XLAT_VAL_73 ((unsigned) (NT_LOONGARCH_LSX))
- #define XLAT_STR_73 STRINGIFY(NT_LOONGARCH_LSX)
+ #define XLAT_VAL_75 ((unsigned) (NT_LOONGARCH_LSX))
+ #define XLAT_STR_75 STRINGIFY(NT_LOONGARCH_LSX)
  XLAT(NT_LOONGARCH_LASX),
- #define XLAT_VAL_74 ((unsigned) (NT_LOONGARCH_LASX))
- #define XLAT_STR_74 STRINGIFY(NT_LOONGARCH_LASX)
+ #define XLAT_VAL_76 ((unsigned) (NT_LOONGARCH_LASX))
+ #define XLAT_STR_76 STRINGIFY(NT_LOONGARCH_LASX)
  XLAT(NT_LOONGARCH_LBT),
- #define XLAT_VAL_75 ((unsigned) (NT_LOONGARCH_LBT))
- #define XLAT_STR_75 STRINGIFY(NT_LOONGARCH_LBT)
+ #define XLAT_VAL_77 ((unsigned) (NT_LOONGARCH_LBT))
+ #define XLAT_STR_77 STRINGIFY(NT_LOONGARCH_LBT)
  XLAT(NT_FILE),
- #define XLAT_VAL_76 ((unsigned) (NT_FILE))
- #define XLAT_STR_76 STRINGIFY(NT_FILE)
+ #define XLAT_VAL_78 ((unsigned) (NT_FILE))
+ #define XLAT_STR_78 STRINGIFY(NT_FILE)
  XLAT(NT_PRXFPREG),
- #define XLAT_VAL_77 ((unsigned) (NT_PRXFPREG))
- #define XLAT_STR_77 STRINGIFY(NT_PRXFPREG)
+ #define XLAT_VAL_79 ((unsigned) (NT_PRXFPREG))
+ #define XLAT_STR_79 STRINGIFY(NT_PRXFPREG)
  XLAT(NT_SIGINFO),
- #define XLAT_VAL_78 ((unsigned) (NT_SIGINFO))
- #define XLAT_STR_78 STRINGIFY(NT_SIGINFO)
+ #define XLAT_VAL_80 ((unsigned) (NT_SIGINFO))
+ #define XLAT_STR_80 STRINGIFY(NT_SIGINFO)
 };
 static
 const struct xlat nt_descriptor_types[1] = { {
@@ -1839,6 +1879,12 @@ const struct xlat nt_descriptor_types[1] = { {
 #  ifdef XLAT_VAL_78
   | XLAT_VAL_78
 #  endif
+#  ifdef XLAT_VAL_79
+  | XLAT_VAL_79
+#  endif
+#  ifdef XLAT_VAL_80
+  | XLAT_VAL_80
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -2078,6 +2124,12 @@ const struct xlat nt_descriptor_types[1] = { {
 #  ifdef XLAT_STR_78
   + sizeof(XLAT_STR_78)
 #  endif
+#  ifdef XLAT_STR_79
+  + sizeof(XLAT_STR_79)
+#  endif
+#  ifdef XLAT_STR_80
+  + sizeof(XLAT_STR_80)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -2240,6 +2292,10 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_77
 #  undef XLAT_STR_78
 #  undef XLAT_VAL_78
+#  undef XLAT_STR_79
+#  undef XLAT_VAL_79
+#  undef XLAT_STR_80
+#  undef XLAT_VAL_80
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

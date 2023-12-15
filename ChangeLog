@@ -1,3 +1,607 @@
+2023-09-01  Dmitry V. Levin  <ldv@strace.io>
+
+	Prepare for 6.5 release.
+	* NEWS: Update for 6.5 release.
+
+	Update copyright headers.
+	Headers updated automatically using maint/update_copyright_years.sh
+	script.
+
+2023-09-01  Dmitry V. Levin  <ldv@strace.io>
+
+	Fix preprocessor indentation.
+	Indent the C preprocessor directives to reflect their nesting
+	using the following script:
+
+	$ cppi -l $(git grep -El '^[[:space:]]*#[[:space:]]*(if|ifdef|ifndef|elif|else|endif|define|pragma)[[:space:]]' src tests |grep -Ev '\.(sh|test)$') |while read f; do
+		cppi < "$f" > "$f".cppi; mv "$f".cppi "$f"
+	done
+
+2023-08-31  Dmitry V. Levin  <ldv@strace.io>
+
+	tests: avoid libc definition for time_t in direct syscalls.
+	Following up the commit that stopped using of struct timespec and struct
+	timeval as arguments of syscalls, avoid using time_t in initializations
+	of kernel_old_timespec_t and kernel_old_timeval_t structures.
+
+	* tests/aio.c (main): Do not use time_t in the initialization of tv_sec.
+	* tests/aio_pgetevents.c (main): Likewise.
+	* tests/clock_nanosleep.c (main): Likewise.
+	* tests/futex.c (main): Likewise.
+	* tests/futimesat.c (main): Likewise.
+	* tests/nanosleep.c (main): Likewise.
+	* tests/ppoll.c (main): Likewise.
+	* tests/rt_sigtimedwait.c (main): Likewise.
+	* tests/timer_xettime.c (main): Likewise.
+	* tests/timerfd_xettime.c (main): Likewise.
+	* tests/utimensat.c (main): Likewise.
+	* tests/xettimeofday.c (main): Likewise.
+
+2023-08-30  Dmitry V. Levin  <ldv@strace.io>
+
+	tests: do not use struct timespec in clock_nanosleep syscall.
+	* tests/mq_sendrecv.c (do_send, do_recv, main): Replace struct timespec
+	with kernel_old_timespec_t in direct invocations of clock_nanosleep
+	syscall.
+	* tests/threads-execve.c (thread, main): Likewise.
+
+	Complements: v6.4-41-g51cb6c52e394 "tests: do not use libc definitions
+	for timespec/timeval in direct syscalls"
+
+2023-08-30  Dmitry V. Levin  <ldv@strace.io>
+
+	tests: do not use struct timeval in gettimeofday syscall arguments.
+	* tests/delay.c: Include "kernel_timeval.h".
+	(usecs_from_tv, check_delay, run): Replace struct timeval with
+	kernel_old_timeval_t in direct invocations of gettimeofday syscall.
+
+	Complements: v6.4-41-g51cb6c52e394 "tests: do not use libc definitions
+	for timespec/timeval in direct syscalls"
+
+2023-08-30  Dmitry V. Levin  <ldv@strace.io>
+
+	Use the proper type for decoding the time syscall.
+	Do not use time_t type provided by libc to decode the time syscall as
+	the latter uses kernel_long_t which does not necessarily match the type
+	provided by libc.
+
+	* src/print_time.c (kernel_time_t): New type, defined to kernel_ulong_t.
+	Use it instead of time_t.
+	* tests/time.c (kernel_time_t): Likewise.
+	(k_time): New function.
+	(main): Use it.
+
+2023-08-30  Alexander Kanavin  <alex@linutronix.de>
+
+	tests/clock_nanosleep.c: avoid use of CLOCK_ABSTIME on systems with 32 bit time_t.
+	This does break (syscall returning -EINVAL) if system date is set to post-2038.
+
+	Resolves: https://github.com/strace/strace/pull/265
+
+2023-08-30  Alexander Kanavin  <alex@linutronix.de>
+
+	tests/time.c: print syscall return values as unsigned decimal.
+	strace prints them that way, and so the test has to follow,
+	even if the actual time_t is signed.
+
+	Resolves: https://github.com/strace/strace/pull/264
+
+2023-08-30  Alexander Kanavin  <alex@linutronix.de>
+
+	tests: do not use libc definitions for timespec/timeval in direct syscalls
+	libc does not guarantee that they match syscall structures,
+	and indeed, they don't if components are built against glibc
+	with -D_TIME_BITS=64 on 32 bit platforms (to avoid collapse
+	in 2038).
+
+	* tests/tests.h: Include "kernel_old_timespec.h".
+	(struct timespec): Remove forward declaration.
+	(recv_mmsg): Replace struct timespec with kernel_old_timespec_t.
+	* tests/aio.c (main): Replace struct timespec with kernel_old_timespec_t.
+	* tests/aio_pgetevents.c (main): Likewise.
+	* tests/clock_nanosleep.c (main): Likewise.
+	* tests/futex.c (main): Likewise.
+	* tests/libmmsg.c (recv_mmsg): Likewise.
+	* tests/mmsg-silent.c (main): Likewise.
+	* tests/ppoll.c (main): Likewise.
+	* tests/recvmmsg-timeout.c (main): Likewise.
+	* tests/rt_sigtimedwait.c (k_sigtimedwait, iterate, main): Likewise.
+	* tests/sched_rr_get_interval.c (main): Likewise.
+	* tests/utimensat.c (print_ts): Likewise.
+	* tests/futimesat.c: Include "kernel_timeval.h".
+	(print_tv, main): Replace struct timeval with kernel_old_timeval_t.
+	* tests/utimes.c: Include "kernel_timeval.h".
+	(TEST_STRUCT): Replace struct timeval with kernel_old_timeval_t.
+	* tests/xettimeofday.c: Include "kernel_timeval.h".
+	(main): Replace struct timeval with kernel_old_timeval_t.
+	* tests/xselect.c: Likewise.
+
+	Resolves: https://github.com/strace/strace/issues/250
+	Resolves: https://github.com/strace/strace/pull/263
+
+2023-08-29  Gleb Fotengauer-Malinovskiy  <glebfm@altlinux.org>
+
+	Update ioctl entries from linux v6.5.
+	* src/linux/32/ioctls_inc_align16.h: Update from linux v6.5 using
+	ioctls_gen.sh.
+	* src/linux/32/ioctls_inc_align32.h: Likewise.
+	* src/linux/32/ioctls_inc_align64.h: Likewise.
+	* src/linux/64/ioctls_inc.h: Likewise.
+	* src/linux/x32/ioctls_inc0.h: Likewise.
+	* src/linux/s390/ioctls_arch0.h: Likewise.
+	* src/linux/s390x/ioctls_arch0.h: Likewise.
+	* NEWS: Mention this.
+
+	maint: Add support for *_IOCTL wrappers, such as ARMADA_IOCTL and UVIO_IOCTL
+	* maint/ioctls_sym.sh (r_io): Add ([A-Z]+)?_S?IOCTL.
+
+2023-08-29  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update NT_* constants.
+	* src/xlat/nt_descriptor_types.in (NT_RISCV_VECTOR): Remove constant
+	introduced by Linux kernel commit v6.5-rc1~120^2~17^2~15 and removed
+	by Linux kernel commit commit v6.5~8^2~1^2~1.
+
+2023-08-29  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	tests/sched_xetaffinity: do not assume that cpuset_size is big enough.
+	Commit v5.15~160 ("tests/sched_xetaffinity: add a check
+	for a non-properly-sized CPU set") added a check that implicitly assumed
+	that cpuset_size is at least 8, which is not the case on 32-bit userspace
+	with less than 33 CPUs, and that has led to skipping the test altogether
+	on such systems due to syscall returning EFAULT.  Fix it by allocating
+	a separate set of the expected size and perform the check on it.
+
+	* tests/sched_xetaffinity.c (main): Add crop_size constant, set to 8;
+	add crop_cpuset variable;  use them instead of cpuset_size and cpuset,
+	respectively, in the non-properly-sized CPU set check.
+
+	Fixes: v5.15~160 "tests/sched_xetaffinity: add a check for a non-properly-sized CPU set"
+	Reported-by: Sven Schnelle <svens@linux.ibm.com>
+
+2023-08-29  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	ptp: provide additional information about max_phase_adj.
+	Since we know that it is in nanosecond, we can provide a comment to make
+	it more human-readable.
+
+	* src/ptp.c (ptp_ioctl): Use PRINT_FIELD_TICKS_D instead
+	of PRINT_FIELD_D for max_phase_adj field printing.
+	* tests/ioctl_ptp.c: Update expected output.
+
+2023-08-29  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	util: add print_ticks_d and PRINT_FIELD_TICKS{,_D}
+	print_ticks_d is similar to print_ticks, but handles signed numbers.
+
+	* src/defs.h (print_ticks_d): New declaration.
+	* src/util.c (print_ticks_d): New function.
+	* src/print_fields.h (PRINT_FIELD_TICKS, PRINT_FIELD_TICKS_D): New
+	macros, wrappers for print_ticks and print_ticks_d, respectivaly.
+
+2023-08-29  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	strace.spec: try to comply with the new Fedora package license policy.
+	New Fedora policies[1][2] require the usage of the SPDX identifiers
+	with pretty specific syntax[3], and [4] requires refraining from any
+	"license analysis" and listing all the licenses verbatim (which is especially
+	fun with all the bundled sources), so here we are.  The %changelog entry
+	mention is added per [5].
+
+	[1] https://fedoraproject.org/wiki/Changes/SPDX_Licenses_Phase_2
+	[2] https://docs.fedoraproject.org/en-US/legal/update-existing-packages/
+	[3] https://docs.fedoraproject.org/en-US/legal/license-field/#_conjunctive_and_licensing
+	[4] https://docs.fedoraproject.org/en-US/legal/license-field/#_no_effective_license_analysis
+	[5] https://docs.fedoraproject.org/en-US/legal/update-existing-packages/#_changelog_entry
+
+	* strace.spec.in [0%{?fedora} >= 35 || 0%{?centos} >= 9 || 0%{?rhel} >= 9]
+	(License): Update the license expression and add an appropriate comment.
+	(%changelog): Mention it.
+
+2023-08-10  Dmitry V. Levin  <ldv@strace.io>
+
+	strace.spec.in: configure using --enable-bundled=yes.
+	* strace.spec.in (%build): Pass --enable-bundled=yes to %configure
+	so that package builds wouldn't break unexpectedly when unreleased
+	kernel headers are installed into the build environment.
+
+2023-08-09  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: remove BPF_F_PATH_FD from bpf_map_flags.
+	BPF_F_PATH_FD is applicable to BPF_OBJ_PIN and BPF_OBJ_GET commands
+	only, and therefore should be listed in bpf_file_flags only.
+
+	This reverts commit c16832d01c09e8c249082a7fb04fc9f06fc9d00d.
+
+	* src/xlat/bpf_map_flags.in (BPF_F_PATH_FD): Remove.
+	* tests/bpf.c: Update expected output.
+
+2023-08-08  Dmitry V. Levin  <ldv@strace.io>
+
+	bpf: update decoding of BPF_OBJ_PIN and BPF_OBJ_GET commands.
+	* src/print_fields.h (PRINT_FIELD_DIRFD): New macro.
+	* src/xlat/bpf_file_flags.in: New file.
+	* src/bpf_attr.h (BPF_OBJ_PIN_struct): Add path_fd field introduced
+	by Linux commit v6.5-rc1~163^2~215^2~9.
+	(BPF_OBJ_PIN_struct_size, expected_BPF_OBJ_PIN_struct_size): Update.
+	* src/bpf.c: Include "xlat/bpf_file_flags.h".
+	(BEGIN_BPF_CMD_DECODER(BPF_OBJ_PIN)): Decode path_fd.
+	* tests/bpf.c: Include "xmalloc.h".
+	(at_fdcwd_str): New variable.
+	(main): Initialize it.
+	(init_BPF_OBJ_PIN_str): New function.
+	(BPF_OBJ_PIN_checks): Check path_fd decoding.
+	* tests/bpf-success-long-y.c (YFLAG): Define.
+	* NEWS: Mention this.
+
+2023-08-07  Dmitry V. Levin  <ldv@strace.io>
+
+	bpf: implement decoding of BPF_PROG_BIND_MAP command.
+	* src/bpf_attr.h (BPF_PROG_BIND_MAP_struct): New structure introduced
+	by Linux commit v5.10-rc1~107^2~169^2~20^2~3.
+	(BPF_PROG_BIND_MAP_struct_size, expected_BPF_PROG_BIND_MAP_struct_size):
+	New macros.
+	* src/bpf.c (BEGIN_BPF_CMD_DECODER(BPF_PROG_BIND_MAP)): New function.
+	(SYS_FUNC(bpf)) <bpf_cmd_decoders[]>: Use it.
+	* NEWS: Mention this.
+	* tests/bpf.c (union bpf_attr_data): Add
+	BPF_ATTR_DATA_FIELD(BPF_PROG_BIND_MAP).
+	(BPF_PROG_BIND_MAP_checks): New checks array.
+	(main) <checks>: Add CHK(BPF_PROG_BIND_MAP).
+
+2023-08-06  Dmitry V. Levin  <ldv@strace.io>
+
+	bpf: implement decoding of BPF_LINK_DETACH command.
+	* src/bpf_attr.h (BPF_LINK_DETACH_struct): New structure introduced
+	by Linux commit v5.9-rc1~133^2~23^2~6^2~4.
+	(BPF_LINK_DETACH_struct_size, expected_BPF_LINK_DETACH_struct_size):
+	New macros.
+	* src/bpf.c (BEGIN_BPF_CMD_DECODER(BPF_LINK_DETACH)): New function.
+	(SYS_FUNC(bpf)) <bpf_cmd_decoders[]>: Use it.
+	* NEWS: Mention this.
+	* tests/bpf.c (union bpf_attr_data): Add
+	BPF_ATTR_DATA_FIELD(BPF_LINK_DETACH).
+	(BPF_LINK_DETACH_checks): New checks array.
+	(main) <checks>: Add CHK(BPF_LINK_DETACH).
+
+2023-08-03  Dmitry V. Levin  <ldv@strace.io>
+
+	bpf: implement decoding of BPF_ITER_CREATE command.
+	* src/bpf_attr.h (BPF_ITER_CREATE_struct): New structure introduced
+	by Linux commit v5.8-rc1~165^2~185^2~16^2~15.
+	(BPF_ITER_CREATE_struct_size, expected_BPF_ITER_CREATE_struct_size):
+	New macros.
+	* src/bpf.c (BEGIN_BPF_CMD_DECODER(BPF_ITER_CREATE)): New function.
+	(SYS_FUNC(bpf)) <bpf_cmd_decoders[]>: Use it.
+	* NEWS: Mention this.
+	* tests/bpf.c (union bpf_attr_data): Add
+	BPF_ATTR_DATA_FIELD(BPF_ITER_CREATE).
+	(BPF_ITER_CREATE_checks): New checks array.
+	(main) <checks>: Add CHK(BPF_ITER_CREATE).
+
+2023-08-02  Dmitry V. Levin  <ldv@strace.io>
+
+	bpf: implement decoding of BPF_ENABLE_STATS command.
+	* src/xlat/bpf_stats_type.in: New file.
+	* src/bpf_attr.h (BPF_ENABLE_STATS_struct): New structure introduced
+	by Linux commit v5.8-rc1~165^2~343^2~3^2~2.
+	(BPF_ENABLE_STATS_struct_size, expected_BPF_ENABLE_STATS_struct_size):
+	New macros.
+	* src/bpf.c: Include "xlat/bpf_stats_type.h".
+	(BEGIN_BPF_CMD_DECODER(BPF_ENABLE_STATS)): New function.
+	(SYS_FUNC(bpf)) <bpf_cmd_decoders[]>: Use it.
+	* NEWS: Mention this.
+	* tests/bpf.c (union bpf_attr_data): Add
+	BPF_ATTR_DATA_FIELD(BPF_ENABLE_STATS).
+	(BPF_ENABLE_STATS_checks): New checks array.
+	(main) <checks>: Add CHK(BPF_ENABLE_STATS).
+
+2023-08-01  Dmitry V. Levin  <ldv@strace.io>
+
+	Implement decoding of fchmodat2 syscall.
+	This new syscall is expected to be introduced in Linux kernel v6.6-rc1.
+
+	* src/xlat/fchmodat_flags.in: New file.
+	* src/chmod.c: Include <linux/fcntl.h> and "xlat/fchmodat_flags.h".
+	(decode_fchmodat): New function.
+	(SYS_FUNC(fchmodat)): Use it.
+	(SYS_FUNC(fchmodat2)): New function.
+	* src/pathtrace.c (pathtrace_match_set): Handle SEN_fchmodat2.
+	* src/linux/generic/syscallent-common.h [BASE_NR + 452]: Wire up
+	fchmodat2.
+	* tests/fchmodat2.c: New file.
+	* tests/pure_executables.list: Add fchmodat2.
+	* tests/.gitignore: Likewise.
+	* tests/gen_tests.in (fchmodat2, fchmodat2--secontext,
+	fchmodat2--secontext_full, fchmodat2--secontext_full_mismatch,
+	fchmodat2--secontext_mismatch): New tests.
+	* NEWS: Mention this change.
+
+2023-07-31  Sven Schnelle  <svens@linux.ibm.com>
+
+	tests/times: use libc times instead of raw syscall on s390.
+	The libc implementation of times(2) has additional handling
+	for error codes compared to the raw syscall. Therefore
+	use the libc implementation on s390 like it is already done
+	for MIPS.
+
+2023-07-31  Dmitry V. Levin  <ldv@strace.io>
+
+	Implement decoding of cachestat syscall.
+	This new syscall was introduced by Linux kernel commit
+	v6.5-rc1~176^2~364.
+
+	* src/cachestat.c: New file.
+	* src/cachestat.h: Likewise.
+	* src/Makefile.am (libstrace_a_SOURCES): Add cachestat.c and
+	cachestat.h.
+	* src/linux/generic/syscallent-common.h [BASE_NR + 451]: Wire up
+	cachestat.
+	* tests/cachestat.c: New file.
+	* tests/cachestat-P.c: Likewise.
+	* tests/cachestat-fd.c: Likewise.
+	* tests/cachestat-success.c: Likewise.
+	* tests/pure_executables.list: Add cachestat, cachestat-P, cachestat-fd,
+	and cachestat-success.
+	* tests/.gitignore: Likewise.
+	* tests/gen_tests.in (cachestat, cachestat-P, cachestat-fd,
+	cachestat-success): New tests.
+	* NEWS: Mention this change.
+
+2023-07-30  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update V4L2_* constants.
+	* src/xlat/v4l2_control_ids.in (V4L2_CID_MPEG_VIDEO_AV1_PROFILE,
+	V4L2_CID_MPEG_VIDEO_AV1_LEVEL): New constants introduced by Linux kernel
+	commit v6.5-rc1~48^2~27.
+	* src/xlat/v4l2_control_types.in (V4L2_CTRL_TYPE_AV1_SEQUENCE,
+	V4L2_CTRL_TYPE_AV1_TILE_GROUP_ENTRY, V4L2_CTRL_TYPE_AV1_FRAME,
+	V4L2_CTRL_TYPE_AV1_FILM_GRAIN): Likewise.
+	* src/xlat/v4l2_pix_fmts.in (V4L2_PIX_FMT_AV1_FRAME): Likewise.
+	(V4L2_PIX_FMT_NV15_4L4): New constant introduced by Linux kernel commit
+	v6.5-rc1~48^2~23.
+	* NEWS: Mention this change.
+
+2023-07-29  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update PR_* constants.
+	* src/xlat/prctl_options.in (PR_RISCV_V_SET_CONTROL,
+	PR_RISCV_V_GET_CONTROL): New constants introduced by Linux kernel
+	commit v6.5-rc1~120^2~17^2~6.
+	* NEWS: Mention this change.
+
+2023-07-28  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update NFT_MSG_* constants.
+	* src/xlat/nf_nftables_msg_types.in (NFT_MSG_GETSETELEM_RESET):
+	New constant introduced by Linux kernel commit v6.5-rc1~163^2~9^2~1.
+	* src/netlink.c (decode_nlmsg_flags_netfilter): Handle it.
+	* NEWS: Mention this change.
+
+2023-07-27  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update MOVE_MOUNT_* constants.
+	* src/xlat/move_mount_flags.in (MOVE_MOUNT_BENEATH): New constant
+	introduced by Linux kernel commit v6.5-rc1~243^2.
+	* tests/move_mount.c: Add checks, update expected output.
+	* NEWS: Mention this change.
+
+2023-07-26  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update KVM_* constants.
+	* src/xlat/kvm_cap.in (KVM_CAP_ARM_EAGER_SPLIT_CHUNK_SIZE,
+	KVM_CAP_ARM_SUPPORTED_BLOCK_SIZES): New constants introduced
+	by Linux kernel commit v6.5-rc1~71^2~7^2~7^2~8.
+	* NEWS: Mention this change.
+
+2023-07-25  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update IORING_SETUP_* constants.
+	* src/xlat/uring_setup_flags.in (IORING_SETUP_SINGLE_ISSUER):
+	New constant introduced by Linux kernel commit v6.0-rc1~181^2~92.
+	(IORING_SETUP_DEFER_TASKRUN): New constant introduced by Linux kernel
+	commit  v6.1-rc1~135^2~51.
+	(IORING_SETUP_NO_MMAP): New constant introduced by Linux kernel
+	commit v6.5-rc1~235^2~32.
+	(IORING_SETUP_REGISTERED_FD_ONLY): New constant introduced
+	by Linux kernel commit v6.5-rc1~235^2~31.
+	* tests/io_uring_setup.c (main): Update expected output.
+	* NEWS: Mention this change.
+
+2023-07-24  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update AT_* constants.
+	* src/xlat/name_to_handle_at_flags.in (AT_HANDLE_FID): New constant
+	introduced by Linux kernel v6.5-rc1~146^2~3.
+	* tests/file_handle.c: Update expected output.
+	* NEWS: Mention this change.
+
+2023-07-23  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update NT_* constants.
+	* src/xlat/nt_descriptor_types.in (NT_PPC_DEXCR): New constant
+	introduced by Linux kernel commit v6.5-rc1~121^2~37.
+	(NT_PPC_HASHKEYR): New constant introduced by Linux kernel commit
+	v6.5-rc1~121^2~36.
+	(NT_RISCV_VECTOR): New constant introduced by Linux kernel commit
+	v6.5-rc1~120^2~17^2~15.
+	* NEWS: Mention this change.
+
+2023-07-22  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update BPF_* constants.
+	* src/xlat/bpf_map_flags.in (BPF_F_PATH_FD): New constant introduced
+	by Linux kernel commit v6.5-rc1~163^2~215^2~9.
+	* tests/bpf.c: Update expected output.
+	* NEWS: Mention this change.
+
+2023-07-21  Dmitry V. Levin  <ldv@strace.io>
+
+	tests: explicitly check decoding of SCM_CREDENTIALS control messages.
+	* tests/scm_credentials.c: New file.
+	* tests/pure_executables.list: Add scm_credentials.
+	* tests/.gitignore: Likewise.
+	* tests/gen_tests.in (scm_credentials): New test.
+
+2023-07-20  Dmitry V. Levin  <ldv@strace.io>
+
+	net: implement decoding of SCM_PIDFD control messages.
+	* src/xlat/scmvals.in (SCM_PIDFD): New constant introduced by Linux
+	kernel commit v6.5-rc1~163^2~115^2~3.
+	* src/msghdr.c (print_scm_pidfd): New function.
+	(cmsg_socket_printers) <SCM_PIDFD>: Use it.
+	* tests/scm_pidfd.c: New file.
+	* tests/scm_pidfd-success.c: Likewise.
+	* tests/pure_executables.list: Add scm_pidfd and scm_pidfd-success.
+	* tests/.gitignore: Likewise.
+	* tests/gen_tests.in (scm_pidfd, scm_pidfd-succes): New tests.
+	* NEWS: Mention this change.
+
+2023-07-19  Dmitry V. Levin  <ldv@strace.io>
+
+	net: implement decoding of SO_PEERPIDFD socket option.
+	* src/xlat/sock_options.in (SO_PEERPIDFD): New constant introduced
+	by Linux kernel commit v6.5-rc1~163^2~115^2~2.
+	* src/net.c (print_get_fd): New function.
+	(print_getsockopt) <SO_PEERPIDFD>: Use it to print SO_PEERPIDFD.
+	* tests/sockopt-sol_socket.c (main): Update unknown socket option.
+	* tests/so_peerpidfd.c: New file.
+	* tests/pure_executables.list: Add so_peerpidfd.
+	* tests/.gitignore: Likewise.
+	* tests/gen_tests.in (so_peerpidfd): New test.
+	* NEWS: Mention this change.
+
+2023-07-18  Dmitry V. Levin  <ldv@strace.io>
+
+	net: implement decoding of SO_PASSPIDFD socket option.
+	* src/xlat/sock_options.in (SO_PASSPIDFD): New constant introduced
+	by Linux kernel commit v6.5-rc1~163^2~115^2~3.
+	* src/net.c (print_getsockopt, print_setsockopt) <SO_PASSPIDFD>: Print it.
+	* tests/sockopt-sol_socket.c (main): Test it.
+	* NEWS: Mention this change.
+
+2023-07-17  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	print_utils: add missing license header.
+
+2023-07-17  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	macros: mention --enable-bundled=yes in CHECK_{TYPE,IOCTL}_SIZE assert messages
+	These macros are used to check that the types provided in the kernel
+	headers have the expected characteristics, and most of them (if not all)
+	are bundled with strace itself, so it might have sense to provide a hint
+	to people who are not interested in waiting for the upstream to accommodate
+	for the UAPI changes and just want to get strace built that may
+	be of some help and save some time and effort spent on finding the option
+	themselves.
+
+	* src/macros.h (CHECK_TYPE_SIZE, CHECK_IOCTL_SIZE): Mention
+	--enable-bundled=yes configure option in the assertion failure message.
+
+2023-07-11  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	syscall: keep the s_prev_ent if the current syscall is restart_syscall.
+	It allows showing the original syscall in the cases where a syscall
+	interrupted repeatedly and avoid "resuming interrupted restart_syscall":
+
+	    clock_nanosleep(CLOCK_REALTIME, 0, {tv_sec=0, tv_nsec=222222222}, {tv_sec=0, tv_nsec=211140476}) = ? ERESTART_RESTARTBLOCK (Interrupted by signal)
+	    --- SIGALRM {si_signo=SIGALRM, si_code=SI_KERNEL} ---
+	    restart_syscall(<... resuming interrupted clock_nanosleep ...>) = ? ERESTART_RESTARTBLOCK (Interrupted by signal)
+	    --- SIGALRM {si_signo=SIGALRM, si_code=SI_KERNEL} ---
+	    restart_syscall(<... resuming interrupted restart_syscall ...>) = ? ERESTART_RESTARTBLOCK (Interrupted by signal)
+	    [...]
+
+	* src/syscall.c (syscall_exiting_trace): store either tcp->s_prev_ent
+	or tcp->s_ent as a new value for tcp->s_prev_ent depending on whether
+	the current sen is SEN_restart_syscall.
+	* tests/restart_syscall.c: Make the interval timer trigger repeatedly,
+	check for the absence of "resuming interrupted restart_syscall" output.
+
+	References: https://bugzilla.redhat.com/2148516
+
+2023-07-09  Dmitry V. Levin  <ldv@strace.io>
+
+	bundled: update linux UAPI headers to v6.5-rc1.
+	* bundled/linux/include/uapi/linux/counter.h: Update to
+	headers_install'ed Linux kernel v6.5-rc1.
+	* bundled/linux/include/uapi/linux/fcntl.h: Likewise.
+	* bundled/linux/include/uapi/linux/if_link.h: Likewise.
+	* bundled/linux/include/uapi/linux/io_uring.h: Likewise.
+	* bundled/linux/include/uapi/linux/mount.h: Likewise.
+	* bundled/linux/include/uapi/linux/mptcp.h: Likewise.
+	* bundled/linux/include/uapi/linux/netfilter/nf_tables.h: Likewise.
+	* bundled/linux/include/uapi/linux/pkt_sched.h: Likewise.
+	* bundled/linux/include/uapi/linux/prctl.h: Likewise.
+	* bundled/linux/include/uapi/linux/types.h: Likewise.
+	* bundled/linux/include/uapi/linux/v4l2-controls.h: Likewise.
+	* bundled/linux/include/uapi/linux/version.h: Likewise.
+	* bundled/linux/include/uapi/linux/videodev2.h: Likewise.
+
+	ptp: add max_phase_adj field and update rsv field of struct ptp_clock_caps
+	* bundled/linux/include/uapi/linux/ptp_clock.h (struct ptp_clock_caps):
+	Add max_phase_adj field and update rsv field following the change
+	introduced by Linux kernel commit v6.5-rc1~163^2~65^2~4.
+	* src/ptp.c (ptp_ioctl): Likewise.
+	* tests/ioctl_ptp.c (test_no_device): Update expected output.
+
+	io_uring: rename resv2 fields of io_[cs]qring_offsets to user_addr.
+	* bundled/linux/include/uapi/linux/io_uring.h (struct io_sqring_offsets,
+	struct io_cqring_offsets): Rename resv2 to user_addr following
+	the change introduced by Linux kernel commit v6.5-rc1~235^2~32.
+	* src/io_uring.c (print_io_sqring_offsets, print_io_cqring_offsets):
+	Likewise.
+	* tests/io_uring_setup.c (main): Update expected output.
+
+2023-06-30  Dmitry V. Levin  <ldv@strace.io>
+
+	exec_or_die: install seccomp filter before setreuid.
+	While we strive to install the seccomp filter as late as possible before
+	the execve call, in --user mode this has an undesired side effect:
+	the setreuid call strips CAP_SYS_ADMIN, making PR_SET_NO_NEW_PRIVS call
+	a necessity, which results to the tracee less privileged than in the
+	case when --seccomp-bpf mode was not enabled.
+
+	Workaround this by moving the installation of the seccomp filter before
+	the setreuid call in --user mode.
+
+	* src/strace.c (maybe_init_seccomp_filter): New function, a thin wrapper
+	around init_seccomp_filter.
+	(exec_or_die): Invoke maybe_init_seccomp_filter instead of
+	init_seccomp_filter before the execve call, limit the invocation
+	to username == NULL case.
+	(exec_or_die) <username != NULL>: Invoke maybe_init_seccomp_filter
+	before the setreuid call.
+
+	Resolves: https://github.com/strace/strace/issues/126
+
+2023-06-29  Dmitry V. Levin  <ldv@strace.io>
+
+	exec_or_die: remove incomprehensible setreuid invocation.
+	Since the very first commit setreuid is invoked in geteuid() != 0
+	case without any plausible explanation.  It makes little sense to
+	install strace as a setuid-nonroot executable in the first place,
+	and even in that case it is unclear why one would like to drop the
+	effective nonzero uid before the execve.
+
+	* src/strace.c (exec_or_die) <!username && geteuid() != 0>: Remove.
+
+2023-06-28  Dmitry V. Levin  <ldv@strace.io>
+
+	exec_or_die: restore SIGCHLD handler earlier.
+	When --daemonize mode is not enabled, the disposition of SIGCHLD is not
+	relevant to the child process, so in that case sigaction can be called
+	before the PTRACE_TRACEME call.
+
+	* src/strace.c (exec_or_die) <!daemonized_tracer>: Restore SIGCHLD
+	handler before PTRACE_TRACEME.
+
+2023-06-27  Dmitry V. Levin  <ldv@strace.io>
+
+	Post-release administrivia.
+	* NEWS: Add a header line for the next release.
+	* debian/changelog.in: Add a changelog entry for 6.4-1.
+	* strace.spec.in: Likewise.
+
 2023-06-26  Dmitry V. Levin  <ldv@strace.io>
 
 	Prepare for 6.4 release.

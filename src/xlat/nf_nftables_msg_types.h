@@ -114,6 +114,9 @@ static const struct xlat_data nf_nftables_msg_types_xdata[] = {
  [NFT_MSG_DESTROYFLOWTABLE] = XLAT(NFT_MSG_DESTROYFLOWTABLE),
  #define XLAT_VAL_32 ((unsigned) (NFT_MSG_DESTROYFLOWTABLE))
  #define XLAT_STR_32 STRINGIFY(NFT_MSG_DESTROYFLOWTABLE)
+ [NFT_MSG_GETSETELEM_RESET] = XLAT(NFT_MSG_GETSETELEM_RESET),
+ #define XLAT_VAL_33 ((unsigned) (NFT_MSG_GETSETELEM_RESET))
+ #define XLAT_STR_33 STRINGIFY(NFT_MSG_GETSETELEM_RESET)
 };
 static
 const struct xlat nf_nftables_msg_types[1] = { {
@@ -220,6 +223,9 @@ const struct xlat nf_nftables_msg_types[1] = { {
 #  ifdef XLAT_VAL_32
   | XLAT_VAL_32
 #  endif
+#  ifdef XLAT_VAL_33
+  | XLAT_VAL_33
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -321,6 +327,9 @@ const struct xlat nf_nftables_msg_types[1] = { {
 #  ifdef XLAT_STR_32
   + sizeof(XLAT_STR_32)
 #  endif
+#  ifdef XLAT_STR_33
+  + sizeof(XLAT_STR_33)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -391,6 +400,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_31
 #  undef XLAT_STR_32
 #  undef XLAT_VAL_32
+#  undef XLAT_STR_33
+#  undef XLAT_VAL_33
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */
