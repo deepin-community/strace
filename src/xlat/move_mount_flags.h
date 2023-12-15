@@ -36,6 +36,9 @@ static const struct xlat_data move_mount_flags_xdata[] = {
  XLAT(MOVE_MOUNT_SET_GROUP),
  #define XLAT_VAL_6 ((unsigned) (MOVE_MOUNT_SET_GROUP))
  #define XLAT_STR_6 STRINGIFY(MOVE_MOUNT_SET_GROUP)
+ XLAT(MOVE_MOUNT_BENEATH),
+ #define XLAT_VAL_7 ((unsigned) (MOVE_MOUNT_BENEATH))
+ #define XLAT_STR_7 STRINGIFY(MOVE_MOUNT_BENEATH)
 };
 static
 const struct xlat move_mount_flags[1] = { {
@@ -64,6 +67,9 @@ const struct xlat move_mount_flags[1] = { {
 #  ifdef XLAT_VAL_6
   | XLAT_VAL_6
 #  endif
+#  ifdef XLAT_VAL_7
+  | XLAT_VAL_7
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -87,6 +93,9 @@ const struct xlat move_mount_flags[1] = { {
 #  ifdef XLAT_STR_6
   + sizeof(XLAT_STR_6)
 #  endif
+#  ifdef XLAT_STR_7
+  + sizeof(XLAT_STR_7)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -105,6 +114,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_5
 #  undef XLAT_STR_6
 #  undef XLAT_VAL_6
+#  undef XLAT_STR_7
+#  undef XLAT_VAL_7
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

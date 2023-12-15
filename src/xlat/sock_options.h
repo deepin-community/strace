@@ -1769,6 +1769,56 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 # define SO_RCVMARK 75
 #endif
 #endif
+#if defined __sparc__
+#if defined(SO_PASSPIDFD) || (defined(HAVE_DECL_SO_PASSPIDFD) && HAVE_DECL_SO_PASSPIDFD)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((SO_PASSPIDFD) == (85), "SO_PASSPIDFD != 85");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define SO_PASSPIDFD 85
+#endif
+#elif defined __hppa__
+#if defined(SO_PASSPIDFD) || (defined(HAVE_DECL_SO_PASSPIDFD) && HAVE_DECL_SO_PASSPIDFD)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((SO_PASSPIDFD) == (16458), "SO_PASSPIDFD != 16458");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define SO_PASSPIDFD 16458
+#endif
+#else
+#if defined(SO_PASSPIDFD) || (defined(HAVE_DECL_SO_PASSPIDFD) && HAVE_DECL_SO_PASSPIDFD)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((SO_PASSPIDFD) == (76), "SO_PASSPIDFD != 76");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define SO_PASSPIDFD 76
+#endif
+#endif
+#if defined __sparc__
+#if defined(SO_PEERPIDFD) || (defined(HAVE_DECL_SO_PEERPIDFD) && HAVE_DECL_SO_PEERPIDFD)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((SO_PEERPIDFD) == (86), "SO_PEERPIDFD != 86");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define SO_PEERPIDFD 86
+#endif
+#elif defined __hppa__
+#if defined(SO_PEERPIDFD) || (defined(HAVE_DECL_SO_PEERPIDFD) && HAVE_DECL_SO_PEERPIDFD)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((SO_PEERPIDFD) == (16459), "SO_PEERPIDFD != 16459");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define SO_PEERPIDFD 16459
+#endif
+#else
+#if defined(SO_PEERPIDFD) || (defined(HAVE_DECL_SO_PEERPIDFD) && HAVE_DECL_SO_PEERPIDFD)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((SO_PEERPIDFD) == (77), "SO_PEERPIDFD != 77");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define SO_PEERPIDFD 77
+#endif
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -2774,6 +2824,34 @@ static const struct xlat_data sock_options_xdata[] = {
  #define XLAT_VAL_211 ((unsigned) (SO_RCVMARK))
  #define XLAT_STR_211 STRINGIFY(SO_RCVMARK)
 #endif
+
+#if defined __sparc__
+ XLAT(SO_PASSPIDFD),
+ #define XLAT_VAL_212 ((unsigned) (SO_PASSPIDFD))
+ #define XLAT_STR_212 STRINGIFY(SO_PASSPIDFD)
+#elif defined __hppa__
+ XLAT(SO_PASSPIDFD),
+ #define XLAT_VAL_213 ((unsigned) (SO_PASSPIDFD))
+ #define XLAT_STR_213 STRINGIFY(SO_PASSPIDFD)
+#else
+ XLAT(SO_PASSPIDFD),
+ #define XLAT_VAL_214 ((unsigned) (SO_PASSPIDFD))
+ #define XLAT_STR_214 STRINGIFY(SO_PASSPIDFD)
+#endif
+
+#if defined __sparc__
+ XLAT(SO_PEERPIDFD),
+ #define XLAT_VAL_215 ((unsigned) (SO_PEERPIDFD))
+ #define XLAT_STR_215 STRINGIFY(SO_PEERPIDFD)
+#elif defined __hppa__
+ XLAT(SO_PEERPIDFD),
+ #define XLAT_VAL_216 ((unsigned) (SO_PEERPIDFD))
+ #define XLAT_STR_216 STRINGIFY(SO_PEERPIDFD)
+#else
+ XLAT(SO_PEERPIDFD),
+ #define XLAT_VAL_217 ((unsigned) (SO_PEERPIDFD))
+ #define XLAT_STR_217 STRINGIFY(SO_PEERPIDFD)
+#endif
 };
 static
 const struct xlat sock_options[1] = { {
@@ -3417,6 +3495,24 @@ const struct xlat sock_options[1] = { {
 #  ifdef XLAT_VAL_211
   | XLAT_VAL_211
 #  endif
+#  ifdef XLAT_VAL_212
+  | XLAT_VAL_212
+#  endif
+#  ifdef XLAT_VAL_213
+  | XLAT_VAL_213
+#  endif
+#  ifdef XLAT_VAL_214
+  | XLAT_VAL_214
+#  endif
+#  ifdef XLAT_VAL_215
+  | XLAT_VAL_215
+#  endif
+#  ifdef XLAT_VAL_216
+  | XLAT_VAL_216
+#  endif
+#  ifdef XLAT_VAL_217
+  | XLAT_VAL_217
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -4055,6 +4151,24 @@ const struct xlat sock_options[1] = { {
 #  ifdef XLAT_STR_211
   + sizeof(XLAT_STR_211)
 #  endif
+#  ifdef XLAT_STR_212
+  + sizeof(XLAT_STR_212)
+#  endif
+#  ifdef XLAT_STR_213
+  + sizeof(XLAT_STR_213)
+#  endif
+#  ifdef XLAT_STR_214
+  + sizeof(XLAT_STR_214)
+#  endif
+#  ifdef XLAT_STR_215
+  + sizeof(XLAT_STR_215)
+#  endif
+#  ifdef XLAT_STR_216
+  + sizeof(XLAT_STR_216)
+#  endif
+#  ifdef XLAT_STR_217
+  + sizeof(XLAT_STR_217)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -4483,6 +4597,18 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_210
 #  undef XLAT_STR_211
 #  undef XLAT_VAL_211
+#  undef XLAT_STR_212
+#  undef XLAT_VAL_212
+#  undef XLAT_STR_213
+#  undef XLAT_VAL_213
+#  undef XLAT_STR_214
+#  undef XLAT_VAL_214
+#  undef XLAT_STR_215
+#  undef XLAT_VAL_215
+#  undef XLAT_STR_216
+#  undef XLAT_VAL_216
+#  undef XLAT_STR_217
+#  undef XLAT_VAL_217
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

@@ -19,6 +19,10 @@ PURE_EXECUTABLES = \
   bpf-v \
   brk \
   btrfs \
+  cachestat \
+  cachestat-P \
+  cachestat-fd \
+  cachestat-success \
   caps \
   chdir \
   chmod \
@@ -96,6 +100,7 @@ PURE_EXECUTABLES = \
   fchmod \
   fchmod-y \
   fchmodat \
+  fchmodat2 \
   fchown \
   fchown32 \
   fchownat \
@@ -652,6 +657,9 @@ PURE_EXECUTABLES = \
   sched_xetparam \
   sched_xetscheduler \
   sched_yield \
+  scm_credentials \
+  scm_pidfd \
+  scm_pidfd-success \
   seccomp-filter \
   seccomp_get_action_avail \
   seccomp_get_notif_sizes \
@@ -711,6 +719,7 @@ PURE_EXECUTABLES = \
   so_peercred-Xabbrev \
   so_peercred-Xraw \
   so_peercred-Xverbose \
+  so_peerpidfd \
   sock_filter-v \
   sock_filter-v-Xabbrev \
   sock_filter-v-Xraw \

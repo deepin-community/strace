@@ -1,3 +1,10 @@
+strace (6.5-0.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * New upstream version 6.5. (Closes: #1052118)
+
+ -- Bo YU <tsu.yubo@gmail.com>  Thu, 07 Sep 2023 07:40:21 +0000
+
 strace (6.4-0.1) unstable; urgency=medium
 
   * Non-maintainer upload.

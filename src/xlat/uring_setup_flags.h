@@ -51,6 +51,18 @@ static const struct xlat_data uring_setup_flags_xdata[] = {
  XLAT(IORING_SETUP_CQE32),
  #define XLAT_VAL_11 ((unsigned) (IORING_SETUP_CQE32))
  #define XLAT_STR_11 STRINGIFY(IORING_SETUP_CQE32)
+ XLAT(IORING_SETUP_SINGLE_ISSUER),
+ #define XLAT_VAL_12 ((unsigned) (IORING_SETUP_SINGLE_ISSUER))
+ #define XLAT_STR_12 STRINGIFY(IORING_SETUP_SINGLE_ISSUER)
+ XLAT(IORING_SETUP_DEFER_TASKRUN),
+ #define XLAT_VAL_13 ((unsigned) (IORING_SETUP_DEFER_TASKRUN))
+ #define XLAT_STR_13 STRINGIFY(IORING_SETUP_DEFER_TASKRUN)
+ XLAT(IORING_SETUP_NO_MMAP),
+ #define XLAT_VAL_14 ((unsigned) (IORING_SETUP_NO_MMAP))
+ #define XLAT_STR_14 STRINGIFY(IORING_SETUP_NO_MMAP)
+ XLAT(IORING_SETUP_REGISTERED_FD_ONLY),
+ #define XLAT_VAL_15 ((unsigned) (IORING_SETUP_REGISTERED_FD_ONLY))
+ #define XLAT_STR_15 STRINGIFY(IORING_SETUP_REGISTERED_FD_ONLY)
 };
 static
 const struct xlat uring_setup_flags[1] = { {
@@ -94,6 +106,18 @@ const struct xlat uring_setup_flags[1] = { {
 #  ifdef XLAT_VAL_11
   | XLAT_VAL_11
 #  endif
+#  ifdef XLAT_VAL_12
+  | XLAT_VAL_12
+#  endif
+#  ifdef XLAT_VAL_13
+  | XLAT_VAL_13
+#  endif
+#  ifdef XLAT_VAL_14
+  | XLAT_VAL_14
+#  endif
+#  ifdef XLAT_VAL_15
+  | XLAT_VAL_15
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -132,6 +156,18 @@ const struct xlat uring_setup_flags[1] = { {
 #  ifdef XLAT_STR_11
   + sizeof(XLAT_STR_11)
 #  endif
+#  ifdef XLAT_STR_12
+  + sizeof(XLAT_STR_12)
+#  endif
+#  ifdef XLAT_STR_13
+  + sizeof(XLAT_STR_13)
+#  endif
+#  ifdef XLAT_STR_14
+  + sizeof(XLAT_STR_14)
+#  endif
+#  ifdef XLAT_STR_15
+  + sizeof(XLAT_STR_15)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -160,6 +196,14 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_10
 #  undef XLAT_STR_11
 #  undef XLAT_VAL_11
+#  undef XLAT_STR_12
+#  undef XLAT_VAL_12
+#  undef XLAT_STR_13
+#  undef XLAT_VAL_13
+#  undef XLAT_STR_14
+#  undef XLAT_VAL_14
+#  undef XLAT_STR_15
+#  undef XLAT_VAL_15
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

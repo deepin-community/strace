@@ -24,6 +24,7 @@
 
 #include "bpf_attr.h"
 #include "print_fields.h"
+#include "xmalloc.h"
 
 #include "xlat.h"
 #include "xlat/bpf_attach_type.h"
@@ -88,6 +89,10 @@ union bpf_attr_data {
 	BPF_ATTR_DATA_FIELD(BPF_LINK_CREATE);
 	BPF_ATTR_DATA_FIELD(BPF_LINK_UPDATE);
 	BPF_ATTR_DATA_FIELD(BPF_LINK_GET_FD_BY_ID);
+	BPF_ATTR_DATA_FIELD(BPF_ENABLE_STATS);
+	BPF_ATTR_DATA_FIELD(BPF_ITER_CREATE);
+	BPF_ATTR_DATA_FIELD(BPF_LINK_DETACH);
+	BPF_ATTR_DATA_FIELD(BPF_PROG_BIND_MAP);
 	char char_data[256];
 };
 
@@ -110,6 +115,7 @@ struct bpf_check {
 
 static const kernel_ulong_t long_bits = (kernel_ulong_t) 0xfacefeed00000000ULL;
 static const char *errstr;
+static const char *at_fdcwd_str;
 static const unsigned int sizeof_attr = sizeof(union bpf_attr_data);
 static unsigned int page_size;
 static unsigned long end_of_page;
@@ -833,6 +839,13 @@ init_BPF_OBJ_PIN_attr(struct bpf_attr_check *check, size_t idx)
 	attr->pathname = (uintptr_t) pathname;
 }
 
+static void
+init_BPF_OBJ_PIN_str(struct bpf_attr_check *check, size_t idx)
+{
+	check->str = xasprintf("pathname=NULL, bpf_fd=-1, file_flags=BPF_F_PATH_FD"
+			       ", path_fd=%s", at_fdcwd_str);
+}
+
 static struct bpf_attr_check BPF_OBJ_PIN_checks[] = {
 	{
 		.data = { .BPF_OBJ_PIN_data = { .pathname = 0 } },
@@ -862,6 +875,16 @@ static struct bpf_attr_check BPF_OBJ_PIN_checks[] = {
 		.init_fn = init_BPF_OBJ_PIN_attr,
 		.str = "pathname=\"/sys/fs/bpf/foo/bar\", bpf_fd=-1"
 		       ", file_flags=BPF_F_RDONLY|BPF_F_WRONLY"
+	},
+	{
+		.data = { .BPF_OBJ_PIN_data = {
+			.pathname = 0,
+			.bpf_fd = -1,
+			.file_flags = 0x4000,
+			.path_fd = -100
+		} },
+		.size = offsetofend(struct BPF_OBJ_PIN_struct, path_fd),
+		.init_fn = init_BPF_OBJ_PIN_str,
 	}
 };
 
@@ -1825,6 +1848,67 @@ static const struct bpf_attr_check BPF_LINK_GET_FD_BY_ID_checks[] = {
 	}
 };
 
+static const struct bpf_attr_check BPF_ENABLE_STATS_checks[] = {
+	{
+		.data = { .BPF_ENABLE_STATS_data = { .type = 0 } },
+		.size = offsetofend(struct BPF_ENABLE_STATS_struct, type),
+		.str = "enable_stats={type=BPF_STATS_RUN_TIME}"
+	},
+	{
+		.data = { .BPF_ENABLE_STATS_data = { .type = 1 } },
+		.size = offsetofend(struct BPF_ENABLE_STATS_struct, type),
+		.str = "enable_stats={type=0x1 /* BPF_STATS_??? */}"
+	}
+};
+
+static const struct bpf_attr_check BPF_ITER_CREATE_checks[] = {
+	{
+		.data = { .BPF_ITER_CREATE_data = {
+			.link_fd = -1,
+			.flags = 0
+		} },
+		.size = offsetofend(struct BPF_ITER_CREATE_struct, flags),
+		.str = "iter_create={link_fd=-1, flags=0}"
+	},
+	{
+		.data = { .BPF_ITER_CREATE_data = {
+			.link_fd = -1,
+			.flags = -1U,
+		} },
+		.size = offsetofend(struct BPF_ITER_CREATE_struct, flags),
+		.str = "iter_create={link_fd=-1, flags=0xffffffff}"
+	}
+};
+
+static const struct bpf_attr_check BPF_LINK_DETACH_checks[] = {
+	{
+		.data = { .BPF_LINK_DETACH_data = { .link_fd = -1 } },
+		.size = offsetofend(struct BPF_LINK_DETACH_struct, link_fd),
+		.str = "link_detach={link_fd=-1}"
+	}
+};
+
+static const struct bpf_attr_check BPF_PROG_BIND_MAP_checks[] = {
+	{
+		.data = { .BPF_PROG_BIND_MAP_data = {
+			.prog_fd = -1,
+			.map_fd = -2,
+			.flags = 0
+		} },
+		.size = offsetofend(struct BPF_PROG_BIND_MAP_struct, flags),
+		.str = "prog_bind_map={prog_fd=-1, map_fd=-2, flags=0}"
+	},
+	{
+		.data = { .BPF_PROG_BIND_MAP_data = {
+			.prog_fd = -1,
+			.map_fd = -2,
+			.flags = -1U,
+		} },
+		.size = offsetofend(struct BPF_PROG_BIND_MAP_struct, flags),
+		.str = "prog_bind_map={prog_fd=-1, map_fd=-2, flags=0xffffffff}"
+	}
+};
+
 
 #define CHK(cmd_) \
 	{ \
@@ -1868,10 +1952,21 @@ main(void)
 		CHK(BPF_LINK_UPDATE),
 		CHK(BPF_LINK_GET_NEXT_ID),
 		CHK(BPF_LINK_GET_FD_BY_ID),
+		CHK(BPF_ENABLE_STATS),
+		CHK(BPF_ITER_CREATE),
+		CHK(BPF_LINK_DETACH),
+		CHK(BPF_PROG_BIND_MAP),
 	};
 
 	page_size = get_page_size();
 	end_of_page = (unsigned long) tail_alloc(1) + 1;
+
+	at_fdcwd_str =
+#ifdef YFLAG
+		xasprintf("AT_FDCWD<%s>", get_fd_path(get_dir_fd(".")));
+#else
+		"AT_FDCWD";
+#endif
 
 	for (size_t i = 0; i < ARRAY_SIZE(checks); i++)
 		test_bpf(checks + i);
