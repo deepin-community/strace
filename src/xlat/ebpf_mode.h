@@ -31,6 +31,13 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define BPF_MEM 0x60
 #endif
+#if defined(BPF_MEMSX) || (defined(HAVE_DECL_BPF_MEMSX) && HAVE_DECL_BPF_MEMSX)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((BPF_MEMSX) == (0x80), "BPF_MEMSX != 0x80");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define BPF_MEMSX 0x80
+#endif
 #if defined(BPF_XADD) || (defined(HAVE_DECL_BPF_XADD) && HAVE_DECL_BPF_XADD)
 DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
 static_assert((BPF_XADD) == (0xc0), "BPF_XADD != 0xc0");
@@ -62,9 +69,12 @@ static const struct xlat_data ebpf_mode_xdata[] = {
  XLAT(BPF_MEM),
  #define XLAT_VAL_3 ((unsigned) (BPF_MEM))
  #define XLAT_STR_3 STRINGIFY(BPF_MEM)
+ XLAT(BPF_MEMSX),
+ #define XLAT_VAL_4 ((unsigned) (BPF_MEMSX))
+ #define XLAT_STR_4 STRINGIFY(BPF_MEMSX)
  XLAT(BPF_XADD),
- #define XLAT_VAL_4 ((unsigned) (BPF_XADD))
- #define XLAT_STR_4 STRINGIFY(BPF_XADD)
+ #define XLAT_VAL_5 ((unsigned) (BPF_XADD))
+ #define XLAT_STR_5 STRINGIFY(BPF_XADD)
 };
 static
 const struct xlat ebpf_mode[1] = { {
@@ -87,6 +97,9 @@ const struct xlat ebpf_mode[1] = { {
 #  ifdef XLAT_VAL_4
   | XLAT_VAL_4
 #  endif
+#  ifdef XLAT_VAL_5
+  | XLAT_VAL_5
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -104,6 +117,9 @@ const struct xlat ebpf_mode[1] = { {
 #  ifdef XLAT_STR_4
   + sizeof(XLAT_STR_4)
 #  endif
+#  ifdef XLAT_STR_5
+  + sizeof(XLAT_STR_5)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -118,6 +134,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_3
 #  undef XLAT_STR_4
 #  undef XLAT_VAL_4
+#  undef XLAT_STR_5
+#  undef XLAT_VAL_5
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

@@ -1,3 +1,19 @@
+strace (6.8-1) unstable; urgency=medium
+
+  * Team upload.
+
+  [ Adrien Nader ]
+  * debian/control: use commas before "i.e." in description rather than colon
+
+  [ Bo YU ]
+  * New upstream version 6.8. (Closes: #1060789).
+  * Rebase debian/patches/*
+  * Add 03-fix-arm-time_t-ftbfs.patch to fix FTBFS. (Closes: #1068758)
+  * Depend libunwind and libiberty on more architectures. 
+    Thanks to Balint Reczey. See MR!3.
+
+ -- Bo YU <tsu.yubo@gmail.com>  Fri, 10 May 2024 14:53:53 +0800
+
 strace (6.5-0.1) unstable; urgency=medium
 
   * Non-maintainer upload.

@@ -2,7 +2,7 @@
  * Check decoding of landlock_create_ruleset syscall.
  *
  * Copyright (c) 2021 Eugene Syromyatnikov <evgsyr@gmail.com>
- * Copyright (c) 2021-2023 The strace developers.
+ * Copyright (c) 2021-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -45,8 +45,7 @@
 static const char *errstr;
 
 static long
-sys_landlock_create_ruleset(struct landlock_ruleset_attr *attr,
-			    kernel_ulong_t size, unsigned int flags)
+sys_landlock_create_ruleset(void *attr, kernel_ulong_t size, unsigned int flags)
 
 {
 	static const kernel_ulong_t fill =
@@ -72,7 +71,12 @@ main(void)
 
 	SKIP_IF_PROC_IS_UNAVAILABLE;
 
-	TAIL_ALLOC_OBJECT_VAR_PTR(struct landlock_ruleset_attr, attr);
+	TAIL_ALLOC_OBJECT_CONST_PTR(uint64_t, handled_access_fs);
+	struct attr {
+		uint64_t handled_access_fs;
+		uint64_t handled_access_net;
+	};
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct attr, attr);
 	long rc;
 
 	/* All zeroes */
@@ -104,7 +108,8 @@ main(void)
 	       0xbadfacec, sprintrc(rc));
 
 	/* Bogus addr, size, flags */
-	rc = sys_landlock_create_ruleset(attr + 1, bogus_size, 0xbadcaffe);
+	rc = sys_landlock_create_ruleset(attr + 1, bogus_size,
+					 0xbadcaffe);
 	printf("landlock_create_ruleset(%p, %llu"
 	       ", 0xbadcaffe /* LANDLOCK_CREATE_RULESET_??? */) = %s"
 	       INJ_FD_STR,
@@ -112,27 +117,71 @@ main(void)
 
 	/* Size is too small */
 	for (size_t i = 0; i < 8; i++) {
-		rc = sys_landlock_create_ruleset(attr, i, 0);
+		rc = sys_landlock_create_ruleset(handled_access_fs, i, 0);
 		printf("landlock_create_ruleset(%p, %zu, 0) = %s" INJ_FD_STR,
-		       attr, i, errstr);
+		       handled_access_fs, i, errstr);
 	}
 
 	/* Perform syscalls with valid attr ptr */
 	static const struct {
 		uint64_t val;
 		const char *str;
-	} attr_vals[] = {
+	} fs_vals[] = {
 		{ ARG_STR(LANDLOCK_ACCESS_FS_EXECUTE) },
 		{ ARG_ULL_STR(LANDLOCK_ACCESS_FS_EXECUTE|LANDLOCK_ACCESS_FS_READ_FILE|LANDLOCK_ACCESS_FS_READ_DIR|LANDLOCK_ACCESS_FS_REMOVE_FILE|LANDLOCK_ACCESS_FS_MAKE_CHAR|LANDLOCK_ACCESS_FS_MAKE_DIR|LANDLOCK_ACCESS_FS_MAKE_SOCK|LANDLOCK_ACCESS_FS_MAKE_FIFO|LANDLOCK_ACCESS_FS_MAKE_BLOCK|LANDLOCK_ACCESS_FS_MAKE_SYM|LANDLOCK_ACCESS_FS_REFER|LANDLOCK_ACCESS_FS_TRUNCATE|0xdebeefeddeca8000) },
 		{ ARG_ULL_STR(0xdebeefeddeca8000)
 			" /* LANDLOCK_ACCESS_FS_??? */" },
+	}, net_vals[] = {
+		{ ARG_STR(LANDLOCK_ACCESS_NET_BIND_TCP) },
+		{ ARG_STR(LANDLOCK_ACCESS_NET_CONNECT_TCP) },
+		{ ARG_ULL_STR(LANDLOCK_ACCESS_NET_BIND_TCP|LANDLOCK_ACCESS_NET_CONNECT_TCP|0xfffffffffffffffc) },
+		{ ARG_ULL_STR(0xfffffffffffffffc) " /* LANDLOCK_ACCESS_NET_??? */" },
 	};
-	static const kernel_ulong_t sizes[] = { 8, 12, 16 };
-	for (size_t i = 0; i < ARRAY_SIZE(attr_vals); i++) {
+
+	for (size_t i = 0; i < ARRAY_SIZE(fs_vals); i++) {
+		const char *fd_str = FD_PATH;
+
+		*handled_access_fs = fs_vals[i].val;
+		rc = sys_landlock_create_ruleset(handled_access_fs,
+						 sizeof(*handled_access_fs), 0);
+
+#if DECODE_FD
+		/*
+		 * The ABI has been broken in commit v5.18-rc1~88^2
+		 * by adding brackets to the link value, hence, we can't
+		 * rely on a specific name anymore and have to fetch it
+		 * ourselves.
+		 */
+		if (rc >= 0) {
+			static char buf[256];
+			char *path = xasprintf("/proc/self/fd/%ld", rc);
+			ssize_t ret = readlink(path, buf + 1,
+					       sizeof(buf) - 3);
+			free(path);
+
+			if (ret >= 0) {
+				buf[0] = '<';
+				buf[ret + 1] = '>';
+				buf[ret + 2] = '\0';
+				fd_str = buf;
+			}
+		}
+#endif
+
+		printf("landlock_create_ruleset({handled_access_fs=%s}"
+		       ", %llu, 0) = %s%s" INJ_STR,
+		       fs_vals[i].str,
+		       (unsigned long long) sizeof(*handled_access_fs),
+		       errstr, rc >= 0 ? fd_str : "");
+	}
+
+	static const kernel_ulong_t sizes[] = { sizeof(*attr), sizeof(*attr) + 4 };
+	for (size_t i = 0; i < ARRAY_SIZE(net_vals); i++) {
 		for (size_t j = 0; j < ARRAY_SIZE(sizes); j++) {
 			const char *fd_str = FD_PATH;
 
-			attr->handled_access_fs = attr_vals[i].val;
+			attr->handled_access_fs = 0;
+			attr->handled_access_net = net_vals[i].val;
 			rc = sys_landlock_create_ruleset(attr, sizes[j], 0);
 
 #if DECODE_FD
@@ -158,10 +207,10 @@ main(void)
 			}
 #endif
 
-			printf("landlock_create_ruleset({handled_access_fs=%s"
-			       "%s}, %llu, 0) = %s%s" INJ_STR,
-			       attr_vals[i].str,
-			       sizes[j] > sizeof(*attr) ? ", ..." : "",
+			printf("landlock_create_ruleset({handled_access_fs=0"
+			       ", handled_access_net=%s%s}, %llu, 0) = %s%s" INJ_STR,
+			       net_vals[i].str,
+			       sizes[j] > sizes[0] ? ", ..." : "",
 			       (unsigned long long) sizes[j],
 			       errstr, rc >= 0 ? fd_str : "");
 		}

@@ -685,6 +685,74 @@ static_assert((unsigned long long) (SOL_XDP)
 #undef XLAT_PREV_VAL
 #define XLAT_PREV_VAL (SOL_XDP)
 #endif
+#if defined(SOL_MPTCP) || (defined(HAVE_DECL_SOL_MPTCP) && HAVE_DECL_SOL_MPTCP)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((SOL_MPTCP) == (284), "SOL_MPTCP != 284");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define SOL_MPTCP 284
+#endif
+#if defined(SOL_MPTCP) || (defined(HAVE_DECL_SOL_MPTCP) && HAVE_DECL_SOL_MPTCP)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (SOL_MPTCP)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: SOL_MPTCP"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (SOL_MPTCP)
+#endif
+#if defined(SOL_MCTP) || (defined(HAVE_DECL_SOL_MCTP) && HAVE_DECL_SOL_MCTP)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((SOL_MCTP) == (285), "SOL_MCTP != 285");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define SOL_MCTP 285
+#endif
+#if defined(SOL_MCTP) || (defined(HAVE_DECL_SOL_MCTP) && HAVE_DECL_SOL_MCTP)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (SOL_MCTP)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: SOL_MCTP"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (SOL_MCTP)
+#endif
+#if defined(SOL_SMC) || (defined(HAVE_DECL_SOL_SMC) && HAVE_DECL_SOL_SMC)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((SOL_SMC) == (286), "SOL_SMC != 286");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define SOL_SMC 286
+#endif
+#if defined(SOL_SMC) || (defined(HAVE_DECL_SOL_SMC) && HAVE_DECL_SOL_SMC)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (SOL_SMC)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: SOL_SMC"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (SOL_SMC)
+#endif
+#if defined(SOL_VSOCK) || (defined(HAVE_DECL_SOL_VSOCK) && HAVE_DECL_SOL_VSOCK)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((SOL_VSOCK) == (287), "SOL_VSOCK != 287");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define SOL_VSOCK 287
+#endif
+#if defined(SOL_VSOCK) || (defined(HAVE_DECL_SOL_VSOCK) && HAVE_DECL_SOL_VSOCK)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (SOL_VSOCK)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: SOL_VSOCK"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (SOL_VSOCK)
+#endif
 #if defined __alpha__ || defined __hppa__ || defined __mips__ || defined __sparc__
 #if defined(SOL_SOCKET) || (defined(HAVE_DECL_SOL_SOCKET) && HAVE_DECL_SOL_SOCKET)
 DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
@@ -834,10 +902,22 @@ static const struct xlat_data socketlayers_xdata[] = {
  XLAT(SOL_XDP),
  #define XLAT_VAL_39 ((unsigned) (SOL_XDP))
  #define XLAT_STR_39 STRINGIFY(SOL_XDP)
+ XLAT(SOL_MPTCP),
+ #define XLAT_VAL_40 ((unsigned) (SOL_MPTCP))
+ #define XLAT_STR_40 STRINGIFY(SOL_MPTCP)
+ XLAT(SOL_MCTP),
+ #define XLAT_VAL_41 ((unsigned) (SOL_MCTP))
+ #define XLAT_STR_41 STRINGIFY(SOL_MCTP)
+ XLAT(SOL_SMC),
+ #define XLAT_VAL_42 ((unsigned) (SOL_SMC))
+ #define XLAT_STR_42 STRINGIFY(SOL_SMC)
+ XLAT(SOL_VSOCK),
+ #define XLAT_VAL_43 ((unsigned) (SOL_VSOCK))
+ #define XLAT_STR_43 STRINGIFY(SOL_VSOCK)
 #if defined __alpha__ || defined __hppa__ || defined __mips__ || defined __sparc__
  XLAT(SOL_SOCKET),
- #define XLAT_VAL_40 ((unsigned) (SOL_SOCKET))
- #define XLAT_STR_40 STRINGIFY(SOL_SOCKET)
+ #define XLAT_VAL_44 ((unsigned) (SOL_SOCKET))
+ #define XLAT_STR_44 STRINGIFY(SOL_SOCKET)
 #endif
 };
 const struct xlat socketlayers[1] = { {
@@ -968,6 +1048,18 @@ const struct xlat socketlayers[1] = { {
 #  ifdef XLAT_VAL_40
   | XLAT_VAL_40
 #  endif
+#  ifdef XLAT_VAL_41
+  | XLAT_VAL_41
+#  endif
+#  ifdef XLAT_VAL_42
+  | XLAT_VAL_42
+#  endif
+#  ifdef XLAT_VAL_43
+  | XLAT_VAL_43
+#  endif
+#  ifdef XLAT_VAL_44
+  | XLAT_VAL_44
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -1093,6 +1185,18 @@ const struct xlat socketlayers[1] = { {
 #  ifdef XLAT_STR_40
   + sizeof(XLAT_STR_40)
 #  endif
+#  ifdef XLAT_STR_41
+  + sizeof(XLAT_STR_41)
+#  endif
+#  ifdef XLAT_STR_42
+  + sizeof(XLAT_STR_42)
+#  endif
+#  ifdef XLAT_STR_43
+  + sizeof(XLAT_STR_43)
+#  endif
+#  ifdef XLAT_STR_44
+  + sizeof(XLAT_STR_44)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -1179,6 +1283,14 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_39
 #  undef XLAT_STR_40
 #  undef XLAT_VAL_40
+#  undef XLAT_STR_41
+#  undef XLAT_VAL_41
+#  undef XLAT_STR_42
+#  undef XLAT_VAL_42
+#  undef XLAT_STR_43
+#  undef XLAT_VAL_43
+#  undef XLAT_STR_44
+#  undef XLAT_VAL_44
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

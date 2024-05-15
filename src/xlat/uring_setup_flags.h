@@ -63,6 +63,9 @@ static const struct xlat_data uring_setup_flags_xdata[] = {
  XLAT(IORING_SETUP_REGISTERED_FD_ONLY),
  #define XLAT_VAL_15 ((unsigned) (IORING_SETUP_REGISTERED_FD_ONLY))
  #define XLAT_STR_15 STRINGIFY(IORING_SETUP_REGISTERED_FD_ONLY)
+ XLAT(IORING_SETUP_NO_SQARRAY),
+ #define XLAT_VAL_16 ((unsigned) (IORING_SETUP_NO_SQARRAY))
+ #define XLAT_STR_16 STRINGIFY(IORING_SETUP_NO_SQARRAY)
 };
 static
 const struct xlat uring_setup_flags[1] = { {
@@ -118,6 +121,9 @@ const struct xlat uring_setup_flags[1] = { {
 #  ifdef XLAT_VAL_15
   | XLAT_VAL_15
 #  endif
+#  ifdef XLAT_VAL_16
+  | XLAT_VAL_16
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -168,6 +174,9 @@ const struct xlat uring_setup_flags[1] = { {
 #  ifdef XLAT_STR_15
   + sizeof(XLAT_STR_15)
 #  endif
+#  ifdef XLAT_STR_16
+  + sizeof(XLAT_STR_16)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -204,6 +213,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_14
 #  undef XLAT_STR_15
 #  undef XLAT_VAL_15
+#  undef XLAT_STR_16
+#  undef XLAT_VAL_16
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

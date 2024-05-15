@@ -2,7 +2,7 @@
  * Copyright (c) 1991, 1992 Paul Kranenburg <pk@cs.few.eur.nl>
  * Copyright (c) 1993 Branko Lankester <branko@hacktic.nl>
  * Copyright (c) 1993, 1994, 1995, 1996 Rick Sladkey <jrs@world.std.com>
- * Copyright (c) 1999-2023 The strace developers.
+ * Copyright (c) 1999-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: LGPL-2.1-or-later
@@ -71,6 +71,10 @@ extern char *stpcpy(char *dst, const char *src);
 # endif
 # ifndef DEFAULT_ACOLUMN
 #  define DEFAULT_ACOLUMN	40	/* default alignment column for results */
+# endif
+# ifndef DEFAULT_STACK_TRACE_FRAME_LIMIT
+/* Default limit for the amount of frames obtained during syscall backtrace.  */
+#  define DEFAULT_STACK_TRACE_FRAME_LIMIT 256
 # endif
 /*
  * Maximum number of args to a syscall.
@@ -407,16 +411,19 @@ extern const struct_sysent stub_sysent;
 extern const struct xlat addrfams[];
 extern const struct xlat arp_hardware_types[];
 extern const struct xlat at_flags[];
+extern const struct xlat audit_arch[];
 extern const struct xlat clocknames[];
 extern const struct xlat dirent_types[];
 extern const struct xlat ethernet_protocols[];
-extern const struct xlat inet_protocols[];
 extern const struct xlat evdev_abs[];
-extern const struct xlat audit_arch[];
 extern const struct xlat evdev_ev[];
+extern const struct xlat fsmagic[];
+extern const struct xlat futexbitset[];
 extern const struct xlat iffflags[];
+extern const struct xlat inet_protocols[];
 extern const struct xlat ip_type_of_services[];
 extern const struct xlat ipc_private[];
+extern const struct xlat mount_attr_attr[];
 extern const struct xlat msg_flags[];
 extern const struct xlat netlink_protocols[];
 extern const struct xlat nl_bridge_vlan_flags[];
@@ -544,13 +551,17 @@ enum xflag_opts {
 extern unsigned xflag;
 extern bool followfork;
 extern bool output_separately;
+enum stack_trace_modes {
+	STACK_TRACE_OFF,
+	STACK_TRACE_ON,
+	STACK_TRACE_WITH_SRCINFO,
+};
 # ifdef ENABLE_STACKTRACE
 /* if this is true do the stack trace for every system call */
-extern bool stack_trace_enabled;
+extern enum stack_trace_modes stack_trace_mode;
 # else
-#  define stack_trace_enabled 0
+#  define stack_trace_mode STACK_TRACE_OFF
 # endif
-extern unsigned ptrace_setoptions;
 extern unsigned max_strlen;
 extern unsigned os_release;
 # undef KERNEL_VERSION
@@ -671,11 +682,14 @@ struct finfo {
 	bool deleted;
 	struct {
 		unsigned int major, minor;
+
+		/* Use only when major == 5, minor == 2 (/dev/ptmx) */
+		int tty_index;
 	} dev;
 };
 
 extern struct finfo *
-get_finfo_for_dev(const char *path, struct finfo *finfo);
+get_finfo_for_dev(pid_t pid, int fd, const char *path, struct finfo *finfo);
 
 extern int
 term_ioctl_decode_command_number(struct tcb *tcp,
@@ -724,6 +738,9 @@ tfetch_mem_ignore_syserror(struct tcb *tcp, const kernel_ulong_t addr,
 {
 	return tfetch_mem64_ignore_syserror(tcp, addr, len, laddr);
 }
+# define tfetch_obj_ignore_syserror(pid, addr, objp)			\
+	tfetch_mem_ignore_syserror((pid), (addr),			\
+				   sizeof(*(objp)), (void *) (objp))
 
 /**
  * @return 0 on success, -1 on error (and print addr).
@@ -1561,7 +1578,7 @@ extern void print_ticks_d(int64_t val, long freq, unsigned int precision);
 extern void print_clock_t(uint64_t val);
 
 # ifdef ENABLE_STACKTRACE
-extern void unwind_init(void);
+extern void unwind_init(bool, int);
 extern void unwind_tcb_init(struct tcb *);
 extern void unwind_tcb_fin(struct tcb *);
 extern void unwind_tcb_print(struct tcb *);
@@ -1893,7 +1910,7 @@ truncate_kulong_to_current_klongsize(const kernel_ulong_t v)
  * Sign-extend an unsigned integer type to long long.
  */
 # define sign_extend_unsigned_to_ll(v) \
-	(sizeof(v) == sizeof(char) ? (long long) (char) (v) : \
+	(sizeof(v) == sizeof(char) ? (long long) (signed char) (v) : \
 	 sizeof(v) == sizeof(short) ? (long long) (short) (v) : \
 	 sizeof(v) == sizeof(int) ? (long long) (int) (v) : \
 	 sizeof(v) == sizeof(long) ? (long long) (long) (v) : \

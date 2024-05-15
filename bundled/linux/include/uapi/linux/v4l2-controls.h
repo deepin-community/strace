@@ -115,13 +115,11 @@ enum v4l2_colorfx {
 
 /* USER-class private control IDs */
 
-#ifndef __KERNEL__
 /*
  * The base for the meye driver controls. This driver was removed, but
  * we keep this define in case any software still uses it.
  */
 #define V4L2_CID_USER_MEYE_BASE			(V4L2_CID_USER_BASE + 0x1000)
-#endif
 
 /* The base for the bttv driver controls.
  * We reserve 32 controls for this driver. */
@@ -202,6 +200,18 @@ enum v4l2_colorfx {
  * We reserve 16 controls for this driver.
  */
 #define V4L2_CID_USER_ASPEED_BASE		(V4L2_CID_USER_BASE + 0x11a0)
+
+/*
+ * The base for Nuvoton NPCM driver controls.
+ * We reserve 16 controls for this driver.
+ */
+#define V4L2_CID_USER_NPCM_BASE			(V4L2_CID_USER_BASE + 0x11b0)
+
+/*
+ * The base for THine THP7312 driver controls.
+ * We reserve 32 controls for this driver.
+ */
+#define V4L2_CID_USER_THP7312_BASE		(V4L2_CID_USER_BASE + 0x11c0)
 
 /* MPEG-class control IDs */
 /* The MPEG controls are applicable to all codec controls

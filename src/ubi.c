@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2012 Mike Frysinger <vapier@gentoo.org>
- * Copyright (c) 2012-2021 The strace developers.
+ * Copyright (c) 2012-2024 The strace developers.
  *
  * SPDX-License-Identifier: LGPL-2.1-or-later
  */
@@ -146,6 +146,10 @@ decode_UBI_IOCATT(struct tcb *const tcp, const kernel_ulong_t arg)
 		PRINT_FIELD_D(attach, vid_hdr_offset);
 		tprint_struct_next();
 		PRINT_FIELD_D(attach, max_beb_per1024);
+		tprint_struct_next();
+		PRINT_FIELD_D(attach, disable_fm);
+		tprint_struct_next();
+		PRINT_FIELD_D(attach, need_resv_pool);
 		tprint_struct_end();
 		return 0;
 	}

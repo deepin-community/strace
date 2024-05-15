@@ -31,6 +31,13 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define QFMT_VFS_V1 4
 #endif
+#if defined(QFMT_SHMEM) || (defined(HAVE_DECL_QFMT_SHMEM) && HAVE_DECL_QFMT_SHMEM)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((QFMT_SHMEM) == (5), "QFMT_SHMEM != 5");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define QFMT_SHMEM 5
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -55,6 +62,9 @@ static const struct xlat_data quota_formats_xdata[] = {
  [QFMT_VFS_V1] = XLAT(QFMT_VFS_V1),
  #define XLAT_VAL_3 ((unsigned) (QFMT_VFS_V1))
  #define XLAT_STR_3 STRINGIFY(QFMT_VFS_V1)
+ [QFMT_SHMEM] = XLAT(QFMT_SHMEM),
+ #define XLAT_VAL_4 ((unsigned) (QFMT_SHMEM))
+ #define XLAT_STR_4 STRINGIFY(QFMT_SHMEM)
 };
 static
 const struct xlat quota_formats[1] = { {
@@ -74,6 +84,9 @@ const struct xlat quota_formats[1] = { {
 #  ifdef XLAT_VAL_3
   | XLAT_VAL_3
 #  endif
+#  ifdef XLAT_VAL_4
+  | XLAT_VAL_4
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -88,6 +101,9 @@ const struct xlat quota_formats[1] = { {
 #  ifdef XLAT_STR_3
   + sizeof(XLAT_STR_3)
 #  endif
+#  ifdef XLAT_STR_4
+  + sizeof(XLAT_STR_4)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -100,6 +116,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_2
 #  undef XLAT_STR_3
 #  undef XLAT_VAL_3
+#  undef XLAT_STR_4
+#  undef XLAT_VAL_4
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

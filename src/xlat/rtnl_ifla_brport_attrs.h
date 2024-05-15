@@ -147,6 +147,9 @@ static const struct xlat_data rtnl_ifla_brport_attrs_xdata[] = {
  [IFLA_BRPORT_NEIGH_VLAN_SUPPRESS] = XLAT(IFLA_BRPORT_NEIGH_VLAN_SUPPRESS),
  #define XLAT_VAL_43 ((unsigned) (IFLA_BRPORT_NEIGH_VLAN_SUPPRESS))
  #define XLAT_STR_43 STRINGIFY(IFLA_BRPORT_NEIGH_VLAN_SUPPRESS)
+ [IFLA_BRPORT_BACKUP_NHID] = XLAT(IFLA_BRPORT_BACKUP_NHID),
+ #define XLAT_VAL_44 ((unsigned) (IFLA_BRPORT_BACKUP_NHID))
+ #define XLAT_STR_44 STRINGIFY(IFLA_BRPORT_BACKUP_NHID)
 };
 static
 const struct xlat rtnl_ifla_brport_attrs[1] = { {
@@ -286,6 +289,9 @@ const struct xlat rtnl_ifla_brport_attrs[1] = { {
 #  ifdef XLAT_VAL_43
   | XLAT_VAL_43
 #  endif
+#  ifdef XLAT_VAL_44
+  | XLAT_VAL_44
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -420,6 +426,9 @@ const struct xlat rtnl_ifla_brport_attrs[1] = { {
 #  ifdef XLAT_STR_43
   + sizeof(XLAT_STR_43)
 #  endif
+#  ifdef XLAT_STR_44
+  + sizeof(XLAT_STR_44)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -512,6 +521,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_42
 #  undef XLAT_STR_43
 #  undef XLAT_VAL_43
+#  undef XLAT_STR_44
+#  undef XLAT_VAL_44
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

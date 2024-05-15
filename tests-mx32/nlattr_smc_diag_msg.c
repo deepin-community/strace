@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2017 JingPiao Chen <chenjingpiao@gmail.com>
- * Copyright (c) 2017-2021 The strace developers.
+ * Copyright (c) 2017-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -230,6 +230,10 @@ int main(void)
 			   PRINT_FIELD_X(dinfo, token);
 			   printf(", ");
 			   PRINT_FIELD_X(dinfo, peer_token);
+			   printf(", ");
+			   PRINT_FIELD_X(dinfo, peer_gid_ext);
+			   printf(", ");
+			   PRINT_FIELD_X(dinfo, my_gid_ext);
 			   printf("}"));
 
 	TEST_NLATTR_OBJECT(fd, nlh0, hdrlen,

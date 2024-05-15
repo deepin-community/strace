@@ -1,0 +1,95 @@
+From c73580f144257175535ae7b9318c24a691d8c247 Mon Sep 17 00:00:00 2001
+From: Christian Ehrhardt <christian.ehrhardt@canonical.com>
+Date: Thu, 18 Apr 2024 15:42:45 +0200
+Subject: [PATCH] tests: fix LL->time_t->tv_sec conversion path
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+Due to 64-bit time_t on armhf the initialization of some test cases
+that use the pattern of `...tv-sec = (time_t) = 0x1234LL` now fail.
+
+Example:
+  tests/xselect.c:216:24: error: overflow in conversion from
+  ‘long long int’ to ‘kernel_long_t’ {aka ‘long int’}
+  changes value from ‘-3819351491602432273’
+  to ‘-559038737’ [-Werror=overflow]
+  216 |         tv_in.tv_sec = (time_t) 0xcafef00ddeadbeefLL;
+
+Other places that used to cast from LL to time_t to assign to tv_sec
+have been changed in 2023 by 7178658e "tests: avoid libc definition
+for time_t in direct syscalls"
+  -       ts->tv_sec = (time_t) 0xcafef00ddeadbeefLL;
+  +       ts->tv_sec = (typeof(ts->tv_sec)) 0xcafef00ddeadbeefLL;
+
+That avoids the issue where time64 on 32-bit armhf leads to a mismatch.
+kernel_old_timespec.h determines as SIZEOF_KERNEL_LONG_T == 4 and
+thereby selecting `int` as type for tv_sec, but then time_t changed
+to 64-bit.
+Yet on the other hand tv_sec didn't change as it is a kernel type,
+so the assignment triggers an error.
+  old: 64-bit -> explicit cast 32-bit -> assign 32-bit tv_sec
+  new: 64-bit -> explicit cast 64-bit (time_t) -> assign 32-bit tv_sec
+
+The same pattern was yet unfixed in a few tests and hereby
+resolved the same way as in 7178658e.
+
+Resolves: https://github.com/strace/strace/issues/296
+Complements: v6.5~3 "tests: avoid libc definition for time_t in direct syscalls"
+Signed-off-by: Christian Ehrhardt <christian.ehrhardt@canonical.com>
+---
+ tests/mq_sendrecv.c      | 4 ++--
+ tests/recvmmsg-timeout.c | 2 +-
+ tests/xselect.c          | 2 +-
+ tests/xutimes.c          | 2 +-
+ 4 files changed, 5 insertions(+), 5 deletions(-)
+
+--- a/tests/mq_sendrecv.c
++++ b/tests/mq_sendrecv.c
+@@ -195,11 +195,11 @@
+ 	static const kernel_ulong_t bogus_prio =
+ 		(kernel_ulong_t) 0xdec0ded1defaced3ULL;
+ 	static const kernel_old_timespec_t bogus_tmout_data = {
+-		.tv_sec = (time_t) 0xdeadfacebeeff00dLL,
++		.tv_sec = (typeof(bogus_tmout_data.tv_sec)) 0xdeadfacebeeff00dLL,
+ 		.tv_nsec = (long) 0xfacefee1deadfeedLL,
+ 	};
+ 	static const kernel_old_timespec_t future_tmout_data = {
+-		.tv_sec = (time_t) 0x7ea1fade7e57faceLL,
++		.tv_sec = (typeof(future_tmout_data.tv_sec)) 0x7ea1fade7e57faceLL,
+ 		.tv_nsec = 999999999,
+ 	};
+ 	struct_sigevent bogus_sev_data = {
+--- a/tests/recvmmsg-timeout.c
++++ b/tests/recvmmsg-timeout.c
+@@ -57,7 +57,7 @@
+ 	       fds[0], &mh, (long long) ts->tv_sec,
+ 	       zero_extend_signed_to_ull(ts->tv_nsec), sprintrc(rc));
+ 
+-	ts->tv_sec = (time_t) 0xcafef00ddeadbeefLL;
++	ts->tv_sec = (typeof(ts->tv_sec)) 0xcafef00ddeadbeefLL;
+ 	ts->tv_nsec = (long) 0xbadc0dedfacefeedLL;
+ 
+ 	rc = recv_mmsg(fds[0], &mh, 1, 0, ts);
+--- a/tests/xselect.c
++++ b/tests/xselect.c
+@@ -213,7 +213,7 @@
+ 	 * Very odd timeout.
+ 	 */
+ 	*l_rs = (1UL << fds[0]) | (1UL << fds[1]);
+-	tv_in.tv_sec = (time_t) 0xcafef00ddeadbeefLL;
++	tv_in.tv_sec = (typeof(tv_in.tv_sec)) 0xcafef00ddeadbeefLL;
+ 	tv_in.tv_usec = (suseconds_t) 0xbadc0dedfacefeedLL;
+ 	memcpy(tv, &tv_in, sizeof(tv_in));
+ 	rc = xselect(nfds, a_rs, a_rs, a_rs, a_tv);
+--- a/tests/xutimes.c
++++ b/tests/xutimes.c
+@@ -86,7 +86,7 @@
+ 
+ 	tv[0].tv_sec = 0xdeadbeefU;
+ 	tv[0].tv_usec = 0xfacefeedU;
+-	tv[1].tv_sec = (time_t) 0xcafef00ddeadbeefLL;
++	tv[1].tv_sec = (typeof(tv[1].tv_sec)) 0xcafef00ddeadbeefLL;
+ 	tv[1].tv_usec = (suseconds_t) 0xbadc0dedfacefeedLL;
+ 
+ 	k_utimes(kfname, (uintptr_t) tv);

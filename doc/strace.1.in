@@ -38,7 +38,11 @@
 strace \- trace system calls and signals
 .SH SYNOPSIS
 .SY strace
-.if '@ENABLE_STACKTRACE_FALSE@'#' .OP \-ACdffhikqqrtttTvVwxxyyYzZ
+.\" -kk option is available:
+.if '@ENABLE_STACKTRACE_FALSE@'#' .if '@USE_LIBDW_FALSE@'#' .OP \-ACdffhikkqqrtttTvVwxxyyYzZ
+.\" only -k option is available:
+.if '@ENABLE_STACKTRACE_FALSE@'#' .if '@USE_LIBUNWIND_FALSE@'#' .OP \-ACdffhikqqrtttTvVwxxyyYzZ
+.\" no -k option is available:
 .if '@ENABLE_STACKTRACE_TRUE@'#' .OP \-ACdffhiqqrtttTvVwxxyyYzZ
 .OP \-a column
 .OP \-b execve
@@ -53,7 +57,8 @@ strace \- trace system calls and signals
 .OP \-U columns
 .OP \-X format
 .OP \-\-seccomp\-bpf
-.OP \-\-syscall\-limit limit
+.if '@ENABLE_STACKTRACE_FALSE@'#' .OP \-\-stack\-trace\-frame\-limit\fR=\fIlimit\fR
+.OP \-\-syscall\-limit=\fIlimit\fR
 .if '@ENABLE_SECONTEXT_FALSE@'#' .OP \-\-secontext\fR[=\fIformat\fR]
 .OP \-\-tips\fR[=\fIformat\fR]
 .BR "" {
@@ -77,7 +82,7 @@ strace \- trace system calls and signals
 .OP \-S sortby
 .OP \-U columns
 .OP \-\-seccomp\-bpf
-.OP \-\-syscall\-limit limit
+.OP \-\-syscall\-limit=\fIlimit\fR
 .OP \-\-tips\fR[=\fIformat\fR]
 .BR "" {
 .OR \-p pid
@@ -489,6 +494,17 @@ number of syscalls have been captured. Syscalls filtered out via
 or
 .B \-\-status
 options are not considered when keeping track of the number of syscalls that are captured.
+.TP
+.B \-\-kill\-on\-exit
+Set
+.B PTRACE_O_EXITKILL
+ptrace option to all tracee processes (which send a SIGKILL signal to
+the tracee if the tracer exits) and do not detach them on cleanup so
+they will not be left running after the tracer exit.
+.B \-\-kill\-on\-exit
+is not compatible with
+.BR \-p / \-\-attach
+options.
 .SS Filtering
 .TP 12
 \fB\-e\ trace\fR=\,\fIsyscall_set\fR
@@ -985,9 +1001,25 @@ Print the syscall number.
 .if '@ENABLE_STACKTRACE_FALSE@'#' .TP
 .if '@ENABLE_STACKTRACE_FALSE@'#' .B \-k
 .if '@ENABLE_STACKTRACE_FALSE@'#' .TQ
-.if '@ENABLE_STACKTRACE_FALSE@'#' .B \-\-stack\-traces
+.if '@ENABLE_STACKTRACE_FALSE@'#' .BR \-\-stack\-trace [= symbol ]
 .if '@ENABLE_STACKTRACE_FALSE@'#' Print the execution stack trace of the traced
 .if '@ENABLE_STACKTRACE_FALSE@'#' processes after each system call.
+.if '@USE_LIBDW_FALSE@'#' .TP
+.if '@USE_LIBDW_FALSE@'#' .B \-kk
+.if '@USE_LIBDW_FALSE@'#' .TQ
+.if '@USE_LIBDW_FALSE@'#' .BR \-\-stack\-trace = source
+.if '@USE_LIBDW_FALSE@'#' Print the execution stack trace and source code information of the traced
+.if '@USE_LIBDW_FALSE@'#' processes after each system call. This option expects the target program is compiled
+.if '@USE_LIBDW_FALSE@'#' with appropriate debug options: "\-g" (gcc), or "\-g \-gdwarf-aranges" (clang).
+.if '@ENABLE_STACKTRACE_FALSE@'#' .TP
+.if '@ENABLE_STACKTRACE_FALSE@'#' .BR \-\-stack\-trace\-frame\-limit = \fIlimit\fR
+.if '@ENABLE_STACKTRACE_FALSE@'#' Print no more than this amount of stack trace frames
+.if '@ENABLE_STACKTRACE_FALSE@'#' when backtracing a system call (the default is 256).
+.if '@ENABLE_STACKTRACE_FALSE@'#' Use this option with the
+.if '@ENABLE_STACKTRACE_FALSE@'#' .B \-\-stack\-trace
+.if '@ENABLE_STACKTRACE_FALSE@'#' (or
+.if '@ENABLE_STACKTRACE_FALSE@'#' .BR \-k )
+.if '@ENABLE_STACKTRACE_FALSE@'#' option.
 .TP
 .BI "\-o " filename
 .TQ
@@ -1633,6 +1665,13 @@ itself is being traced.
 In cases when seccomp-bpf filter setup failed,
 .B strace
 proceeds as usual and stops traced processes on every system call.
+When
+.B \-\-seccomp\-bpf
+is activated and
+.BR \-p / \-\-attach
+option is not used,
+.B \-\-kill\-on\-exit
+option is activated as well.
 .TP
 .BR \-\-tips [=[[ id: ] \fIid\fR ],[[ format: ] \fIformat\fR ]]
 Show strace tips, tricks, and tweaks before exit.
@@ -1902,7 +1941,13 @@ A traced process runs slowly (but check out the
 .B \-\-seccomp\-bpf
 option).
 .LP
-Traced processes which are descended from
+Unless
+.B \-\-kill\-on\-exit
+option is used (or
+.B \-\-seccomp\-bpf
+option is used in a way that implies
+.BR \-\-kill\-on\-exit ),
+traced processes which are descended from
 .I command
 may be left running after an interrupt signal
 .RB ( CTRL\-C ).
@@ -1969,7 +2014,7 @@ systems was removed.
 Also, in 2012
 .B strace
 gained support for path tracing and file descriptor path decoding.
-In 2014, support for stack traces printing was added.
+In 2014, support for stack trace printing was added.
 In 2016, syscall fault injection was implemented.
 .PP
 For the additional information, please refer to the

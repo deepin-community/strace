@@ -409,6 +409,13 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define DEVCONF_ACCEPT_UNTRACKED_NA 57
 #endif
+#if defined(DEVCONF_ACCEPT_RA_MIN_LFT) || (defined(HAVE_DECL_DEVCONF_ACCEPT_RA_MIN_LFT) && HAVE_DECL_DEVCONF_ACCEPT_RA_MIN_LFT)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((DEVCONF_ACCEPT_RA_MIN_LFT) == (58), "DEVCONF_ACCEPT_RA_MIN_LFT != 58");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define DEVCONF_ACCEPT_RA_MIN_LFT 58
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -595,6 +602,9 @@ static const struct xlat_data inet6_devconf_indices_xdata[] = {
  [DEVCONF_ACCEPT_UNTRACKED_NA] = XLAT(DEVCONF_ACCEPT_UNTRACKED_NA),
  #define XLAT_VAL_57 ((unsigned) (DEVCONF_ACCEPT_UNTRACKED_NA))
  #define XLAT_STR_57 STRINGIFY(DEVCONF_ACCEPT_UNTRACKED_NA)
+ [DEVCONF_ACCEPT_RA_MIN_LFT] = XLAT(DEVCONF_ACCEPT_RA_MIN_LFT),
+ #define XLAT_VAL_58 ((unsigned) (DEVCONF_ACCEPT_RA_MIN_LFT))
+ #define XLAT_STR_58 STRINGIFY(DEVCONF_ACCEPT_RA_MIN_LFT)
 };
 static
 const struct xlat inet6_devconf_indices[1] = { {
@@ -776,6 +786,9 @@ const struct xlat inet6_devconf_indices[1] = { {
 #  ifdef XLAT_VAL_57
   | XLAT_VAL_57
 #  endif
+#  ifdef XLAT_VAL_58
+  | XLAT_VAL_58
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -952,6 +965,9 @@ const struct xlat inet6_devconf_indices[1] = { {
 #  ifdef XLAT_STR_57
   + sizeof(XLAT_STR_57)
 #  endif
+#  ifdef XLAT_STR_58
+  + sizeof(XLAT_STR_58)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -1072,6 +1088,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_56
 #  undef XLAT_STR_57
 #  undef XLAT_VAL_57
+#  undef XLAT_STR_58
+#  undef XLAT_VAL_58
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

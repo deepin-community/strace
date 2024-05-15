@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2023 The strace developers.
+ * Copyright (c) 2019-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: LGPL-2.1-or-later
@@ -37,3 +37,12 @@
 [BASE_NR + 450] = { 4,	TM,		SEN(set_mempolicy_home_node),	"set_mempolicy_home_node"	},
 [BASE_NR + 451] = { 4,	TD,		SEN(cachestat),			"cachestat"	},
 [BASE_NR + 452] = { 4,	TD|TF,		SEN(fchmodat2),			"fchmodat2"	},
+[BASE_NR + 453] = { 3,	TM,		SEN(map_shadow_stack),		"map_shadow_stack"	},
+[BASE_NR + 454] = { 4,	0,		SEN(futex_wake),		"futex_wake"	},
+[BASE_NR + 455] = { 6,	0,		SEN(futex_wait),		"futex_wait"	},
+[BASE_NR + 456] = { 4,	0,		SEN(futex_requeue),		"futex_requeue"	},
+[BASE_NR + 457] = { 4,	0,		SEN(statmount),			"statmount"	},
+[BASE_NR + 458] = { 4,	0,		SEN(listmount),			"listmount"	},
+[BASE_NR + 459] = { 4,	0,		SEN(lsm_get_self_attr),		"lsm_get_self_attr"	},
+[BASE_NR + 460] = { 4,	0,		SEN(lsm_set_self_attr),		"lsm_set_self_attr"	},
+[BASE_NR + 461] = { 3,	0,		SEN(lsm_list_modules),		"lsm_list_modules"	},
