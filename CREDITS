@@ -60,6 +60,7 @@ strace-devel@lists.strace.io mailing list.
 	Chris Metcalf <cmetcalf@tilera.com>
 	Chris Packham <chris.packham@alliedtelesis.co.nz>
 	Chris Zankel <chris@zankel.net>
+	Christian Ehrhardt <christian.ehrhardt@canonical.com>
 	Christian Neukirchen <chneukirchen@gmail.com>
 	Christian Svensson <blue@cmd.nu>
 	Christopher Covington <cov@codeaurora.org>
@@ -119,6 +120,8 @@ strace-devel@lists.strace.io mailing list.
 	Helge Deller <deller@gmx.de>
 	Henrik Storner <storner@osiris.ping.dk>
 	Holger Hans Peter Freyther <holger@freyther.de>
+	Ivan Avdeev <me@provod.works>
+	Ivan Trofimov <i.trofimow@yandex.ru>
 	J. Bruce Fields <bfields@fieldses.org>
 	Jacob Goense <dugo@xs4all.nl>
 	Jakub Bogusz <qboosh@pld-linux.org>
@@ -134,6 +137,7 @@ strace-devel@lists.strace.io mailing list.
 	Jann Horn <jannh@google.com>
 	Janosch Frank <frankja@linux.ibm.com>
 	JayRJoshi <jay.r.joshi100@gmail.com>
+	Jean-Baptiste Skutnik <jb.skutnik@gmail.com>
 	Jeff Law <law@redhat.com>
 	Jeff Mahoney <jeffm@suse.com>
 	Jeremy Kerr <jk@ozlabs.org>
@@ -148,7 +152,7 @@ strace-devel@lists.strace.io mailing list.
 	John Spencer <maillist-strace@barfooze.de>
 	Jonathan Borne <jborne@kalray.eu>
 	Josef T. Burger <bolo@cs.wisc.edu>
-	Josh Triplett <josh@freedesktop.org>
+	Josh Triplett <josh@joshtriplett.org>
 	Joubin Jabbari <joubin@linux.com>
 	Jürgen Fluk <louis@marco.de>
 	Jürgen Weigert <jnweiger@immd4.informatik.uni-erlangen.de>
@@ -193,6 +197,7 @@ strace-devel@lists.strace.io mailing list.
 	Michael E Chastain <mec@duracef.shout.net>
 	Michael Holzheu <holzheu@de.ibm.com>
 	Michael Shigorin <mike@altlinux.org>
+	Michael Vogt <mvo@ubuntu.com>
 	Michail Litvak <mci@owl.openwall.com>
 	Michal Ludvig <mludvig@suse.cz>
 	Michal Sekletar <msekleta@redhat.com>
@@ -300,13 +305,16 @@ strace-devel@lists.strace.io mailing list.
 	William Manley <will@williammanley.net>
 	Xiaoning Ding <dingxn@gmail.com>
 	Yaakov Selkowitz <yselkowitz@fedoraproject.org>
+	Yao Zi <ziyao@disroot.org>
 	Yun-Chih Chen <b03902074@ntu.edu.tw>
 	Zach Brown <zach.brown@oracle.com>
 	Zev Weiss <zev@bewilderbeest.net>
 	Zhang Le <robert.zhangle@gmail.com>
 	Zhibin Li <haoyouab@gmail.com>
 	Zubin Mithra <zubin.mithra@gmail.com>
+	Zygmunt Krynicki <me@zygoon.pl>
 	adrien-n <adrien.nader@canonical.com>
+	donghaobo <donghaobo@kuaishou.com>
 	leedagee <leedageea@gmail.com>
 	Ákos Uzonyi <uzonyi.akos@gmail.com>
 	Марк Коренберг <socketpair@gmail.com>

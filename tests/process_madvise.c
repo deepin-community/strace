@@ -1,7 +1,7 @@
 /*
  * Check decoding of process_madvise syscall.
  *
- * Copyright (c) 2020 Dmitry V. Levin <ldv@strace.io>
+ * Copyright (c) 2020-2024 Dmitry V. Levin <ldv@strace.io>
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -53,7 +53,7 @@ main(void)
 	if (open("/dev/full", O_WRONLY))
 		perror_msg_and_fail("open");
 
-	struct iovec *iov = tail_alloc(2 * sizeof(*iov));
+	TAIL_ALLOC_OBJECT_CONST_ARR(struct iovec, iov, 2);
 	fill_memory(iov, 2 * sizeof(*iov));
 
 	k_process_madvise(0, iov, 2, 0, -1U);

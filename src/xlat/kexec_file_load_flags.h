@@ -24,6 +24,9 @@ static const struct xlat_data kexec_file_load_flags_xdata[] = {
  XLAT(KEXEC_FILE_NO_INITRAMFS),
  #define XLAT_VAL_2 ((unsigned) (KEXEC_FILE_NO_INITRAMFS))
  #define XLAT_STR_2 STRINGIFY(KEXEC_FILE_NO_INITRAMFS)
+ XLAT(KEXEC_FILE_DEBUG),
+ #define XLAT_VAL_3 ((unsigned) (KEXEC_FILE_DEBUG))
+ #define XLAT_STR_3 STRINGIFY(KEXEC_FILE_DEBUG)
 };
 static
 const struct xlat kexec_file_load_flags[1] = { {
@@ -40,6 +43,9 @@ const struct xlat kexec_file_load_flags[1] = { {
 #  ifdef XLAT_VAL_2
   | XLAT_VAL_2
 #  endif
+#  ifdef XLAT_VAL_3
+  | XLAT_VAL_3
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -51,6 +57,9 @@ const struct xlat kexec_file_load_flags[1] = { {
 #  ifdef XLAT_STR_2
   + sizeof(XLAT_STR_2)
 #  endif
+#  ifdef XLAT_STR_3
+  + sizeof(XLAT_STR_3)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -61,6 +70,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_1
 #  undef XLAT_STR_2
 #  undef XLAT_VAL_2
+#  undef XLAT_STR_3
+#  undef XLAT_VAL_3
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

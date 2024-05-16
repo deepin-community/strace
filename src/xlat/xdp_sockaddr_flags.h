@@ -31,6 +31,13 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define XDP_USE_NEED_WAKEUP (1 << 3)
 #endif
+#if defined(XDP_USE_SG) || (defined(HAVE_DECL_XDP_USE_SG) && HAVE_DECL_XDP_USE_SG)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((XDP_USE_SG) == ((1 << 4)), "XDP_USE_SG != (1 << 4)");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define XDP_USE_SG (1 << 4)
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -55,6 +62,9 @@ static const struct xlat_data xdp_sockaddr_flags_xdata[] = {
  XLAT(XDP_USE_NEED_WAKEUP),
  #define XLAT_VAL_3 ((unsigned) (XDP_USE_NEED_WAKEUP))
  #define XLAT_STR_3 STRINGIFY(XDP_USE_NEED_WAKEUP)
+ XLAT(XDP_USE_SG),
+ #define XLAT_VAL_4 ((unsigned) (XDP_USE_SG))
+ #define XLAT_STR_4 STRINGIFY(XDP_USE_SG)
 };
 static
 const struct xlat xdp_sockaddr_flags[1] = { {
@@ -74,6 +84,9 @@ const struct xlat xdp_sockaddr_flags[1] = { {
 #  ifdef XLAT_VAL_3
   | XLAT_VAL_3
 #  endif
+#  ifdef XLAT_VAL_4
+  | XLAT_VAL_4
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -88,6 +101,9 @@ const struct xlat xdp_sockaddr_flags[1] = { {
 #  ifdef XLAT_STR_3
   + sizeof(XLAT_STR_3)
 #  endif
+#  ifdef XLAT_STR_4
+  + sizeof(XLAT_STR_4)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -100,6 +116,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_2
 #  undef XLAT_STR_3
 #  undef XLAT_VAL_3
+#  undef XLAT_STR_4
+#  undef XLAT_VAL_4
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

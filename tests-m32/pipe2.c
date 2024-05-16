@@ -2,7 +2,7 @@
  * Check decoding of pipe2 syscall.
  *
  * Copyright (c) 2015-2018 Dmitry V. Levin <ldv@strace.io>
- * Copyright (c) 2017-2021 The strace developers.
+ * Copyright (c) 2017-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -18,7 +18,7 @@
 int
 main(void)
 {
-	int *const fds = tail_alloc(sizeof(*fds) * 2);
+	TAIL_ALLOC_OBJECT_CONST_ARR(int, fds, 2);
 	int *const efault = fds + 1;
 	long rc;
 

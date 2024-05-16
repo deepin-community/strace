@@ -47,6 +47,7 @@ PURE_EXECUTABLES = \
   dev--decode-fds-none \
   dev--decode-fds-path \
   dev--decode-fds-socket \
+  dev-pty-yy \
   dev-yy \
   dup \
   dup-P \
@@ -132,7 +133,19 @@ PURE_EXECUTABLES = \
   ftruncate \
   ftruncate64 \
   futex \
+  futex_requeue \
+  futex_requeue-Xabbrev \
+  futex_requeue-Xraw \
+  futex_requeue-Xverbose \
+  futex_wait \
+  futex_wait-Xabbrev \
+  futex_wait-Xraw \
+  futex_wait-Xverbose \
   futex_waitv \
+  futex_wake \
+  futex_wake-Xabbrev \
+  futex_wake-Xraw \
+  futex_wake-Xverbose \
   futimesat \
   get_mempolicy \
   getcpu \
@@ -320,15 +333,26 @@ PURE_EXECUTABLES = \
   lchown32 \
   link \
   linkat \
+  listmount \
+  listmount-success \
   llseek \
   lookup_dcookie \
   lseek \
+  lsm_get_self_attr \
+  lsm_get_self_attr-success \
+  lsm_list_modules \
+  lsm_list_modules-success \
+  lsm_set_self_attr \
   lstat \
   lstat64 \
   madvise \
   madvise-Xabbrev \
   madvise-Xraw \
   madvise-Xverbose \
+  map_shadow_stack \
+  map_shadow_stack-Xabbrev \
+  map_shadow_stack-Xraw \
+  map_shadow_stack-Xverbose \
   maybe_switch_current_tcp \
   maybe_switch_current_tcp--quiet-thread-execve \
   mbind \
@@ -742,6 +766,8 @@ PURE_EXECUTABLES = \
   stat64 \
   statfs \
   statfs64 \
+  statmount \
+  statmount-success \
   status-all \
   status-failed \
   status-failed-long \
@@ -753,6 +779,7 @@ PURE_EXECUTABLES = \
   status-successful-status \
   status-unfinished \
   statx \
+  strace--always-show-pid \
   strace--strings-in-hex \
   strace--strings-in-hex-all \
   strace--strings-in-hex-non-ascii \
@@ -773,6 +800,7 @@ PURE_EXECUTABLES = \
   sysinfo \
   syslog \
   tampering-notes \
+  tcp_ao \
   tee \
   tgkill \
   time \

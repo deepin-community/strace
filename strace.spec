@@ -1,6 +1,6 @@
 Summary: Tracks and displays system calls associated with a running process
 Name: strace
-Version: 6.5
+Version: 6.9
 Release: 1%{?dist}
 # The test suite is GPLv2+, the bundled headers are GPLv2 with Linux syscall
 # exception, all the rest is LGPLv2.1+.
@@ -151,8 +151,8 @@ received by a process.
 %prep
 %setup -q
 echo -n %version-%release > .tarball-version
-echo -n 2023 > .year
-echo -n 2023-06-11 > doc/.strace.1.in.date
+echo -n 2024 > .year
+echo -n 2024-05-05 > doc/.strace.1.in.date
 echo -n 2022-01-01 > doc/.strace-log-merge.1.in.date
 
 %build
@@ -205,9 +205,21 @@ fi
 %{_mandir}/man1/*
 
 %changelog
-* Fri Sep 01 2023 strace-devel@lists.strace.io - 6.5-1
-- strace 6.5 snapshot.
-- Updated the SPDX license expression.
+* Tue May 14 2024 strace-devel@lists.strace.io - 6.9-1
+- strace 6.9 snapshot.
+
+* Wed Mar 20 2024 Dmitry V. Levin <ldv@strace.io> - 6.8-1
+- v6.7 -> v6.8.
+
+* Mon Jan 29 2024 Dmitry V. Levin <ldv@strace.io> - 6.7-1
+- v6.6 -> v6.7.
+
+* Tue Oct 31 2023 Dmitry V. Levin <ldv@strace.io> - 6.6-1
+- v6.5 -> v6.6 (resolves: #2243631).
+
+* Fri Sep 01 2023 Dmitry V. Levin <ldv@strace.io> - 6.5-1
+- v6.4 -> v6.5.
+- Updated the SPDX license expression (by Eugene Syromyatnikov).
 
 * Mon Jun 26 2023 Dmitry V. Levin <ldv@strace.io> - 6.4-1
 - v6.3 -> v6.4.

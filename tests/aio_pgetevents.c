@@ -2,7 +2,7 @@
  * Check decoding of io_pgetevents syscall.
  *
  * Copyright (c) 2015-2016 Dmitry V. Levin <ldv@strace.io>
- * Copyright (c) 2015-2023 The strace developers.
+ * Copyright (c) 2015-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -91,7 +91,7 @@ main(void)
 
 	const unsigned int nr = ARRAY_SIZE(proto_cb);
 
-	const struct io_event *ev = tail_alloc(nr * sizeof(struct io_event));
+	TAIL_ALLOC_OBJECT_CONST_ARR(const struct io_event, ev, nr);
 	TAIL_ALLOC_OBJECT_CONST_PTR(kernel_old_timespec_t, ts);
 	TAIL_ALLOC_OBJECT_CONST_PTR(struct __aio_sigset, ss);
 	TAIL_ALLOC_OBJECT_CONST_PTR(sigset_t, sigs);

@@ -101,6 +101,13 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define BPF_JSLE 0xd0
 #endif
+#if defined(BPF_JCOND) || (defined(HAVE_DECL_BPF_JCOND) && HAVE_DECL_BPF_JCOND)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((BPF_JCOND) == (0xe0), "BPF_JCOND != 0xe0");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define BPF_JCOND 0xe0
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -155,6 +162,9 @@ static const struct xlat_data bpf_op_jmp_xdata[] = {
  XLAT(BPF_JSLE),
  #define XLAT_VAL_13 ((unsigned) (BPF_JSLE))
  #define XLAT_STR_13 STRINGIFY(BPF_JSLE)
+ XLAT(BPF_JCOND),
+ #define XLAT_VAL_14 ((unsigned) (BPF_JCOND))
+ #define XLAT_STR_14 STRINGIFY(BPF_JCOND)
 };
 static
 const struct xlat bpf_op_jmp[1] = { {
@@ -204,6 +214,9 @@ const struct xlat bpf_op_jmp[1] = { {
 #  ifdef XLAT_VAL_13
   | XLAT_VAL_13
 #  endif
+#  ifdef XLAT_VAL_14
+  | XLAT_VAL_14
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -248,6 +261,9 @@ const struct xlat bpf_op_jmp[1] = { {
 #  ifdef XLAT_STR_13
   + sizeof(XLAT_STR_13)
 #  endif
+#  ifdef XLAT_STR_14
+  + sizeof(XLAT_STR_14)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -280,6 +296,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_12
 #  undef XLAT_STR_13
 #  undef XLAT_VAL_13
+#  undef XLAT_STR_14
+#  undef XLAT_VAL_14
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

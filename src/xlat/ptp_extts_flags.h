@@ -27,6 +27,9 @@ static const struct xlat_data ptp_extts_flags_xdata[] = {
  XLAT(PTP_STRICT_FLAGS),
  #define XLAT_VAL_3 ((unsigned) (PTP_STRICT_FLAGS))
  #define XLAT_STR_3 STRINGIFY(PTP_STRICT_FLAGS)
+ XLAT(PTP_EXT_OFFSET),
+ #define XLAT_VAL_4 ((unsigned) (PTP_EXT_OFFSET))
+ #define XLAT_STR_4 STRINGIFY(PTP_EXT_OFFSET)
 };
 static
 const struct xlat ptp_extts_flags[1] = { {
@@ -46,6 +49,9 @@ const struct xlat ptp_extts_flags[1] = { {
 #  ifdef XLAT_VAL_3
   | XLAT_VAL_3
 #  endif
+#  ifdef XLAT_VAL_4
+  | XLAT_VAL_4
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -60,6 +66,9 @@ const struct xlat ptp_extts_flags[1] = { {
 #  ifdef XLAT_STR_3
   + sizeof(XLAT_STR_3)
 #  endif
+#  ifdef XLAT_STR_4
+  + sizeof(XLAT_STR_4)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -72,6 +81,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_2
 #  undef XLAT_STR_3
 #  undef XLAT_VAL_3
+#  undef XLAT_STR_4
+#  undef XLAT_VAL_4
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

@@ -2,7 +2,7 @@
  * Check decoding of setrlimit syscall.
  *
  * Copyright (c) 2016-2018 Dmitry V. Levin <ldv@strace.io>
- * Copyright (c) 2016-2021 The strace developers.
+ * Copyright (c) 2016-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -18,7 +18,7 @@
 int
 main(void)
 {
-	kernel_ulong_t *const rlimit = tail_alloc(sizeof(*rlimit) * 2);
+	TAIL_ALLOC_OBJECT_CONST_ARR(kernel_ulong_t, rlimit, 2);
 	const struct xlat_data *xlat;
 	size_t i = 0;
 

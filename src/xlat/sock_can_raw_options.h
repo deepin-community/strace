@@ -45,6 +45,20 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define CAN_RAW_JOIN_FILTERS 6
 #endif
+#if defined(CAN_RAW_XL_FRAMES) || (defined(HAVE_DECL_CAN_RAW_XL_FRAMES) && HAVE_DECL_CAN_RAW_XL_FRAMES)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((CAN_RAW_XL_FRAMES) == (7), "CAN_RAW_XL_FRAMES != 7");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define CAN_RAW_XL_FRAMES 7
+#endif
+#if defined(CAN_RAW_XL_VCID_OPTS) || (defined(HAVE_DECL_CAN_RAW_XL_VCID_OPTS) && HAVE_DECL_CAN_RAW_XL_VCID_OPTS)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((CAN_RAW_XL_VCID_OPTS) == (8), "CAN_RAW_XL_VCID_OPTS != 8");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define CAN_RAW_XL_VCID_OPTS 8
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -75,6 +89,12 @@ static const struct xlat_data sock_can_raw_options_xdata[] = {
  [CAN_RAW_JOIN_FILTERS] = XLAT(CAN_RAW_JOIN_FILTERS),
  #define XLAT_VAL_5 ((unsigned) (CAN_RAW_JOIN_FILTERS))
  #define XLAT_STR_5 STRINGIFY(CAN_RAW_JOIN_FILTERS)
+ [CAN_RAW_XL_FRAMES] = XLAT(CAN_RAW_XL_FRAMES),
+ #define XLAT_VAL_6 ((unsigned) (CAN_RAW_XL_FRAMES))
+ #define XLAT_STR_6 STRINGIFY(CAN_RAW_XL_FRAMES)
+ [CAN_RAW_XL_VCID_OPTS] = XLAT(CAN_RAW_XL_VCID_OPTS),
+ #define XLAT_VAL_7 ((unsigned) (CAN_RAW_XL_VCID_OPTS))
+ #define XLAT_STR_7 STRINGIFY(CAN_RAW_XL_VCID_OPTS)
 };
 static
 const struct xlat sock_can_raw_options[1] = { {
@@ -100,6 +120,12 @@ const struct xlat sock_can_raw_options[1] = { {
 #  ifdef XLAT_VAL_5
   | XLAT_VAL_5
 #  endif
+#  ifdef XLAT_VAL_6
+  | XLAT_VAL_6
+#  endif
+#  ifdef XLAT_VAL_7
+  | XLAT_VAL_7
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -120,6 +146,12 @@ const struct xlat sock_can_raw_options[1] = { {
 #  ifdef XLAT_STR_5
   + sizeof(XLAT_STR_5)
 #  endif
+#  ifdef XLAT_STR_6
+  + sizeof(XLAT_STR_6)
+#  endif
+#  ifdef XLAT_STR_7
+  + sizeof(XLAT_STR_7)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -136,6 +168,10 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_4
 #  undef XLAT_STR_5
 #  undef XLAT_VAL_5
+#  undef XLAT_STR_6
+#  undef XLAT_VAL_6
+#  undef XLAT_STR_7
+#  undef XLAT_VAL_7
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

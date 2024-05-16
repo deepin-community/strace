@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2018-2023 The strace developers.
+ * Copyright (c) 2018-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -272,6 +272,138 @@ print_fmt(const char *pfx, struct v4l2_format *f)
 	}
 }
 
+#ifdef KERNEL_V4L2_HAVE_TIME32
+static void
+test_v4l2_buffer_time32(long inject_retval) {
+	static const struct strval32 buf_cmds[] = {
+		{ ARG_STR(VIDIOC_QUERYBUF_TIME32) },
+		{ ARG_STR(VIDIOC_QBUF_TIME32) },
+		{ ARG_STR(VIDIOC_DQBUF_TIME32) },
+	};
+
+	TAIL_ALLOC_OBJECT_CONST_PTR(kernel_v4l2_buffer_time32_t, buf);
+
+	for (size_t i = 0; i < ARRAY_SIZE(buf_cmds); i++) {
+		ioctl(-1, buf_cmds[i].val, 0);
+		printf("ioctl(-1, %s, NULL) = %ld (INJECTED)\n",
+		       sprintxlat(buf_cmds[i].str, buf_cmds[i].val, NULL),
+		       inject_retval);
+
+		ioctl(-1, buf_cmds[i].val, (char *) buf + 1);
+		printf("ioctl(-1, %s, %p) = %ld (INJECTED)\n",
+		       sprintxlat(buf_cmds[i].str, buf_cmds[i].val, NULL),
+		       (char *) buf + 1, inject_retval);
+
+		fill_memory(buf, sizeof(*buf));
+		buf->index     = 0xdeadc0de;
+		buf->type      = V4L2_BUF_TYPE_VIDEO_CAPTURE;
+		buf->bytesused = 0xdecaffee;
+		buf->flags     = 0x1ff; /* TODO: update */
+		buf->field     = V4L2_FIELD_TOP;
+
+		buf->timestamp.tv_sec  = 0x1e55c0de;
+		buf->timestamp.tv_usec = 999999;
+
+		buf->timecode.type = V4L2_TC_TYPE_24FPS;
+		buf->timecode.flags = 0xbeefdeaf;
+
+		buf->memory    = V4L2_MEMORY_MMAP;
+		buf->m.offset  = 0xfacefeed;
+		buf->length    = 0xcafebed5;
+		buf->reserved  = 0xdeefaced;
+
+		ioctl(-1, buf_cmds[i].val, buf);
+		printf("ioctl(-1, %s, {type="
+		       XLAT_KNOWN(0x1, "V4L2_BUF_TYPE_VIDEO_CAPTURE")
+		       ", index=3735929054, memory="
+		       XLAT_KNOWN(0x1, "V4L2_MEMORY_MMAP")
+		       ", m.offset=0xfacefeed, length=3405692629"
+		       ", bytesused=3737845742, flags=" RAW("0x1ff")
+# if !XLAT_RAW
+		       XLAT_KNOWN(0x1ff, "V4L2_BUF_FLAG_MAPPED"
+		       "|V4L2_BUF_FLAG_QUEUED|V4L2_BUF_FLAG_DONE"
+		       "|V4L2_BUF_FLAG_KEYFRAME|V4L2_BUF_FLAG_PFRAME"
+		       "|V4L2_BUF_FLAG_BFRAME|V4L2_BUF_FLAG_ERROR"
+		       "|V4L2_BUF_FLAG_IN_REQUEST|V4L2_BUF_FLAG_TIMECODE") "|"
+		       XLAT_KNOWN(0, "V4L2_BUF_FLAG_TIMESTAMP_UNKNOWN") "|"
+		       XLAT_KNOWN(0, "V4L2_BUF_FLAG_TSTAMP_SRC_EOF")
+# endif
+		       "%s, ...}) = %ld (INJECTED)\n",
+		       sprintxlat(buf_cmds[i].str, buf_cmds[i].val, NULL),
+		       buf_cmds[i].val == VIDIOC_DQBUF_TIME32
+			? ", timestamp={tv_sec=508936414, tv_usec=999999}" : "",
+		       inject_retval);
+
+		buf->type      = V4L2_BUF_TYPE_VBI_CAPTURE;
+		buf->flags     = 0x268040;
+		buf->field     = 0xb;
+		buf->memory    = V4L2_MEMORY_USERPTR;
+		buf->m.userptr = (long) 0xdefaced0dec0ded1LL;
+
+		ioctl(-1, buf_cmds[i].val, buf);
+		printf("ioctl(-1, %s, {type="
+		       XLAT_KNOWN(0x4, "V4L2_BUF_TYPE_VBI_CAPTURE")
+		       ", index=3735929054, memory="
+		       XLAT_KNOWN(0x2, "V4L2_MEMORY_USERPTR")
+		       ", m.userptr=%p, length=3405692629"
+		       ", bytesused=3737845742, flags=" RAW("0x268040")
+# if !XLAT_RAW
+		       XLAT_KNOWN(0x200040, "V4L2_BUF_FLAG_ERROR|0x200000") "|"
+		       XLAT_UNKNOWN(0x8000, "V4L2_BUF_FLAG_TIMESTAMP_???") "|"
+		       XLAT_UNKNOWN(0x60000, "V4L2_BUF_FLAG_TSTAMP_SRC_???")
+# endif
+		       "%s, ...}) = %ld (INJECTED)\n",
+		       sprintxlat(buf_cmds[i].str, buf_cmds[i].val, NULL),
+		       (void *) (intptr_t) 0xdefaced0dec0ded1LL,
+		       buf_cmds[i].val == VIDIOC_DQBUF_TIME32
+			? ", timestamp={tv_sec=508936414, tv_usec=999999}" : "",
+		       inject_retval);
+
+		buf->type      = 0x9;
+		buf->flags     = 0;
+
+		ioctl(-1, buf_cmds[i].val, buf);
+		printf("ioctl(-1, %s, {type="
+		       XLAT_KNOWN(0x9, "V4L2_BUF_TYPE_VIDEO_CAPTURE_MPLANE")
+		       ", index=3735929054, memory="
+		       XLAT_KNOWN(0x2, "V4L2_MEMORY_USERPTR")
+		       ", m.userptr=%p, length=3405692629"
+		       ", bytesused=3737845742, flags=" RAW("0")
+# if !XLAT_RAW
+		       XLAT_KNOWN(0, "V4L2_BUF_FLAG_TIMESTAMP_UNKNOWN") "|"
+		       XLAT_KNOWN(0, "V4L2_BUF_FLAG_TSTAMP_SRC_EOF")
+# endif
+		       "%s, ...}) = %ld (INJECTED)\n",
+		       sprintxlat(buf_cmds[i].str, buf_cmds[i].val, NULL),
+		       (void *) (intptr_t) 0xdefaced0dec0ded1LL,
+		       buf_cmds[i].val == VIDIOC_DQBUF_TIME32
+			? ", timestamp={tv_sec=508936414, tv_usec=999999}" : "",
+		       inject_retval);
+
+		buf->type      = 0xa;
+		buf->memory    = V4L2_MEMORY_OVERLAY;
+		buf->flags     = 0x2000;
+
+		ioctl(-1, buf_cmds[i].val, buf);
+		printf("ioctl(-1, %s, {type="
+		       XLAT_KNOWN(0xa, "V4L2_BUF_TYPE_VIDEO_OUTPUT_MPLANE")
+		       ", index=3735929054, memory="
+		       XLAT_KNOWN(0x3, "V4L2_MEMORY_OVERLAY")
+		       ", length=3405692629, bytesused=3737845742"
+		       ", flags=" RAW("0x2000")
+# if !XLAT_RAW
+		       XLAT_KNOWN(0x2000, "V4L2_BUF_FLAG_TIMESTAMP_MONOTONIC")
+		       "|" XLAT_KNOWN(0, "V4L2_BUF_FLAG_TSTAMP_SRC_EOF")
+# endif
+		       "%s, ...}) = %ld (INJECTED)\n",
+		       sprintxlat(buf_cmds[i].str, buf_cmds[i].val, NULL),
+		       buf_cmds[i].val == VIDIOC_DQBUF_TIME32
+			? ", timestamp={tv_sec=508936414, tv_usec=999999}" : "",
+		       inject_retval);
+	}
+}
+#endif
+
 int
 main(int argc, char **argv)
 {
@@ -312,7 +444,7 @@ main(int argc, char **argv)
 
 
 	/* VIDIOC_QUERYCAP */
-	struct v4l2_capability *caps = tail_alloc(sizeof(*caps));
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct v4l2_capability, caps);
 
 	fill_memory(caps, sizeof(*caps));
 	caps->capabilities = 0xdeadbeef;
@@ -406,7 +538,7 @@ main(int argc, char **argv)
 			      NRAW("v4l2_fourcc('\\xed', '\\x0d', '\\xdc',"
 			           " '\\xba')") },
 	};
-	struct v4l2_fmtdesc *fmtdesc = tail_alloc(sizeof(*fmtdesc));
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct v4l2_fmtdesc, fmtdesc);
 
 	fill_memory(fmtdesc, sizeof(*fmtdesc));
 	fmtdesc->index = 0xdeac0de;
@@ -454,7 +586,7 @@ main(int argc, char **argv)
 		{ ARG_XLAT_UNKNOWN(0x5, "V4L2_MEMORY_???") },
 		{ ARG_XLAT_UNKNOWN(0xbadc0ded, "V4L2_MEMORY_???") },
 	};
-	struct v4l2_requestbuffers *reqb = tail_alloc(sizeof(*reqb));
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct v4l2_requestbuffers, reqb);
 
 	fill_memory(reqb, sizeof(*reqb));
 	reqb->count = 0xfeedface;
@@ -489,7 +621,7 @@ main(int argc, char **argv)
 		{ ARG_STR(VIDIOC_TRY_FMT) },
 	};
 
-	struct v4l2_format *fmt = tail_alloc(sizeof(*fmt));
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct v4l2_format, fmt);
 
 	for (size_t i = 0; i < ARRAY_SIZE(fmt_cmds); i++) {
 		ioctl(-1, fmt_cmds[i].val, 0);
@@ -523,6 +655,10 @@ main(int argc, char **argv)
 		}
 	}
 
+#ifdef KERNEL_V4L2_HAVE_TIME32
+	/* VIDIOC_QUERYBUF_TIME32, VIDIOC_QBUF_TIME32, VIDIOC_DQBUF_TIME32 */
+	test_v4l2_buffer_time32(inject_retval);
+#endif
 
 	/* VIDIOC_QUERYBUF, VIDIOC_QBUF, VIDIOC_DQBUF */
 	static const struct strval32 buf_cmds[] = {
@@ -531,7 +667,7 @@ main(int argc, char **argv)
 		{ ARG_STR(VIDIOC_DQBUF) },
 	};
 
-	kernel_v4l2_buffer_t *buf = tail_alloc(sizeof(*buf));
+	TAIL_ALLOC_OBJECT_CONST_PTR(kernel_v4l2_buffer_t, buf);
 
 	for (size_t i = 0; i < ARRAY_SIZE(buf_cmds); i++) {
 		ioctl(-1, buf_cmds[i].val, 0);
@@ -659,7 +795,7 @@ main(int argc, char **argv)
 		{ ARG_STR(VIDIOC_S_FBUF) },
 	};
 
-	struct v4l2_framebuffer *fbuf = tail_alloc(sizeof(*fbuf));
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct v4l2_framebuffer, fbuf);
 
 	for (size_t i = 0; i < ARRAY_SIZE(fbuf_cmds); i++) {
 		ioctl(-1, fbuf_cmds[i].val, 0);
@@ -689,7 +825,7 @@ main(int argc, char **argv)
 		{ ARG_STR(VIDIOC_S_PARM) },
 	};
 
-	struct v4l2_streamparm *sparm = tail_alloc(sizeof(*sparm));
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct v4l2_streamparm, sparm);
 
 	for (size_t i = 0; i < ARRAY_SIZE(sparm_cmds); i++) {
 		ioctl(-1, sparm_cmds[i].val, 0);
@@ -801,7 +937,7 @@ main(int argc, char **argv)
 		{ ARG_ULL_STR(0xbadc0deddeadface) },
 	};
 
-	v4l2_std_id *stdid = tail_alloc(sizeof(*stdid));
+	TAIL_ALLOC_OBJECT_CONST_PTR(v4l2_std_id, stdid);
 
 	for (size_t i = 0; i < ARRAY_SIZE(stdid_cmds); i++) {
 		ioctl(-1, stdid_cmds[i].val, 0);
@@ -827,7 +963,7 @@ main(int argc, char **argv)
 
 
 	/* VIDIOC_ENUMSTD */
-	struct v4l2_standard *std = tail_alloc(sizeof(*std));
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct v4l2_standard, std);
 
 	ioctl(-1, VIDIOC_ENUMSTD, 0);
 	printf("ioctl(-1, %s, NULL) = %ld (INJECTED)\n",
@@ -895,7 +1031,7 @@ main(int argc, char **argv)
 		{ ARG_XLAT_UNKNOWN(0x80000000, "V4L2_IN_CAP_???") },
 	};
 
-	struct v4l2_input *input = tail_alloc(sizeof(*input));
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct v4l2_input, input);
 
 	ioctl(-1, VIDIOC_ENUMINPUT, 0);
 	printf("ioctl(-1, %s, NULL) = %ld (INJECTED)\n",
@@ -945,7 +1081,7 @@ main(int argc, char **argv)
 		{ ARG_STR(VIDIOC_S_CTRL) },
 	};
 
-	struct v4l2_control *ctrl = tail_alloc(sizeof(*ctrl));
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct v4l2_control, ctrl);
 
 	for (size_t i = 0; i < ARRAY_SIZE(ctrl_cmds); i++) {
 		ioctl(-1, ctrl_cmds[i].val, 0);
@@ -1026,7 +1162,7 @@ main(int argc, char **argv)
 						  ARRAY_SIZE(tuner_rxsc)),
 					      ARRAY_SIZE(tuner_amodes));
 
-	struct v4l2_tuner *tuner = tail_alloc(sizeof(*tuner));
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct v4l2_tuner, tuner);
 
 	for (size_t i = 0; i < ARRAY_SIZE(tuner_cmds); i++) {
 		ioctl(-1, tuner_cmds[i].val, 0);
@@ -1151,7 +1287,7 @@ main(int argc, char **argv)
 						  ARRAY_SIZE(ctrl_types)),
 					       ARRAY_SIZE(ctrl_flags));
 
-	struct v4l2_queryctrl *qctrl = tail_alloc(sizeof(*qctrl));
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct v4l2_queryctrl, qctrl);
 
 	ioctl(-1, VIDIOC_QUERYCTRL, 0);
 	printf("ioctl(-1, %s, NULL) = %ld (INJECTED)\n",
@@ -1204,7 +1340,7 @@ main(int argc, char **argv)
 		{ ARG_STR(4294967295) },
 	};
 
-	int *inputid = tail_alloc(sizeof(*inputid));
+	TAIL_ALLOC_OBJECT_CONST_PTR(int, inputid);
 
 	for (size_t i = 0; i < ARRAY_SIZE(input_cmds); i++) {
 		ioctl(-1, input_cmds[i].val, 0);
@@ -1231,7 +1367,7 @@ main(int argc, char **argv)
 
 
 	/* VIDIOC_CROPCAP */
-	struct v4l2_cropcap *ccap = tail_alloc(sizeof(*ccap));
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct v4l2_cropcap, ccap);
 
 	fill_memory32(ccap, sizeof(*ccap));
 
@@ -1264,7 +1400,7 @@ main(int argc, char **argv)
 		{ ARG_STR(VIDIOC_G_CROP) },
 		{ ARG_STR(VIDIOC_S_CROP) },
 	};
-	struct v4l2_crop *crop = tail_alloc(sizeof(*crop));
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct v4l2_crop, crop);
 
 	for (size_t i = 0; i < ARRAY_SIZE(crop_cmds); i++) {
 		fill_memory32(crop, sizeof(*crop));
@@ -1302,7 +1438,7 @@ main(int argc, char **argv)
 	/* static const struct strval32 ectrl_which = {
 	}; */
 
-	struct v4l2_ext_controls *ectrls = tail_alloc(sizeof(*ectrls));
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct v4l2_ext_controls, ectrls);
 	/* struct v4l2_ext_control *ectrl = tail_alloc(sizeof(*ectrl) * 2); */
 
 	for (size_t i = 0; i < ARRAY_SIZE(ectrl_cmds); i++) {
@@ -1328,7 +1464,7 @@ main(int argc, char **argv)
 		{ ARG_XLAT_UNKNOWN(0xdeadf157, "V4L2_FRMSIZE_TYPE_???") },
 	};
 
-	struct v4l2_frmsizeenum *fse = tail_alloc(sizeof(*fse));
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct v4l2_frmsizeenum, fse);
 
 	ioctl(-1, VIDIOC_ENUM_FRAMESIZES, 0);
 	printf("ioctl(-1, %s, NULL) = %ld (INJECTED)\n",
@@ -1391,7 +1527,7 @@ main(int argc, char **argv)
 		{ ARG_XLAT_KNOWN(0x3, "V4L2_FRMIVAL_TYPE_STEPWISE") },
 	};
 
-	struct v4l2_frmivalenum *fie = tail_alloc(sizeof(*fie));
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct v4l2_frmivalenum, fie);
 
 	ioctl(-1, VIDIOC_ENUM_FRAMEINTERVALS, 0);
 	printf("ioctl(-1, %s, NULL) = %ld (INJECTED)\n",
@@ -1448,7 +1584,7 @@ main(int argc, char **argv)
 
 
 	/* VIDIOC_CREATE_BUFS */
-	struct v4l2_create_buffers *cbuf = tail_alloc(sizeof(*cbuf));
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct v4l2_create_buffers, cbuf);
 
 	fill_memory32(cbuf, sizeof(*cbuf));
 
@@ -1492,7 +1628,7 @@ main(int argc, char **argv)
 						  ARRAY_SIZE(ctrl_flags)),
 					      ARRAY_SIZE(qextc_nrdims));
 
-	struct v4l2_query_ext_ctrl *qextc = tail_alloc(sizeof(*qextc));
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct v4l2_query_ext_ctrl, qextc);
 
 	fill_memory32(qextc, sizeof(*qextc));
 

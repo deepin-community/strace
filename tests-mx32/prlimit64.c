@@ -2,7 +2,7 @@
  * Check decoding of prlimit64 syscall.
  *
  * Copyright (c) 2016-2018 Dmitry V. Levin <ldv@strace.io>
- * Copyright (c) 2016-2021 The strace developers.
+ * Copyright (c) 2016-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -58,7 +58,7 @@ main(int argc, char *argv[])
 	unsigned long pid =
 		(unsigned long) 0xdefaced00000000ULL | (unsigned) getpid();
 	const char *pid_str = pidns_pid2str(PT_TGID);
-	uint64_t *const rlimit = tail_alloc(sizeof(*rlimit) * 2);
+	TAIL_ALLOC_OBJECT_CONST_ARR(uint64_t, rlimit, 2);
 	const struct xlat_data *xlat;
 	long rc;
 	unsigned long num_skip = 256;

@@ -2,7 +2,7 @@
  * Check decoding of ptrace syscall.
  *
  * Copyright (c) 2016 Dmitry V. Levin <ldv@strace.io>
- * Copyright (c) 2016-2023 The strace developers.
+ * Copyright (c) 2016-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -147,7 +147,7 @@ test_peeksiginfo(int pid, const unsigned long bad_request)
 
 	const unsigned int nsigs = 4;
 	const uid_t uid = geteuid();
-	siginfo_t *sigs = tail_alloc(sizeof(*sigs) * nsigs);
+	TAIL_ALLOC_OBJECT_CONST_ARR(siginfo_t, sigs, nsigs);
 
 	psi->off = 0;
 	psi->flags = 0;
@@ -2087,7 +2087,8 @@ main(void)
 		{ ARG_XLAT_KNOWN(0x7, "SEGV_ADIPERR") },
 		{ ARG_XLAT_KNOWN(0x8, "SEGV_MTEAERR") },
 		{ ARG_XLAT_KNOWN(0x9, "SEGV_MTESERR") },
-		{ ARG_STR(0xa) },
+		{ ARG_XLAT_KNOWN(0xa, "SEGV_CPERR") },
+		{ ARG_STR(0xb) },
 		{ ARG_STR(0x499602d2) },
 	};
 	uint32_t segv_pkey_vecs[] = { 0, 1234567890, 3141592653U };

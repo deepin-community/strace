@@ -45,6 +45,13 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define MPOL_PREFERRED_MANY 5
 #endif
+#if defined(MPOL_WEIGHTED_INTERLEAVE) || (defined(HAVE_DECL_MPOL_WEIGHTED_INTERLEAVE) && HAVE_DECL_MPOL_WEIGHTED_INTERLEAVE)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((MPOL_WEIGHTED_INTERLEAVE) == (6), "MPOL_WEIGHTED_INTERLEAVE != 6");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define MPOL_WEIGHTED_INTERLEAVE 6
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -75,6 +82,9 @@ static const struct xlat_data mpol_modes_xdata[] = {
  [MPOL_PREFERRED_MANY] = XLAT(MPOL_PREFERRED_MANY),
  #define XLAT_VAL_5 ((unsigned) (MPOL_PREFERRED_MANY))
  #define XLAT_STR_5 STRINGIFY(MPOL_PREFERRED_MANY)
+ [MPOL_WEIGHTED_INTERLEAVE] = XLAT(MPOL_WEIGHTED_INTERLEAVE),
+ #define XLAT_VAL_6 ((unsigned) (MPOL_WEIGHTED_INTERLEAVE))
+ #define XLAT_STR_6 STRINGIFY(MPOL_WEIGHTED_INTERLEAVE)
 };
 static
 const struct xlat mpol_modes[1] = { {
@@ -100,6 +110,9 @@ const struct xlat mpol_modes[1] = { {
 #  ifdef XLAT_VAL_5
   | XLAT_VAL_5
 #  endif
+#  ifdef XLAT_VAL_6
+  | XLAT_VAL_6
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -120,6 +133,9 @@ const struct xlat mpol_modes[1] = { {
 #  ifdef XLAT_STR_5
   + sizeof(XLAT_STR_5)
 #  endif
+#  ifdef XLAT_STR_6
+  + sizeof(XLAT_STR_6)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -136,6 +152,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_4
 #  undef XLAT_STR_5
 #  undef XLAT_VAL_5
+#  undef XLAT_STR_6
+#  undef XLAT_VAL_6
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

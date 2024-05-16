@@ -87,6 +87,21 @@ static const struct xlat_data uring_register_opcodes_xdata[] = {
  [IORING_UNREGISTER_PBUF_RING] = XLAT(IORING_UNREGISTER_PBUF_RING),
  #define XLAT_VAL_23 ((unsigned) (IORING_UNREGISTER_PBUF_RING))
  #define XLAT_STR_23 STRINGIFY(IORING_UNREGISTER_PBUF_RING)
+ [IORING_REGISTER_SYNC_CANCEL] = XLAT(IORING_REGISTER_SYNC_CANCEL),
+ #define XLAT_VAL_24 ((unsigned) (IORING_REGISTER_SYNC_CANCEL))
+ #define XLAT_STR_24 STRINGIFY(IORING_REGISTER_SYNC_CANCEL)
+ [IORING_REGISTER_FILE_ALLOC_RANGE] = XLAT(IORING_REGISTER_FILE_ALLOC_RANGE),
+ #define XLAT_VAL_25 ((unsigned) (IORING_REGISTER_FILE_ALLOC_RANGE))
+ #define XLAT_STR_25 STRINGIFY(IORING_REGISTER_FILE_ALLOC_RANGE)
+ [IORING_REGISTER_PBUF_STATUS] = XLAT(IORING_REGISTER_PBUF_STATUS),
+ #define XLAT_VAL_26 ((unsigned) (IORING_REGISTER_PBUF_STATUS))
+ #define XLAT_STR_26 STRINGIFY(IORING_REGISTER_PBUF_STATUS)
+ [IORING_REGISTER_NAPI] = XLAT(IORING_REGISTER_NAPI),
+ #define XLAT_VAL_27 ((unsigned) (IORING_REGISTER_NAPI))
+ #define XLAT_STR_27 STRINGIFY(IORING_REGISTER_NAPI)
+ [IORING_UNREGISTER_NAPI] = XLAT(IORING_UNREGISTER_NAPI),
+ #define XLAT_VAL_28 ((unsigned) (IORING_UNREGISTER_NAPI))
+ #define XLAT_STR_28 STRINGIFY(IORING_UNREGISTER_NAPI)
 };
 static
 const struct xlat uring_register_opcodes[1] = { {
@@ -166,6 +181,21 @@ const struct xlat uring_register_opcodes[1] = { {
 #  ifdef XLAT_VAL_23
   | XLAT_VAL_23
 #  endif
+#  ifdef XLAT_VAL_24
+  | XLAT_VAL_24
+#  endif
+#  ifdef XLAT_VAL_25
+  | XLAT_VAL_25
+#  endif
+#  ifdef XLAT_VAL_26
+  | XLAT_VAL_26
+#  endif
+#  ifdef XLAT_VAL_27
+  | XLAT_VAL_27
+#  endif
+#  ifdef XLAT_VAL_28
+  | XLAT_VAL_28
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -240,6 +270,21 @@ const struct xlat uring_register_opcodes[1] = { {
 #  ifdef XLAT_STR_23
   + sizeof(XLAT_STR_23)
 #  endif
+#  ifdef XLAT_STR_24
+  + sizeof(XLAT_STR_24)
+#  endif
+#  ifdef XLAT_STR_25
+  + sizeof(XLAT_STR_25)
+#  endif
+#  ifdef XLAT_STR_26
+  + sizeof(XLAT_STR_26)
+#  endif
+#  ifdef XLAT_STR_27
+  + sizeof(XLAT_STR_27)
+#  endif
+#  ifdef XLAT_STR_28
+  + sizeof(XLAT_STR_28)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -292,6 +337,16 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_22
 #  undef XLAT_STR_23
 #  undef XLAT_VAL_23
+#  undef XLAT_STR_24
+#  undef XLAT_VAL_24
+#  undef XLAT_STR_25
+#  undef XLAT_VAL_25
+#  undef XLAT_STR_26
+#  undef XLAT_VAL_26
+#  undef XLAT_STR_27
+#  undef XLAT_VAL_27
+#  undef XLAT_STR_28
+#  undef XLAT_VAL_28
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

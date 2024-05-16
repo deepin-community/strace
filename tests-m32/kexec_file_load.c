@@ -2,7 +2,7 @@
  * Check decoding of kexec_file_load syscall.
  *
  * Copyright (c) 2016 Eugene Syromyatnikov <evgsyr@gmail.com>
- * Copyright (c) 2016-2021 The strace developers.
+ * Copyright (c) 2016-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -46,12 +46,13 @@ main(void)
 		sizeof(cmdline_short_str) + 1,
 	};
 	static const struct strval flags[] = {
-		{ (kernel_ulong_t) 0xbadc0dedda7a1058ULL,
+		{ (kernel_ulong_t) 0xbadc0dedda7a1050ULL,
 			"0xbadc0ded", "0x",
-			"da7a1058 /* KEXEC_FILE_??? */" },
+			"da7a1050 /* KEXEC_FILE_??? */" },
 		{ 0, "", "", "0" },
-		{ 0xdeadbeef, "", "", "KEXEC_FILE_UNLOAD|KEXEC_FILE_ON_CRASH|"
-			"KEXEC_FILE_NO_INITRAMFS|0xdeadbee8" },
+		{ 0xdeadbeef, "", "",
+			"KEXEC_FILE_UNLOAD|KEXEC_FILE_ON_CRASH|"
+			"KEXEC_FILE_NO_INITRAMFS|KEXEC_FILE_DEBUG|0xdeadbee0" },
 	};
 
 

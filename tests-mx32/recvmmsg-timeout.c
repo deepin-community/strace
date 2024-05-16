@@ -2,7 +2,7 @@
  * Check decoding of timeout argument of recvmmsg syscall.
  *
  * Copyright (c) 2016 Dmitry V. Levin <ldv@strace.io>
- * Copyright (c) 2016-2023 The strace developers.
+ * Copyright (c) 2016-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -57,7 +57,7 @@ main(void)
 	       fds[0], &mh, (long long) ts->tv_sec,
 	       zero_extend_signed_to_ull(ts->tv_nsec), sprintrc(rc));
 
-	ts->tv_sec = (time_t) 0xcafef00ddeadbeefLL;
+	ts->tv_sec = (typeof(ts->tv_sec)) 0xcafef00ddeadbeefLL;
 	ts->tv_nsec = (long) 0xbadc0dedfacefeedLL;
 
 	rc = recv_mmsg(fds[0], &mh, 1, 0, ts);

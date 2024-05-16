@@ -234,6 +234,13 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define BPF_MAP_TYPE_CGRP_STORAGE 32
 #endif
+#if defined(BPF_MAP_TYPE_ARENA) || (defined(HAVE_DECL_BPF_MAP_TYPE_ARENA) && HAVE_DECL_BPF_MAP_TYPE_ARENA)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((BPF_MAP_TYPE_ARENA) == (33), "BPF_MAP_TYPE_ARENA != 33");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define BPF_MAP_TYPE_ARENA 33
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -345,6 +352,9 @@ static const struct xlat_data bpf_map_types_xdata[] = {
  [BPF_MAP_TYPE_CGRP_STORAGE] = XLAT(BPF_MAP_TYPE_CGRP_STORAGE),
  #define XLAT_VAL_32 ((unsigned) (BPF_MAP_TYPE_CGRP_STORAGE))
  #define XLAT_STR_32 STRINGIFY(BPF_MAP_TYPE_CGRP_STORAGE)
+ [BPF_MAP_TYPE_ARENA] = XLAT(BPF_MAP_TYPE_ARENA),
+ #define XLAT_VAL_33 ((unsigned) (BPF_MAP_TYPE_ARENA))
+ #define XLAT_STR_33 STRINGIFY(BPF_MAP_TYPE_ARENA)
 };
 static
 const struct xlat bpf_map_types[1] = { {
@@ -451,6 +461,9 @@ const struct xlat bpf_map_types[1] = { {
 #  ifdef XLAT_VAL_32
   | XLAT_VAL_32
 #  endif
+#  ifdef XLAT_VAL_33
+  | XLAT_VAL_33
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -552,6 +565,9 @@ const struct xlat bpf_map_types[1] = { {
 #  ifdef XLAT_STR_32
   + sizeof(XLAT_STR_32)
 #  endif
+#  ifdef XLAT_STR_33
+  + sizeof(XLAT_STR_33)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -622,6 +638,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_31
 #  undef XLAT_STR_32
 #  undef XLAT_VAL_32
+#  undef XLAT_STR_33
+#  undef XLAT_VAL_33
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

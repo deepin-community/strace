@@ -115,6 +115,13 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define STATX_DIOALIGN 0x00002000U
 #endif
+#if defined(STATX_MNT_ID_UNIQUE) || (defined(HAVE_DECL_STATX_MNT_ID_UNIQUE) && HAVE_DECL_STATX_MNT_ID_UNIQUE)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((STATX_MNT_ID_UNIQUE) == (0x00004000U), "STATX_MNT_ID_UNIQUE != 0x00004000U");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define STATX_MNT_ID_UNIQUE 0x00004000U
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -176,6 +183,9 @@ static const struct xlat_data statx_masks_xdata[] = {
  XLAT(STATX_DIOALIGN),
  #define XLAT_VAL_15 ((unsigned) (STATX_DIOALIGN))
  #define XLAT_STR_15 STRINGIFY(STATX_DIOALIGN)
+ XLAT(STATX_MNT_ID_UNIQUE),
+ #define XLAT_VAL_16 ((unsigned) (STATX_MNT_ID_UNIQUE))
+ #define XLAT_STR_16 STRINGIFY(STATX_MNT_ID_UNIQUE)
 };
 static
 const struct xlat statx_masks[1] = { {
@@ -231,6 +241,9 @@ const struct xlat statx_masks[1] = { {
 #  ifdef XLAT_VAL_15
   | XLAT_VAL_15
 #  endif
+#  ifdef XLAT_VAL_16
+  | XLAT_VAL_16
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -281,6 +294,9 @@ const struct xlat statx_masks[1] = { {
 #  ifdef XLAT_STR_15
   + sizeof(XLAT_STR_15)
 #  endif
+#  ifdef XLAT_STR_16
+  + sizeof(XLAT_STR_16)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -317,6 +333,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_14
 #  undef XLAT_STR_15
 #  undef XLAT_VAL_15
+#  undef XLAT_STR_16
+#  undef XLAT_VAL_16
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

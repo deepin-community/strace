@@ -178,6 +178,8 @@ AC_DEFUN([st_BPF_ATTR], [dnl
 		union bpf_attr.test.prog_fd,
 		union bpf_attr.test.repeat,
 		union bpf_attr.test.retval,
+		union bpf_attr.token_create.bpffs_fd,
+		union bpf_attr.token_create.flags,
 		union bpf_attr.value,
 		union bpf_attr.value_size,
 		union bpf_attr.dummy

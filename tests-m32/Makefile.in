@@ -17,7 +17,7 @@
 # Automake input for strace tests.
 #
 # Copyright (c) 2011-2016 Dmitry V. Levin <ldv@strace.io>
-# Copyright (c) 2011-2023 The strace developers.
+# Copyright (c) 2011-2024 The strace developers.
 # All rights reserved.
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
@@ -131,8 +131,8 @@ check_PROGRAMS = $(am__EXEEXT_1) $(am__EXEEXT_2) _newselect-P$(EXEEXT) \
 	clone_ptrace--quiet-attach$(EXEEXT) \
 	clone_ptrace--quiet-exit$(EXEEXT) clone_ptrace-q$(EXEEXT) \
 	clone_ptrace-qq$(EXEEXT) close_range$(EXEEXT) count-f$(EXEEXT) \
-	delay$(EXEEXT) execve-v$(EXEEXT) execveat-v$(EXEEXT) \
-	fcntl--pidns-translation$(EXEEXT) \
+	delay$(EXEEXT) detach-vfork$(EXEEXT) execve-v$(EXEEXT) \
+	execveat-v$(EXEEXT) fcntl--pidns-translation$(EXEEXT) \
 	fcntl64--pidns-translation$(EXEEXT) \
 	filter-unavailable$(EXEEXT) filter_seccomp-flag$(EXEEXT) \
 	filter_seccomp-perf$(EXEEXT) fork--pidns-translation$(EXEEXT) \
@@ -344,7 +344,8 @@ check_PROGRAMS = $(am__EXEEXT_1) $(am__EXEEXT_2) _newselect-P$(EXEEXT) \
 	xet_robust_list--pidns-translation$(EXEEXT) \
 	xetpgid--pidns-translation$(EXEEXT) \
 	xetpriority--pidns-translation$(EXEEXT) zeroargc$(EXEEXT)
-@ENABLE_STACKTRACE_TRUE@@USE_DEMANGLE_TRUE@am__append_2 = strace-k-demangle.test
+@ENABLE_STACKTRACE_TRUE@@USE_LIBDW_TRUE@am__append_2 = strace-kk.test strace-kk-p.test
+@ENABLE_STACKTRACE_TRUE@@USE_DEMANGLE_TRUE@am__append_3 = strace-k-demangle.test
 TESTS = $(GEN_TESTS) $(DECODER_TESTS) $(MISC_TESTS) $(am__EXEEXT_3)
 subdir = tests-m32
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -360,6 +361,7 @@ am__aclocal_m4_deps = $(top_srcdir)/src/xlat/ieee802154_addr_types.m4 \
 	$(top_srcdir)/m4/ax_prog_cc_for_build.m4 \
 	$(top_srcdir)/m4/ax_valgrind_check.m4 \
 	$(top_srcdir)/m4/bpf_attr.m4 $(top_srcdir)/m4/mpers.m4 \
+	$(top_srcdir)/m4/st_debug_cflags.m4 \
 	$(top_srcdir)/m4/st_demangle.m4 \
 	$(top_srcdir)/m4/st_esyscmd_s.m4 $(top_srcdir)/m4/st_libdw.m4 \
 	$(top_srcdir)/m4/st_libunwind.m4 \
@@ -393,21 +395,21 @@ am__EXEEXT_1 = _newselect$(EXEEXT) accept$(EXEEXT) accept4$(EXEEXT) \
 	creat$(EXEEXT) delete_module$(EXEEXT) \
 	dev--decode-fds-all$(EXEEXT) dev--decode-fds-dev$(EXEEXT) \
 	dev--decode-fds-none$(EXEEXT) dev--decode-fds-path$(EXEEXT) \
-	dev--decode-fds-socket$(EXEEXT) dev-yy$(EXEEXT) dup$(EXEEXT) \
-	dup-P$(EXEEXT) dup-trace-fds-0$(EXEEXT) \
-	dup-trace-fds-0-9$(EXEEXT) dup-trace-fds-0-P$(EXEEXT) \
-	dup-trace-fds-not-9$(EXEEXT) dup-y$(EXEEXT) dup-yy$(EXEEXT) \
-	dup2$(EXEEXT) dup2-P$(EXEEXT) dup2-e-fd-0$(EXEEXT) \
-	dup2-e-fd-0-9$(EXEEXT) dup2-e-fd-0-P$(EXEEXT) \
-	dup2-e-fd-not-9$(EXEEXT) dup2-y$(EXEEXT) dup2-yy$(EXEEXT) \
-	dup3$(EXEEXT) dup3-P$(EXEEXT) dup3-y$(EXEEXT) dup3-yy$(EXEEXT) \
-	epoll_create$(EXEEXT) epoll_create1$(EXEEXT) \
-	epoll_ctl$(EXEEXT) epoll_pwait$(EXEEXT) epoll_pwait2$(EXEEXT) \
-	epoll_pwait2-P$(EXEEXT) epoll_pwait2-y$(EXEEXT) \
-	epoll_wait$(EXEEXT) erestartsys$(EXEEXT) eventfd$(EXEEXT) \
-	execve$(EXEEXT) execveat$(EXEEXT) faccessat$(EXEEXT) \
-	faccessat-P$(EXEEXT) faccessat-y$(EXEEXT) \
-	faccessat-yy$(EXEEXT) faccessat2$(EXEEXT) \
+	dev--decode-fds-socket$(EXEEXT) dev-pty-yy$(EXEEXT) \
+	dev-yy$(EXEEXT) dup$(EXEEXT) dup-P$(EXEEXT) \
+	dup-trace-fds-0$(EXEEXT) dup-trace-fds-0-9$(EXEEXT) \
+	dup-trace-fds-0-P$(EXEEXT) dup-trace-fds-not-9$(EXEEXT) \
+	dup-y$(EXEEXT) dup-yy$(EXEEXT) dup2$(EXEEXT) dup2-P$(EXEEXT) \
+	dup2-e-fd-0$(EXEEXT) dup2-e-fd-0-9$(EXEEXT) \
+	dup2-e-fd-0-P$(EXEEXT) dup2-e-fd-not-9$(EXEEXT) \
+	dup2-y$(EXEEXT) dup2-yy$(EXEEXT) dup3$(EXEEXT) dup3-P$(EXEEXT) \
+	dup3-y$(EXEEXT) dup3-yy$(EXEEXT) epoll_create$(EXEEXT) \
+	epoll_create1$(EXEEXT) epoll_ctl$(EXEEXT) epoll_pwait$(EXEEXT) \
+	epoll_pwait2$(EXEEXT) epoll_pwait2-P$(EXEEXT) \
+	epoll_pwait2-y$(EXEEXT) epoll_wait$(EXEEXT) \
+	erestartsys$(EXEEXT) eventfd$(EXEEXT) execve$(EXEEXT) \
+	execveat$(EXEEXT) faccessat$(EXEEXT) faccessat-P$(EXEEXT) \
+	faccessat-y$(EXEEXT) faccessat-yy$(EXEEXT) faccessat2$(EXEEXT) \
 	faccessat2-P$(EXEEXT) faccessat2-y$(EXEEXT) \
 	faccessat2-yy$(EXEEXT) fadvise64$(EXEEXT) \
 	fadvise64_64$(EXEEXT) fallocate$(EXEEXT) \
@@ -426,7 +428,13 @@ am__EXEEXT_1 = _newselect$(EXEEXT) accept$(EXEEXT) accept4$(EXEEXT) \
 	fstat64-Xabbrev$(EXEEXT) fstat64-Xraw$(EXEEXT) \
 	fstat64-Xverbose$(EXEEXT) fstatat64$(EXEEXT) fstatfs$(EXEEXT) \
 	fstatfs64$(EXEEXT) fsync$(EXEEXT) ftruncate$(EXEEXT) \
-	ftruncate64$(EXEEXT) futex$(EXEEXT) futex_waitv$(EXEEXT) \
+	ftruncate64$(EXEEXT) futex$(EXEEXT) futex_requeue$(EXEEXT) \
+	futex_requeue-Xabbrev$(EXEEXT) futex_requeue-Xraw$(EXEEXT) \
+	futex_requeue-Xverbose$(EXEEXT) futex_wait$(EXEEXT) \
+	futex_wait-Xabbrev$(EXEEXT) futex_wait-Xraw$(EXEEXT) \
+	futex_wait-Xverbose$(EXEEXT) futex_waitv$(EXEEXT) \
+	futex_wake$(EXEEXT) futex_wake-Xabbrev$(EXEEXT) \
+	futex_wake-Xraw$(EXEEXT) futex_wake-Xverbose$(EXEEXT) \
 	futimesat$(EXEEXT) get_mempolicy$(EXEEXT) getcpu$(EXEEXT) \
 	getcwd$(EXEEXT) getdents$(EXEEXT) getdents-v$(EXEEXT) \
 	getdents64$(EXEEXT) getdents64-v$(EXEEXT) getegid$(EXEEXT) \
@@ -511,10 +519,17 @@ am__EXEEXT_1 = _newselect$(EXEEXT) accept$(EXEEXT) accept4$(EXEEXT) \
 	landlock_restrict_self$(EXEEXT) \
 	landlock_restrict_self-y$(EXEEXT) lchown$(EXEEXT) \
 	lchown32$(EXEEXT) link$(EXEEXT) linkat$(EXEEXT) \
-	llseek$(EXEEXT) lookup_dcookie$(EXEEXT) lseek$(EXEEXT) \
-	lstat$(EXEEXT) lstat64$(EXEEXT) madvise$(EXEEXT) \
-	madvise-Xabbrev$(EXEEXT) madvise-Xraw$(EXEEXT) \
-	madvise-Xverbose$(EXEEXT) maybe_switch_current_tcp$(EXEEXT) \
+	listmount$(EXEEXT) listmount-success$(EXEEXT) llseek$(EXEEXT) \
+	lookup_dcookie$(EXEEXT) lseek$(EXEEXT) \
+	lsm_get_self_attr$(EXEEXT) lsm_get_self_attr-success$(EXEEXT) \
+	lsm_list_modules$(EXEEXT) lsm_list_modules-success$(EXEEXT) \
+	lsm_set_self_attr$(EXEEXT) lstat$(EXEEXT) lstat64$(EXEEXT) \
+	madvise$(EXEEXT) madvise-Xabbrev$(EXEEXT) \
+	madvise-Xraw$(EXEEXT) madvise-Xverbose$(EXEEXT) \
+	map_shadow_stack$(EXEEXT) map_shadow_stack-Xabbrev$(EXEEXT) \
+	map_shadow_stack-Xraw$(EXEEXT) \
+	map_shadow_stack-Xverbose$(EXEEXT) \
+	maybe_switch_current_tcp$(EXEEXT) \
 	maybe_switch_current_tcp--quiet-thread-execve$(EXEEXT) \
 	mbind$(EXEEXT) mbind-Xabbrev$(EXEEXT) mbind-Xraw$(EXEEXT) \
 	mbind-Xverbose$(EXEEXT) membarrier$(EXEEXT) \
@@ -726,12 +741,14 @@ am__EXEEXT_1 = _newselect$(EXEEXT) accept$(EXEEXT) accept4$(EXEEXT) \
 	sockopt-sol_socket-Xverbose$(EXEEXT) \
 	sockopt-timestamp$(EXEEXT) splice$(EXEEXT) stat$(EXEEXT) \
 	stat64$(EXEEXT) statfs$(EXEEXT) statfs64$(EXEEXT) \
+	statmount$(EXEEXT) statmount-success$(EXEEXT) \
 	status-all$(EXEEXT) status-failed$(EXEEXT) \
 	status-failed-long$(EXEEXT) status-failed-status$(EXEEXT) \
 	status-none$(EXEEXT) status-none-f$(EXEEXT) \
 	status-successful$(EXEEXT) status-successful-long$(EXEEXT) \
 	status-successful-status$(EXEEXT) status-unfinished$(EXEEXT) \
-	statx$(EXEEXT) strace--strings-in-hex$(EXEEXT) \
+	statx$(EXEEXT) strace--always-show-pid$(EXEEXT) \
+	strace--strings-in-hex$(EXEEXT) \
 	strace--strings-in-hex-all$(EXEEXT) \
 	strace--strings-in-hex-non-ascii$(EXEEXT) \
 	strace--strings-in-hex-non-ascii-chars$(EXEEXT) \
@@ -740,13 +757,14 @@ am__EXEEXT_1 = _newselect$(EXEEXT) accept$(EXEEXT) accept4$(EXEEXT) \
 	swap$(EXEEXT) sxetmask$(EXEEXT) symlink$(EXEEXT) \
 	symlinkat$(EXEEXT) sync$(EXEEXT) sync_file_range$(EXEEXT) \
 	sync_file_range2$(EXEEXT) sysctl$(EXEEXT) sysinfo$(EXEEXT) \
-	syslog$(EXEEXT) tampering-notes$(EXEEXT) tee$(EXEEXT) \
-	tgkill$(EXEEXT) time$(EXEEXT) timer_create$(EXEEXT) \
-	timer_xettime$(EXEEXT) timerfd_xettime$(EXEEXT) times$(EXEEXT) \
-	times-Xabbrev$(EXEEXT) times-Xraw$(EXEEXT) \
-	times-Xverbose$(EXEEXT) times-fail$(EXEEXT) tkill$(EXEEXT) \
-	truncate$(EXEEXT) truncate64$(EXEEXT) ugetrlimit$(EXEEXT) \
-	uio$(EXEEXT) umask$(EXEEXT) umount$(EXEEXT) umount2$(EXEEXT) \
+	syslog$(EXEEXT) tampering-notes$(EXEEXT) tcp_ao$(EXEEXT) \
+	tee$(EXEEXT) tgkill$(EXEEXT) time$(EXEEXT) \
+	timer_create$(EXEEXT) timer_xettime$(EXEEXT) \
+	timerfd_xettime$(EXEEXT) times$(EXEEXT) times-Xabbrev$(EXEEXT) \
+	times-Xraw$(EXEEXT) times-Xverbose$(EXEEXT) \
+	times-fail$(EXEEXT) tkill$(EXEEXT) truncate$(EXEEXT) \
+	truncate64$(EXEEXT) ugetrlimit$(EXEEXT) uio$(EXEEXT) \
+	umask$(EXEEXT) umount$(EXEEXT) umount2$(EXEEXT) \
 	umoven-illptr$(EXEEXT) umovestr$(EXEEXT) \
 	umovestr-illptr$(EXEEXT) umovestr2$(EXEEXT) umovestr3$(EXEEXT) \
 	umovestr_cached$(EXEEXT) umovestr_cached_adjacent$(EXEEXT) \
@@ -1232,6 +1250,10 @@ delete_module_SOURCES = delete_module.c
 delete_module_OBJECTS = delete_module.$(OBJEXT)
 delete_module_LDADD = $(LDADD)
 delete_module_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+detach_vfork_SOURCES = detach-vfork.c
+detach_vfork_OBJECTS = detach-vfork.$(OBJEXT)
+detach_vfork_LDADD = $(LDADD)
+detach_vfork_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
 dev__decode_fds_all_SOURCES = dev--decode-fds-all.c
 dev__decode_fds_all_OBJECTS = dev--decode-fds-all.$(OBJEXT)
 dev__decode_fds_all_LDADD = $(LDADD)
@@ -1252,6 +1274,10 @@ dev__decode_fds_socket_SOURCES = dev--decode-fds-socket.c
 dev__decode_fds_socket_OBJECTS = dev--decode-fds-socket.$(OBJEXT)
 dev__decode_fds_socket_LDADD = $(LDADD)
 dev__decode_fds_socket_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+dev_pty_yy_SOURCES = dev-pty-yy.c
+dev_pty_yy_OBJECTS = dev-pty-yy.$(OBJEXT)
+dev_pty_yy_LDADD = $(LDADD)
+dev_pty_yy_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
 dev_yy_SOURCES = dev-yy.c
 dev_yy_OBJECTS = dev-yy.$(OBJEXT)
 dev_yy_LDADD = $(LDADD)
@@ -1855,10 +1881,58 @@ futex_SOURCES = futex.c
 futex_OBJECTS = futex.$(OBJEXT)
 futex_LDADD = $(LDADD)
 futex_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+futex_requeue_SOURCES = futex_requeue.c
+futex_requeue_OBJECTS = futex_requeue.$(OBJEXT)
+futex_requeue_LDADD = $(LDADD)
+futex_requeue_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+futex_requeue_Xabbrev_SOURCES = futex_requeue-Xabbrev.c
+futex_requeue_Xabbrev_OBJECTS = futex_requeue-Xabbrev.$(OBJEXT)
+futex_requeue_Xabbrev_LDADD = $(LDADD)
+futex_requeue_Xabbrev_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+futex_requeue_Xraw_SOURCES = futex_requeue-Xraw.c
+futex_requeue_Xraw_OBJECTS = futex_requeue-Xraw.$(OBJEXT)
+futex_requeue_Xraw_LDADD = $(LDADD)
+futex_requeue_Xraw_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+futex_requeue_Xverbose_SOURCES = futex_requeue-Xverbose.c
+futex_requeue_Xverbose_OBJECTS = futex_requeue-Xverbose.$(OBJEXT)
+futex_requeue_Xverbose_LDADD = $(LDADD)
+futex_requeue_Xverbose_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+futex_wait_SOURCES = futex_wait.c
+futex_wait_OBJECTS = futex_wait.$(OBJEXT)
+futex_wait_LDADD = $(LDADD)
+futex_wait_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+futex_wait_Xabbrev_SOURCES = futex_wait-Xabbrev.c
+futex_wait_Xabbrev_OBJECTS = futex_wait-Xabbrev.$(OBJEXT)
+futex_wait_Xabbrev_LDADD = $(LDADD)
+futex_wait_Xabbrev_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+futex_wait_Xraw_SOURCES = futex_wait-Xraw.c
+futex_wait_Xraw_OBJECTS = futex_wait-Xraw.$(OBJEXT)
+futex_wait_Xraw_LDADD = $(LDADD)
+futex_wait_Xraw_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+futex_wait_Xverbose_SOURCES = futex_wait-Xverbose.c
+futex_wait_Xverbose_OBJECTS = futex_wait-Xverbose.$(OBJEXT)
+futex_wait_Xverbose_LDADD = $(LDADD)
+futex_wait_Xverbose_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
 futex_waitv_SOURCES = futex_waitv.c
 futex_waitv_OBJECTS = futex_waitv.$(OBJEXT)
 futex_waitv_LDADD = $(LDADD)
 futex_waitv_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+futex_wake_SOURCES = futex_wake.c
+futex_wake_OBJECTS = futex_wake.$(OBJEXT)
+futex_wake_LDADD = $(LDADD)
+futex_wake_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+futex_wake_Xabbrev_SOURCES = futex_wake-Xabbrev.c
+futex_wake_Xabbrev_OBJECTS = futex_wake-Xabbrev.$(OBJEXT)
+futex_wake_Xabbrev_LDADD = $(LDADD)
+futex_wake_Xabbrev_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+futex_wake_Xraw_SOURCES = futex_wake-Xraw.c
+futex_wake_Xraw_OBJECTS = futex_wake-Xraw.$(OBJEXT)
+futex_wake_Xraw_LDADD = $(LDADD)
+futex_wake_Xraw_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+futex_wake_Xverbose_SOURCES = futex_wake-Xverbose.c
+futex_wake_Xverbose_OBJECTS = futex_wake-Xverbose.$(OBJEXT)
+futex_wake_Xverbose_LDADD = $(LDADD)
+futex_wake_Xverbose_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
 futimesat_SOURCES = futimesat.c
 futimesat_OBJECTS = futimesat.$(OBJEXT)
 futimesat_LDADD = $(LDADD)
@@ -3235,6 +3309,14 @@ list_sigaction_signum_SOURCES = list_sigaction_signum.c
 list_sigaction_signum_OBJECTS = list_sigaction_signum.$(OBJEXT)
 list_sigaction_signum_LDADD = $(LDADD)
 list_sigaction_signum_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+listmount_SOURCES = listmount.c
+listmount_OBJECTS = listmount.$(OBJEXT)
+listmount_LDADD = $(LDADD)
+listmount_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+listmount_success_SOURCES = listmount-success.c
+listmount_success_OBJECTS = listmount-success.$(OBJEXT)
+listmount_success_LDADD = $(LDADD)
+listmount_success_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
 llseek_SOURCES = llseek.c
 llseek_OBJECTS = llseek.$(OBJEXT)
 llseek_LDADD = $(LDADD)
@@ -3253,6 +3335,29 @@ lseek_SOURCES = lseek.c
 lseek_OBJECTS = lseek.$(OBJEXT)
 lseek_LDADD = $(LDADD)
 lseek_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+lsm_get_self_attr_SOURCES = lsm_get_self_attr.c
+lsm_get_self_attr_OBJECTS = lsm_get_self_attr.$(OBJEXT)
+lsm_get_self_attr_LDADD = $(LDADD)
+lsm_get_self_attr_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+lsm_get_self_attr_success_SOURCES = lsm_get_self_attr-success.c
+lsm_get_self_attr_success_OBJECTS =  \
+	lsm_get_self_attr-success.$(OBJEXT)
+lsm_get_self_attr_success_LDADD = $(LDADD)
+lsm_get_self_attr_success_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+lsm_list_modules_SOURCES = lsm_list_modules.c
+lsm_list_modules_OBJECTS = lsm_list_modules.$(OBJEXT)
+lsm_list_modules_LDADD = $(LDADD)
+lsm_list_modules_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+lsm_list_modules_success_SOURCES = lsm_list_modules-success.c
+lsm_list_modules_success_OBJECTS = lsm_list_modules-success.$(OBJEXT)
+lsm_list_modules_success_LDADD = $(LDADD)
+lsm_list_modules_success_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+lsm_set_self_attr_SOURCES = lsm_set_self_attr.c
+lsm_set_self_attr_OBJECTS = lsm_set_self_attr.$(OBJEXT)
+lsm_set_self_attr_LDADD = $(LDADD)
+lsm_set_self_attr_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
 lstat_SOURCES = lstat.c
 lstat_OBJECTS = lstat.$(OBJEXT)
 lstat_LDADD = $(LDADD)
@@ -3277,6 +3382,25 @@ madvise_Xverbose_SOURCES = madvise-Xverbose.c
 madvise_Xverbose_OBJECTS = madvise-Xverbose.$(OBJEXT)
 madvise_Xverbose_LDADD = $(LDADD)
 madvise_Xverbose_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+map_shadow_stack_SOURCES = map_shadow_stack.c
+map_shadow_stack_OBJECTS = map_shadow_stack.$(OBJEXT)
+map_shadow_stack_LDADD = $(LDADD)
+map_shadow_stack_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+map_shadow_stack_Xabbrev_SOURCES = map_shadow_stack-Xabbrev.c
+map_shadow_stack_Xabbrev_OBJECTS = map_shadow_stack-Xabbrev.$(OBJEXT)
+map_shadow_stack_Xabbrev_LDADD = $(LDADD)
+map_shadow_stack_Xabbrev_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+map_shadow_stack_Xraw_SOURCES = map_shadow_stack-Xraw.c
+map_shadow_stack_Xraw_OBJECTS = map_shadow_stack-Xraw.$(OBJEXT)
+map_shadow_stack_Xraw_LDADD = $(LDADD)
+map_shadow_stack_Xraw_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+map_shadow_stack_Xverbose_SOURCES = map_shadow_stack-Xverbose.c
+map_shadow_stack_Xverbose_OBJECTS =  \
+	map_shadow_stack-Xverbose.$(OBJEXT)
+map_shadow_stack_Xverbose_LDADD = $(LDADD)
+map_shadow_stack_Xverbose_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
 maybe_switch_current_tcp_SOURCES = maybe_switch_current_tcp.c
 maybe_switch_current_tcp_OBJECTS = maybe_switch_current_tcp.$(OBJEXT)
 maybe_switch_current_tcp_DEPENDENCIES = $(am__DEPENDENCIES_2)
@@ -5725,18 +5849,27 @@ splice_SOURCES = splice.c
 splice_OBJECTS = splice.$(OBJEXT)
 splice_LDADD = $(LDADD)
 splice_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
-am_stack_fcall_OBJECTS = stack-fcall.$(OBJEXT) stack-fcall-0.$(OBJEXT) \
-	stack-fcall-1.$(OBJEXT) stack-fcall-2.$(OBJEXT) \
-	stack-fcall-3.$(OBJEXT)
+am_stack_fcall_OBJECTS = stack_fcall-stack-fcall.$(OBJEXT) \
+	stack_fcall-stack-fcall-0.$(OBJEXT) \
+	stack_fcall-stack-fcall-1.$(OBJEXT) \
+	stack_fcall-stack-fcall-2.$(OBJEXT) \
+	stack_fcall-stack-fcall-3.$(OBJEXT)
 stack_fcall_OBJECTS = $(am_stack_fcall_OBJECTS)
 stack_fcall_LDADD = $(LDADD)
 stack_fcall_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
-am_stack_fcall_attach_OBJECTS = stack-fcall-attach.$(OBJEXT) \
-	stack-fcall-0.$(OBJEXT) stack-fcall-1.$(OBJEXT) \
-	stack-fcall-2.$(OBJEXT) stack-fcall-3.$(OBJEXT)
+stack_fcall_LINK = $(CCLD) $(stack_fcall_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+am_stack_fcall_attach_OBJECTS =  \
+	stack_fcall_attach-stack-fcall-attach.$(OBJEXT) \
+	stack_fcall_attach-stack-fcall-0.$(OBJEXT) \
+	stack_fcall_attach-stack-fcall-1.$(OBJEXT) \
+	stack_fcall_attach-stack-fcall-2.$(OBJEXT) \
+	stack_fcall_attach-stack-fcall-3.$(OBJEXT)
 stack_fcall_attach_OBJECTS = $(am_stack_fcall_attach_OBJECTS)
 stack_fcall_attach_LDADD = $(LDADD)
 stack_fcall_attach_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+stack_fcall_attach_LINK = $(CCLD) $(stack_fcall_attach_CFLAGS) \
+	$(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 am_stack_fcall_mangled_OBJECTS = stack-fcall-mangled.$(OBJEXT) \
 	stack-fcall-mangled-0.$(OBJEXT) \
 	stack-fcall-mangled-1.$(OBJEXT) \
@@ -5761,6 +5894,14 @@ statfs64_SOURCES = statfs64.c
 statfs64_OBJECTS = statfs64.$(OBJEXT)
 statfs64_LDADD = $(LDADD)
 statfs64_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+statmount_SOURCES = statmount.c
+statmount_OBJECTS = statmount.$(OBJEXT)
+statmount_LDADD = $(LDADD)
+statmount_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+statmount_success_SOURCES = statmount-success.c
+statmount_success_OBJECTS = statmount-success.$(OBJEXT)
+statmount_success_LDADD = $(LDADD)
+statmount_success_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
 status_all_SOURCES = status-all.c
 status_all_OBJECTS = status-all.$(OBJEXT)
 status_all_LDADD = $(LDADD)
@@ -5820,6 +5961,11 @@ statx_SOURCES = statx.c
 statx_OBJECTS = statx.$(OBJEXT)
 statx_LDADD = $(LDADD)
 statx_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+strace__always_show_pid_SOURCES = strace--always-show-pid.c
+strace__always_show_pid_OBJECTS = strace--always-show-pid.$(OBJEXT)
+strace__always_show_pid_LDADD = $(LDADD)
+strace__always_show_pid_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
 strace__decode_pids_comm_SOURCES = strace--decode-pids-comm.c
 strace__decode_pids_comm_OBJECTS = strace--decode-pids-comm.$(OBJEXT)
 strace__decode_pids_comm_LDADD = $(LDADD)
@@ -5977,6 +6123,10 @@ tampering_notes_SOURCES = tampering-notes.c
 tampering_notes_OBJECTS = tampering-notes.$(OBJEXT)
 tampering_notes_LDADD = $(LDADD)
 tampering_notes_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+tcp_ao_SOURCES = tcp_ao.c
+tcp_ao_OBJECTS = tcp_ao.$(OBJEXT)
+tcp_ao_LDADD = $(LDADD)
+tcp_ao_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
 tee_SOURCES = tee.c
 tee_OBJECTS = tee.$(OBJEXT)
 tee_LDADD = $(LDADD)
@@ -6376,12 +6526,13 @@ am__depfiles_remade = ./$(DEPDIR)/_newselect-P.Po \
 	./$(DEPDIR)/clone_ptrace.Po ./$(DEPDIR)/close_range.Po \
 	./$(DEPDIR)/copy_file_range.Po ./$(DEPDIR)/count-f.Po \
 	./$(DEPDIR)/creat.Po ./$(DEPDIR)/delay.Po \
-	./$(DEPDIR)/delete_module.Po \
+	./$(DEPDIR)/delete_module.Po ./$(DEPDIR)/detach-vfork.Po \
 	./$(DEPDIR)/dev--decode-fds-all.Po \
 	./$(DEPDIR)/dev--decode-fds-dev.Po \
 	./$(DEPDIR)/dev--decode-fds-none.Po \
 	./$(DEPDIR)/dev--decode-fds-path.Po \
-	./$(DEPDIR)/dev--decode-fds-socket.Po ./$(DEPDIR)/dev-yy.Po \
+	./$(DEPDIR)/dev--decode-fds-socket.Po \
+	./$(DEPDIR)/dev-pty-yy.Po ./$(DEPDIR)/dev-yy.Po \
 	./$(DEPDIR)/dup-P.Po ./$(DEPDIR)/dup-trace-fds-0-9.Po \
 	./$(DEPDIR)/dup-trace-fds-0-P.Po \
 	./$(DEPDIR)/dup-trace-fds-0.Po \
@@ -6476,16 +6627,24 @@ am__depfiles_remade = ./$(DEPDIR)/_newselect-P.Po \
 	./$(DEPDIR)/fstatfs64.Po ./$(DEPDIR)/fsync-y.Po \
 	./$(DEPDIR)/fsync.Po ./$(DEPDIR)/ftruncate.Po \
 	./$(DEPDIR)/ftruncate64-ftruncate64.Po ./$(DEPDIR)/futex.Po \
-	./$(DEPDIR)/futex_waitv.Po ./$(DEPDIR)/futimesat.Po \
-	./$(DEPDIR)/get_mempolicy.Po ./$(DEPDIR)/get_process_reaper.Po \
-	./$(DEPDIR)/getcpu.Po ./$(DEPDIR)/getcwd.Po \
-	./$(DEPDIR)/getdents-v.Po ./$(DEPDIR)/getdents.Po \
-	./$(DEPDIR)/getdents64-v.Po ./$(DEPDIR)/getdents64.Po \
-	./$(DEPDIR)/getegid.Po ./$(DEPDIR)/getegid32.Po \
-	./$(DEPDIR)/geteuid.Po ./$(DEPDIR)/geteuid32.Po \
-	./$(DEPDIR)/getgid.Po ./$(DEPDIR)/getgid32.Po \
-	./$(DEPDIR)/getgroups.Po ./$(DEPDIR)/getgroups32.Po \
-	./$(DEPDIR)/getpeername.Po \
+	./$(DEPDIR)/futex_requeue-Xabbrev.Po \
+	./$(DEPDIR)/futex_requeue-Xraw.Po \
+	./$(DEPDIR)/futex_requeue-Xverbose.Po \
+	./$(DEPDIR)/futex_requeue.Po ./$(DEPDIR)/futex_wait-Xabbrev.Po \
+	./$(DEPDIR)/futex_wait-Xraw.Po \
+	./$(DEPDIR)/futex_wait-Xverbose.Po ./$(DEPDIR)/futex_wait.Po \
+	./$(DEPDIR)/futex_waitv.Po ./$(DEPDIR)/futex_wake-Xabbrev.Po \
+	./$(DEPDIR)/futex_wake-Xraw.Po \
+	./$(DEPDIR)/futex_wake-Xverbose.Po ./$(DEPDIR)/futex_wake.Po \
+	./$(DEPDIR)/futimesat.Po ./$(DEPDIR)/get_mempolicy.Po \
+	./$(DEPDIR)/get_process_reaper.Po ./$(DEPDIR)/getcpu.Po \
+	./$(DEPDIR)/getcwd.Po ./$(DEPDIR)/getdents-v.Po \
+	./$(DEPDIR)/getdents.Po ./$(DEPDIR)/getdents64-v.Po \
+	./$(DEPDIR)/getdents64.Po ./$(DEPDIR)/getegid.Po \
+	./$(DEPDIR)/getegid32.Po ./$(DEPDIR)/geteuid.Po \
+	./$(DEPDIR)/geteuid32.Po ./$(DEPDIR)/getgid.Po \
+	./$(DEPDIR)/getgid32.Po ./$(DEPDIR)/getgroups.Po \
+	./$(DEPDIR)/getgroups32.Po ./$(DEPDIR)/getpeername.Po \
 	./$(DEPDIR)/getpgrp--pidns-translation.Po \
 	./$(DEPDIR)/getpgrp.Po \
 	./$(DEPDIR)/getpid--pidns-translation.Po ./$(DEPDIR)/getpid.Po \
@@ -6735,12 +6894,20 @@ am__depfiles_remade = ./$(DEPDIR)/_newselect-P.Po \
 	./$(DEPDIR)/linkat--secontext_full_mismatch.Po \
 	./$(DEPDIR)/linkat--secontext_mismatch.Po \
 	./$(DEPDIR)/linkat.Po ./$(DEPDIR)/list_sigaction_signum.Po \
+	./$(DEPDIR)/listmount-success.Po ./$(DEPDIR)/listmount.Po \
 	./$(DEPDIR)/llseek.Po ./$(DEPDIR)/localtime.Po \
 	./$(DEPDIR)/lookup_dcookie.Po ./$(DEPDIR)/looping_threads.Po \
-	./$(DEPDIR)/lseek.Po ./$(DEPDIR)/lstat.Po \
+	./$(DEPDIR)/lseek.Po ./$(DEPDIR)/lsm_get_self_attr-success.Po \
+	./$(DEPDIR)/lsm_get_self_attr.Po \
+	./$(DEPDIR)/lsm_list_modules-success.Po \
+	./$(DEPDIR)/lsm_list_modules.Po \
+	./$(DEPDIR)/lsm_set_self_attr.Po ./$(DEPDIR)/lstat.Po \
 	./$(DEPDIR)/lstat64-lstat64.Po ./$(DEPDIR)/madvise-Xabbrev.Po \
 	./$(DEPDIR)/madvise-Xraw.Po ./$(DEPDIR)/madvise-Xverbose.Po \
-	./$(DEPDIR)/madvise.Po \
+	./$(DEPDIR)/madvise.Po ./$(DEPDIR)/map_shadow_stack-Xabbrev.Po \
+	./$(DEPDIR)/map_shadow_stack-Xraw.Po \
+	./$(DEPDIR)/map_shadow_stack-Xverbose.Po \
+	./$(DEPDIR)/map_shadow_stack.Po \
 	./$(DEPDIR)/maybe_switch_current_tcp--quiet-thread-execve.Po \
 	./$(DEPDIR)/maybe_switch_current_tcp.Po \
 	./$(DEPDIR)/mbind-Xabbrev.Po ./$(DEPDIR)/mbind-Xraw.Po \
@@ -7144,16 +7311,24 @@ am__depfiles_remade = ./$(DEPDIR)/_newselect-P.Po \
 	./$(DEPDIR)/sockopt-sol_socket-success.Po \
 	./$(DEPDIR)/sockopt-sol_socket.Po \
 	./$(DEPDIR)/sockopt-timestamp.Po ./$(DEPDIR)/splice.Po \
-	./$(DEPDIR)/stack-fcall-0.Po ./$(DEPDIR)/stack-fcall-1.Po \
-	./$(DEPDIR)/stack-fcall-2.Po ./$(DEPDIR)/stack-fcall-3.Po \
-	./$(DEPDIR)/stack-fcall-attach.Po \
 	./$(DEPDIR)/stack-fcall-mangled-0.Po \
 	./$(DEPDIR)/stack-fcall-mangled-1.Po \
 	./$(DEPDIR)/stack-fcall-mangled-2.Po \
 	./$(DEPDIR)/stack-fcall-mangled-3.Po \
-	./$(DEPDIR)/stack-fcall-mangled.Po ./$(DEPDIR)/stack-fcall.Po \
+	./$(DEPDIR)/stack-fcall-mangled.Po \
+	./$(DEPDIR)/stack_fcall-stack-fcall-0.Po \
+	./$(DEPDIR)/stack_fcall-stack-fcall-1.Po \
+	./$(DEPDIR)/stack_fcall-stack-fcall-2.Po \
+	./$(DEPDIR)/stack_fcall-stack-fcall-3.Po \
+	./$(DEPDIR)/stack_fcall-stack-fcall.Po \
+	./$(DEPDIR)/stack_fcall_attach-stack-fcall-0.Po \
+	./$(DEPDIR)/stack_fcall_attach-stack-fcall-1.Po \
+	./$(DEPDIR)/stack_fcall_attach-stack-fcall-2.Po \
+	./$(DEPDIR)/stack_fcall_attach-stack-fcall-3.Po \
+	./$(DEPDIR)/stack_fcall_attach-stack-fcall-attach.Po \
 	./$(DEPDIR)/stat.Po ./$(DEPDIR)/stat64-stat64.Po \
 	./$(DEPDIR)/statfs-statfs.Po ./$(DEPDIR)/statfs64.Po \
+	./$(DEPDIR)/statmount-success.Po ./$(DEPDIR)/statmount.Po \
 	./$(DEPDIR)/status-all.Po \
 	./$(DEPDIR)/status-detached-threads.Po \
 	./$(DEPDIR)/status-failed-long.Po \
@@ -7166,6 +7341,7 @@ am__depfiles_remade = ./$(DEPDIR)/_newselect-P.Po \
 	./$(DEPDIR)/status-successful.Po \
 	./$(DEPDIR)/status-unfinished-threads.Po \
 	./$(DEPDIR)/status-unfinished.Po ./$(DEPDIR)/statx.Po \
+	./$(DEPDIR)/strace--always-show-pid.Po \
 	./$(DEPDIR)/strace--decode-pids-comm.Po \
 	./$(DEPDIR)/strace--strings-in-hex-all.Po \
 	./$(DEPDIR)/strace--strings-in-hex-non-ascii-chars.Po \
@@ -7189,8 +7365,8 @@ am__depfiles_remade = ./$(DEPDIR)/_newselect-P.Po \
 	./$(DEPDIR)/sync_file_range2.Po ./$(DEPDIR)/sysctl.Po \
 	./$(DEPDIR)/sysinfo.Po ./$(DEPDIR)/syslog-success.Po \
 	./$(DEPDIR)/syslog.Po ./$(DEPDIR)/tampering-notes.Po \
-	./$(DEPDIR)/tee.Po ./$(DEPDIR)/tgkill--pidns-translation.Po \
-	./$(DEPDIR)/tgkill.Po \
+	./$(DEPDIR)/tcp_ao.Po ./$(DEPDIR)/tee.Po \
+	./$(DEPDIR)/tgkill--pidns-translation.Po ./$(DEPDIR)/tgkill.Po \
 	./$(DEPDIR)/threads-execve--quiet-thread-execve.Po \
 	./$(DEPDIR)/threads-execve-q.Po \
 	./$(DEPDIR)/threads-execve-qq.Po \
@@ -7277,12 +7453,12 @@ SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c accept.c \
 	clone_ptrace.c clone_ptrace--quiet-attach.c \
 	clone_ptrace--quiet-exit.c clone_ptrace-q.c clone_ptrace-qq.c \
 	close_range.c copy_file_range.c count-f.c creat.c delay.c \
-	delete_module.c dev--decode-fds-all.c dev--decode-fds-dev.c \
-	dev--decode-fds-none.c dev--decode-fds-path.c \
-	dev--decode-fds-socket.c dev-yy.c dup.c dup-P.c \
-	dup-trace-fds-0.c dup-trace-fds-0-9.c dup-trace-fds-0-P.c \
-	dup-trace-fds-not-9.c dup-y.c dup-yy.c dup2.c dup2-P.c \
-	dup2-e-fd-0.c dup2-e-fd-0-9.c dup2-e-fd-0-P.c \
+	delete_module.c detach-vfork.c dev--decode-fds-all.c \
+	dev--decode-fds-dev.c dev--decode-fds-none.c \
+	dev--decode-fds-path.c dev--decode-fds-socket.c dev-pty-yy.c \
+	dev-yy.c dup.c dup-P.c dup-trace-fds-0.c dup-trace-fds-0-9.c \
+	dup-trace-fds-0-P.c dup-trace-fds-not-9.c dup-y.c dup-yy.c \
+	dup2.c dup2-P.c dup2-e-fd-0.c dup2-e-fd-0-9.c dup2-e-fd-0-P.c \
 	dup2-e-fd-not-9.c dup2-y.c dup2-yy.c dup3.c dup3-P.c dup3-y.c \
 	dup3-yy.c epoll_create.c epoll_create1.c epoll_ctl.c \
 	epoll_pwait.c epoll_pwait2.c epoll_pwait2-P.c epoll_pwait2-y.c \
@@ -7330,12 +7506,16 @@ SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c accept.c \
 	fstat-Xabbrev.c fstat-Xraw.c fstat-Xverbose.c fstat64.c \
 	fstat64-Xabbrev.c fstat64-Xraw.c fstat64-Xverbose.c \
 	fstatat64.c fstatfs.c fstatfs64.c fsync.c fsync-y.c \
-	ftruncate.c ftruncate64.c futex.c futex_waitv.c futimesat.c \
-	get_mempolicy.c get_process_reaper.c getcpu.c getcwd.c \
-	getdents.c getdents-v.c getdents64.c getdents64-v.c getegid.c \
-	getegid32.c geteuid.c geteuid32.c getgid.c getgid32.c \
-	getgroups.c getgroups32.c getpeername.c getpgrp.c \
-	getpgrp--pidns-translation.c getpid.c \
+	ftruncate.c ftruncate64.c futex.c futex_requeue.c \
+	futex_requeue-Xabbrev.c futex_requeue-Xraw.c \
+	futex_requeue-Xverbose.c futex_wait.c futex_wait-Xabbrev.c \
+	futex_wait-Xraw.c futex_wait-Xverbose.c futex_waitv.c \
+	futex_wake.c futex_wake-Xabbrev.c futex_wake-Xraw.c \
+	futex_wake-Xverbose.c futimesat.c get_mempolicy.c \
+	get_process_reaper.c getcpu.c getcwd.c getdents.c getdents-v.c \
+	getdents64.c getdents64-v.c getegid.c getegid32.c geteuid.c \
+	geteuid32.c getgid.c getgid32.c getgroups.c getgroups32.c \
+	getpeername.c getpgrp.c getpgrp--pidns-translation.c getpid.c \
 	getpid--pidns-translation.c getppid.c getrandom.c getresgid.c \
 	getresgid32.c getresuid.c getresuid32.c getrlimit.c \
 	getrusage.c getsid.c getsid--pidns-translation.c getsockname.c \
@@ -7449,9 +7629,14 @@ SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c accept.c \
 	landlock_restrict_self-y.c lchown.c lchown32.c link.c link-P.c \
 	linkat.c linkat--secontext.c linkat--secontext_full.c \
 	linkat--secontext_full_mismatch.c linkat--secontext_mismatch.c \
-	list_sigaction_signum.c llseek.c localtime.c lookup_dcookie.c \
-	looping_threads.c lseek.c lstat.c lstat64.c madvise.c \
+	list_sigaction_signum.c listmount.c listmount-success.c \
+	llseek.c localtime.c lookup_dcookie.c looping_threads.c \
+	lseek.c lsm_get_self_attr.c lsm_get_self_attr-success.c \
+	lsm_list_modules.c lsm_list_modules-success.c \
+	lsm_set_self_attr.c lstat.c lstat64.c madvise.c \
 	madvise-Xabbrev.c madvise-Xraw.c madvise-Xverbose.c \
+	map_shadow_stack.c map_shadow_stack-Xabbrev.c \
+	map_shadow_stack-Xraw.c map_shadow_stack-Xverbose.c \
 	maybe_switch_current_tcp.c \
 	maybe_switch_current_tcp--quiet-thread-execve.c mbind.c \
 	mbind-Xabbrev.c mbind-Xraw.c mbind-Xverbose.c membarrier.c \
@@ -7664,12 +7849,13 @@ SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c accept.c \
 	sockopt-sol_socket-success-Xverbose.c sockopt-timestamp.c \
 	splice.c $(stack_fcall_SOURCES) $(stack_fcall_attach_SOURCES) \
 	$(stack_fcall_mangled_SOURCES) stat.c stat64.c statfs.c \
-	statfs64.c status-all.c status-detached-threads.c \
-	status-failed.c status-failed-long.c status-failed-status.c \
-	status-none.c status-none-f.c status-none-threads.c \
-	status-successful.c status-successful-long.c \
-	status-successful-status.c status-successful-threads.c \
-	status-unfinished.c status-unfinished-threads.c statx.c \
+	statfs64.c statmount.c statmount-success.c status-all.c \
+	status-detached-threads.c status-failed.c status-failed-long.c \
+	status-failed-status.c status-none.c status-none-f.c \
+	status-none-threads.c status-successful.c \
+	status-successful-long.c status-successful-status.c \
+	status-successful-threads.c status-unfinished.c \
+	status-unfinished-threads.c statx.c strace--always-show-pid.c \
 	strace--decode-pids-comm.c strace--strings-in-hex.c \
 	strace--strings-in-hex-all.c \
 	strace--strings-in-hex-non-ascii.c \
@@ -7684,22 +7870,22 @@ SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c accept.c \
 	strace-x.c strace-xx.c swap.c sxetmask.c symlink.c symlink-P.c \
 	symlinkat.c sync.c sync_file_range.c sync_file_range2.c \
 	sysctl.c sysinfo.c syslog.c syslog-success.c tampering-notes.c \
-	tee.c tgkill.c tgkill--pidns-translation.c threads-execve.c \
-	threads-execve--quiet-thread-execve.c threads-execve-q.c \
-	threads-execve-qq.c threads-execve-qqq.c time.c timer_create.c \
-	timer_xettime.c timerfd_xettime.c times.c times-Xabbrev.c \
-	times-Xraw.c times-Xverbose.c times-fail.c tkill.c \
-	tkill--pidns-translation.c tracer_ppid_pgid_sid.c \
-	$(trie_test_SOURCES) truncate.c truncate64.c ugetrlimit.c \
-	uio.c umask.c umount.c umount2.c umoven-illptr.c umovestr.c \
-	umovestr-illptr.c umovestr2.c umovestr3.c umovestr_cached.c \
-	umovestr_cached_adjacent.c uname.c unblock_reset_raise.c \
-	unix-pair-send-recv.c unix-pair-sendto-recvfrom.c unlink.c \
-	unlinkat.c unshare.c userfaultfd.c ustat.c utime.c utimensat.c \
-	utimensat-Xabbrev.c utimensat-Xraw.c utimensat-Xverbose.c \
-	utimes.c vfork-f.c vhangup.c vmsplice.c wait4.c wait4-v.c \
-	waitid.c waitid-Y.c waitid-v.c waitpid.c xattr.c \
-	xattr-strings.c xet_robust_list.c \
+	tcp_ao.c tee.c tgkill.c tgkill--pidns-translation.c \
+	threads-execve.c threads-execve--quiet-thread-execve.c \
+	threads-execve-q.c threads-execve-qq.c threads-execve-qqq.c \
+	time.c timer_create.c timer_xettime.c timerfd_xettime.c \
+	times.c times-Xabbrev.c times-Xraw.c times-Xverbose.c \
+	times-fail.c tkill.c tkill--pidns-translation.c \
+	tracer_ppid_pgid_sid.c $(trie_test_SOURCES) truncate.c \
+	truncate64.c ugetrlimit.c uio.c umask.c umount.c umount2.c \
+	umoven-illptr.c umovestr.c umovestr-illptr.c umovestr2.c \
+	umovestr3.c umovestr_cached.c umovestr_cached_adjacent.c \
+	uname.c unblock_reset_raise.c unix-pair-send-recv.c \
+	unix-pair-sendto-recvfrom.c unlink.c unlinkat.c unshare.c \
+	userfaultfd.c ustat.c utime.c utimensat.c utimensat-Xabbrev.c \
+	utimensat-Xraw.c utimensat-Xverbose.c utimes.c vfork-f.c \
+	vhangup.c vmsplice.c wait4.c wait4-v.c waitid.c waitid-Y.c \
+	waitid-v.c waitpid.c xattr.c xattr-strings.c xet_robust_list.c \
 	xet_robust_list--pidns-translation.c xet_thread_area_x86.c \
 	xetitimer.c xetpgid.c xetpgid--pidns-translation.c \
 	xetpriority.c xetpriority--pidns-translation.c xettimeofday.c \
@@ -7731,12 +7917,12 @@ DIST_SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c \
 	clone_ptrace.c clone_ptrace--quiet-attach.c \
 	clone_ptrace--quiet-exit.c clone_ptrace-q.c clone_ptrace-qq.c \
 	close_range.c copy_file_range.c count-f.c creat.c delay.c \
-	delete_module.c dev--decode-fds-all.c dev--decode-fds-dev.c \
-	dev--decode-fds-none.c dev--decode-fds-path.c \
-	dev--decode-fds-socket.c dev-yy.c dup.c dup-P.c \
-	dup-trace-fds-0.c dup-trace-fds-0-9.c dup-trace-fds-0-P.c \
-	dup-trace-fds-not-9.c dup-y.c dup-yy.c dup2.c dup2-P.c \
-	dup2-e-fd-0.c dup2-e-fd-0-9.c dup2-e-fd-0-P.c \
+	delete_module.c detach-vfork.c dev--decode-fds-all.c \
+	dev--decode-fds-dev.c dev--decode-fds-none.c \
+	dev--decode-fds-path.c dev--decode-fds-socket.c dev-pty-yy.c \
+	dev-yy.c dup.c dup-P.c dup-trace-fds-0.c dup-trace-fds-0-9.c \
+	dup-trace-fds-0-P.c dup-trace-fds-not-9.c dup-y.c dup-yy.c \
+	dup2.c dup2-P.c dup2-e-fd-0.c dup2-e-fd-0-9.c dup2-e-fd-0-P.c \
 	dup2-e-fd-not-9.c dup2-y.c dup2-yy.c dup3.c dup3-P.c dup3-y.c \
 	dup3-yy.c epoll_create.c epoll_create1.c epoll_ctl.c \
 	epoll_pwait.c epoll_pwait2.c epoll_pwait2-P.c epoll_pwait2-y.c \
@@ -7784,12 +7970,16 @@ DIST_SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c \
 	fstat-Xabbrev.c fstat-Xraw.c fstat-Xverbose.c fstat64.c \
 	fstat64-Xabbrev.c fstat64-Xraw.c fstat64-Xverbose.c \
 	fstatat64.c fstatfs.c fstatfs64.c fsync.c fsync-y.c \
-	ftruncate.c ftruncate64.c futex.c futex_waitv.c futimesat.c \
-	get_mempolicy.c get_process_reaper.c getcpu.c getcwd.c \
-	getdents.c getdents-v.c getdents64.c getdents64-v.c getegid.c \
-	getegid32.c geteuid.c geteuid32.c getgid.c getgid32.c \
-	getgroups.c getgroups32.c getpeername.c getpgrp.c \
-	getpgrp--pidns-translation.c getpid.c \
+	ftruncate.c ftruncate64.c futex.c futex_requeue.c \
+	futex_requeue-Xabbrev.c futex_requeue-Xraw.c \
+	futex_requeue-Xverbose.c futex_wait.c futex_wait-Xabbrev.c \
+	futex_wait-Xraw.c futex_wait-Xverbose.c futex_waitv.c \
+	futex_wake.c futex_wake-Xabbrev.c futex_wake-Xraw.c \
+	futex_wake-Xverbose.c futimesat.c get_mempolicy.c \
+	get_process_reaper.c getcpu.c getcwd.c getdents.c getdents-v.c \
+	getdents64.c getdents64-v.c getegid.c getegid32.c geteuid.c \
+	geteuid32.c getgid.c getgid32.c getgroups.c getgroups32.c \
+	getpeername.c getpgrp.c getpgrp--pidns-translation.c getpid.c \
 	getpid--pidns-translation.c getppid.c getrandom.c getresgid.c \
 	getresgid32.c getresuid.c getresuid32.c getrlimit.c \
 	getrusage.c getsid.c getsid--pidns-translation.c getsockname.c \
@@ -7903,9 +8093,14 @@ DIST_SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c \
 	landlock_restrict_self-y.c lchown.c lchown32.c link.c link-P.c \
 	linkat.c linkat--secontext.c linkat--secontext_full.c \
 	linkat--secontext_full_mismatch.c linkat--secontext_mismatch.c \
-	list_sigaction_signum.c llseek.c localtime.c lookup_dcookie.c \
-	looping_threads.c lseek.c lstat.c lstat64.c madvise.c \
+	list_sigaction_signum.c listmount.c listmount-success.c \
+	llseek.c localtime.c lookup_dcookie.c looping_threads.c \
+	lseek.c lsm_get_self_attr.c lsm_get_self_attr-success.c \
+	lsm_list_modules.c lsm_list_modules-success.c \
+	lsm_set_self_attr.c lstat.c lstat64.c madvise.c \
 	madvise-Xabbrev.c madvise-Xraw.c madvise-Xverbose.c \
+	map_shadow_stack.c map_shadow_stack-Xabbrev.c \
+	map_shadow_stack-Xraw.c map_shadow_stack-Xverbose.c \
 	maybe_switch_current_tcp.c \
 	maybe_switch_current_tcp--quiet-thread-execve.c mbind.c \
 	mbind-Xabbrev.c mbind-Xraw.c mbind-Xverbose.c membarrier.c \
@@ -8118,12 +8313,13 @@ DIST_SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c \
 	sockopt-sol_socket-success-Xverbose.c sockopt-timestamp.c \
 	splice.c $(stack_fcall_SOURCES) $(stack_fcall_attach_SOURCES) \
 	$(stack_fcall_mangled_SOURCES) stat.c stat64.c statfs.c \
-	statfs64.c status-all.c status-detached-threads.c \
-	status-failed.c status-failed-long.c status-failed-status.c \
-	status-none.c status-none-f.c status-none-threads.c \
-	status-successful.c status-successful-long.c \
-	status-successful-status.c status-successful-threads.c \
-	status-unfinished.c status-unfinished-threads.c statx.c \
+	statfs64.c statmount.c statmount-success.c status-all.c \
+	status-detached-threads.c status-failed.c status-failed-long.c \
+	status-failed-status.c status-none.c status-none-f.c \
+	status-none-threads.c status-successful.c \
+	status-successful-long.c status-successful-status.c \
+	status-successful-threads.c status-unfinished.c \
+	status-unfinished-threads.c statx.c strace--always-show-pid.c \
 	strace--decode-pids-comm.c strace--strings-in-hex.c \
 	strace--strings-in-hex-all.c \
 	strace--strings-in-hex-non-ascii.c \
@@ -8138,22 +8334,22 @@ DIST_SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c \
 	strace-x.c strace-xx.c swap.c sxetmask.c symlink.c symlink-P.c \
 	symlinkat.c sync.c sync_file_range.c sync_file_range2.c \
 	sysctl.c sysinfo.c syslog.c syslog-success.c tampering-notes.c \
-	tee.c tgkill.c tgkill--pidns-translation.c threads-execve.c \
-	threads-execve--quiet-thread-execve.c threads-execve-q.c \
-	threads-execve-qq.c threads-execve-qqq.c time.c timer_create.c \
-	timer_xettime.c timerfd_xettime.c times.c times-Xabbrev.c \
-	times-Xraw.c times-Xverbose.c times-fail.c tkill.c \
-	tkill--pidns-translation.c tracer_ppid_pgid_sid.c \
-	$(trie_test_SOURCES) truncate.c truncate64.c ugetrlimit.c \
-	uio.c umask.c umount.c umount2.c umoven-illptr.c umovestr.c \
-	umovestr-illptr.c umovestr2.c umovestr3.c umovestr_cached.c \
-	umovestr_cached_adjacent.c uname.c unblock_reset_raise.c \
-	unix-pair-send-recv.c unix-pair-sendto-recvfrom.c unlink.c \
-	unlinkat.c unshare.c userfaultfd.c ustat.c utime.c utimensat.c \
-	utimensat-Xabbrev.c utimensat-Xraw.c utimensat-Xverbose.c \
-	utimes.c vfork-f.c vhangup.c vmsplice.c wait4.c wait4-v.c \
-	waitid.c waitid-Y.c waitid-v.c waitpid.c xattr.c \
-	xattr-strings.c xet_robust_list.c \
+	tcp_ao.c tee.c tgkill.c tgkill--pidns-translation.c \
+	threads-execve.c threads-execve--quiet-thread-execve.c \
+	threads-execve-q.c threads-execve-qq.c threads-execve-qqq.c \
+	time.c timer_create.c timer_xettime.c timerfd_xettime.c \
+	times.c times-Xabbrev.c times-Xraw.c times-Xverbose.c \
+	times-fail.c tkill.c tkill--pidns-translation.c \
+	tracer_ppid_pgid_sid.c $(trie_test_SOURCES) truncate.c \
+	truncate64.c ugetrlimit.c uio.c umask.c umount.c umount2.c \
+	umoven-illptr.c umovestr.c umovestr-illptr.c umovestr2.c \
+	umovestr3.c umovestr_cached.c umovestr_cached_adjacent.c \
+	uname.c unblock_reset_raise.c unix-pair-send-recv.c \
+	unix-pair-sendto-recvfrom.c unlink.c unlinkat.c unshare.c \
+	userfaultfd.c ustat.c utime.c utimensat.c utimensat-Xabbrev.c \
+	utimensat-Xraw.c utimensat-Xverbose.c utimes.c vfork-f.c \
+	vhangup.c vmsplice.c wait4.c wait4-v.c waitid.c waitid-Y.c \
+	waitid-v.c waitpid.c xattr.c xattr-strings.c xet_robust_list.c \
 	xet_robust_list--pidns-translation.c xet_thread_area_x86.c \
 	xetitimer.c xetpgid.c xetpgid--pidns-translation.c \
 	xetpriority.c xetpriority--pidns-translation.c xettimeofday.c \
@@ -8344,7 +8540,8 @@ AM_TESTSUITE_SUMMARY_HEADER = ' for $(PACKAGE_STRING)'
 RECHECK_LOGS = $(TEST_LOGS)
 AM_RECURSIVE_TARGETS = check recheck
 @ENABLE_STACKTRACE_TRUE@am__EXEEXT_3 = strace-k.test strace-k-p.test \
-@ENABLE_STACKTRACE_TRUE@	$(am__append_2)
+@ENABLE_STACKTRACE_TRUE@	strace-k-with-depth-limit.test \
+@ENABLE_STACKTRACE_TRUE@	$(am__append_2) $(am__append_3)
 TEST_SUITE_LOG = test-suite.log
 TEST_EXTENSIONS = @EXEEXT@ .test
 am__test_logs1 = $(TESTS:=.log)
@@ -8581,6 +8778,7 @@ libtests_a_SOURCES = \
 	errno2name.c \
 	error_msg.c \
 	fill_memory.c \
+	futex2_flags.h \
 	get_page_size.c \
 	get_sigset_size.c \
 	hexdump_strdup.c \
@@ -8673,6 +8871,7 @@ PURE_EXECUTABLES = \
   dev--decode-fds-none \
   dev--decode-fds-path \
   dev--decode-fds-socket \
+  dev-pty-yy \
   dev-yy \
   dup \
   dup-P \
@@ -8758,7 +8957,19 @@ PURE_EXECUTABLES = \
   ftruncate \
   ftruncate64 \
   futex \
+  futex_requeue \
+  futex_requeue-Xabbrev \
+  futex_requeue-Xraw \
+  futex_requeue-Xverbose \
+  futex_wait \
+  futex_wait-Xabbrev \
+  futex_wait-Xraw \
+  futex_wait-Xverbose \
   futex_waitv \
+  futex_wake \
+  futex_wake-Xabbrev \
+  futex_wake-Xraw \
+  futex_wake-Xverbose \
   futimesat \
   get_mempolicy \
   getcpu \
@@ -8946,15 +9157,26 @@ PURE_EXECUTABLES = \
   lchown32 \
   link \
   linkat \
+  listmount \
+  listmount-success \
   llseek \
   lookup_dcookie \
   lseek \
+  lsm_get_self_attr \
+  lsm_get_self_attr-success \
+  lsm_list_modules \
+  lsm_list_modules-success \
+  lsm_set_self_attr \
   lstat \
   lstat64 \
   madvise \
   madvise-Xabbrev \
   madvise-Xraw \
   madvise-Xverbose \
+  map_shadow_stack \
+  map_shadow_stack-Xabbrev \
+  map_shadow_stack-Xraw \
+  map_shadow_stack-Xverbose \
   maybe_switch_current_tcp \
   maybe_switch_current_tcp--quiet-thread-execve \
   mbind \
@@ -9368,6 +9590,8 @@ PURE_EXECUTABLES = \
   stat64 \
   statfs \
   statfs64 \
+  statmount \
+  statmount-success \
   status-all \
   status-failed \
   status-failed-long \
@@ -9379,6 +9603,7 @@ PURE_EXECUTABLES = \
   status-successful-status \
   status-unfinished \
   statx \
+  strace--always-show-pid \
   strace--strings-in-hex \
   strace--strings-in-hex-all \
   strace--strings-in-hex-non-ascii \
@@ -9399,6 +9624,7 @@ PURE_EXECUTABLES = \
   sysinfo \
   syslog \
   tampering-notes \
+  tcp_ao \
   tee \
   tgkill \
   time \
@@ -9639,9 +9865,11 @@ uio_CPPFLAGS = $(AM_CPPFLAGS) -D_FILE_OFFSET_BITS=64
 stack_fcall_SOURCES = stack-fcall.c \
 	stack-fcall-0.c stack-fcall-1.c stack-fcall-2.c stack-fcall-3.c
 
+@ACCEPT_GDWARF_ARANGES_TRUE@@USE_LIBDW_TRUE@stack_fcall_CFLAGS = $(AM_CFLAGS) -gdwarf-aranges
 stack_fcall_attach_SOURCES = stack-fcall-attach.c \
 	stack-fcall-0.c stack-fcall-1.c stack-fcall-2.c stack-fcall-3.c
 
+@ACCEPT_GDWARF_ARANGES_TRUE@@USE_LIBDW_TRUE@stack_fcall_attach_CFLAGS = $(AM_CFLAGS) -gdwarf-aranges
 stack_fcall_mangled_SOURCES = stack-fcall-mangled.c \
 	stack-fcall-mangled-0.c stack-fcall-mangled-1.c \
 	stack-fcall-mangled-2.c stack-fcall-mangled-3.c
@@ -9689,19 +9917,20 @@ GEN_TESTS = _newselect.gen.test _newselect-P.gen.test accept.gen.test \
 	copy_file_range.gen.test creat.gen.test delete_module.gen.test \
 	dev--decode-fds-all.gen.test dev--decode-fds-dev.gen.test \
 	dev--decode-fds-none.gen.test dev--decode-fds-path.gen.test \
-	dev--decode-fds-socket.gen.test dev-yy.gen.test dup.gen.test \
-	dup-P.gen.test dup-trace-fds-0.gen.test \
-	dup-trace-fds-0-9.gen.test dup-trace-fds-0-P.gen.test \
-	dup-trace-fds-not-9.gen.test dup-y.gen.test dup-yy.gen.test \
-	dup2.gen.test dup2-P.gen.test dup2-e-fd-0.gen.test \
-	dup2-e-fd-0-9.gen.test dup2-e-fd-0-P.gen.test \
-	dup2-e-fd-not-9.gen.test dup2-y.gen.test dup2-yy.gen.test \
-	dup3.gen.test dup3-P.gen.test dup3-y.gen.test dup3-yy.gen.test \
-	epoll_create.gen.test epoll_create1.gen.test \
-	epoll_ctl.gen.test epoll_pwait.gen.test epoll_pwait2.gen.test \
-	epoll_pwait2-P.gen.test epoll_pwait2-y.gen.test \
-	epoll_wait.gen.test erestartsys.gen.test \
-	execve--secontext.gen.test execve--secontext_full.gen.test \
+	dev--decode-fds-socket.gen.test dev-pty-yy.gen.test \
+	dev-yy.gen.test dup.gen.test dup-P.gen.test \
+	dup-trace-fds-0.gen.test dup-trace-fds-0-9.gen.test \
+	dup-trace-fds-0-P.gen.test dup-trace-fds-not-9.gen.test \
+	dup-y.gen.test dup-yy.gen.test dup2.gen.test dup2-P.gen.test \
+	dup2-e-fd-0.gen.test dup2-e-fd-0-9.gen.test \
+	dup2-e-fd-0-P.gen.test dup2-e-fd-not-9.gen.test \
+	dup2-y.gen.test dup2-yy.gen.test dup3.gen.test dup3-P.gen.test \
+	dup3-y.gen.test dup3-yy.gen.test epoll_create.gen.test \
+	epoll_create1.gen.test epoll_ctl.gen.test epoll_pwait.gen.test \
+	epoll_pwait2.gen.test epoll_pwait2-P.gen.test \
+	epoll_pwait2-y.gen.test epoll_wait.gen.test \
+	erestartsys.gen.test execve--secontext.gen.test \
+	execve--secontext_full.gen.test \
 	execve--secontext_full_mismatch.gen.test \
 	execve--secontext_mismatch.gen.test execveat.gen.test \
 	execveat--secontext.gen.test execveat--secontext_full.gen.test \
@@ -9757,7 +9986,13 @@ GEN_TESTS = _newselect.gen.test _newselect-P.gen.test accept.gen.test \
 	fstat64-Xabbrev.gen.test fstat64-Xraw.gen.test \
 	fstat64-Xverbose.gen.test fstatat64.gen.test fstatfs.gen.test \
 	fstatfs64.gen.test fsync.gen.test fsync-y.gen.test \
-	ftruncate.gen.test ftruncate64.gen.test futex_waitv.gen.test \
+	ftruncate.gen.test ftruncate64.gen.test futex_requeue.gen.test \
+	futex_requeue-Xabbrev.gen.test futex_requeue-Xraw.gen.test \
+	futex_requeue-Xverbose.gen.test futex_wait.gen.test \
+	futex_wait-Xabbrev.gen.test futex_wait-Xraw.gen.test \
+	futex_wait-Xverbose.gen.test futex_waitv.gen.test \
+	futex_wake.gen.test futex_wake-Xabbrev.gen.test \
+	futex_wake-Xraw.gen.test futex_wake-Xverbose.gen.test \
 	futimesat.gen.test get_mempolicy.gen.test getcpu.gen.test \
 	getcwd.gen.test getdents.gen.test getdents-v.gen.test \
 	getdents64.gen.test getdents64-v.gen.test getegid.gen.test \
@@ -9933,10 +10168,17 @@ GEN_TESTS = _newselect.gen.test _newselect-P.gen.test accept.gen.test \
 	linkat.gen.test linkat--secontext.gen.test \
 	linkat--secontext_full.gen.test \
 	linkat--secontext_full_mismatch.gen.test \
-	linkat--secontext_mismatch.gen.test lookup_dcookie.gen.test \
-	lstat.gen.test lstat64.gen.test madvise.gen.test \
-	madvise-Xabbrev.gen.test madvise-Xraw.gen.test \
-	madvise-Xverbose.gen.test maybe_switch_current_tcp.gen.test \
+	linkat--secontext_mismatch.gen.test listmount.gen.test \
+	listmount-success.gen.test lookup_dcookie.gen.test \
+	lsm_get_self_attr.gen.test lsm_get_self_attr-success.gen.test \
+	lsm_list_modules.gen.test lsm_list_modules-success.gen.test \
+	lsm_set_self_attr.gen.test lstat.gen.test lstat64.gen.test \
+	madvise.gen.test madvise-Xabbrev.gen.test \
+	madvise-Xraw.gen.test madvise-Xverbose.gen.test \
+	map_shadow_stack.gen.test map_shadow_stack-Xabbrev.gen.test \
+	map_shadow_stack-Xraw.gen.test \
+	map_shadow_stack-Xverbose.gen.test \
+	maybe_switch_current_tcp.gen.test \
 	maybe_switch_current_tcp--quiet-thread-execve.gen.test \
 	mbind.gen.test mbind-Xabbrev.gen.test mbind-Xraw.gen.test \
 	mbind-Xverbose.gen.test membarrier.gen.test \
@@ -10230,6 +10472,7 @@ GEN_TESTS = _newselect.gen.test _newselect-P.gen.test accept.gen.test \
 	sockopt-sol_socket-success-Xverbose.gen.test \
 	sockopt-timestamp.gen.test splice.gen.test stat.gen.test \
 	stat64.gen.test statfs.gen.test statfs64.gen.test \
+	statmount.gen.test statmount-success.gen.test \
 	status-all.gen.test status-failed.gen.test \
 	status-failed-long.gen.test status-failed-status.gen.test \
 	status-none.gen.test status-successful.gen.test \
@@ -10245,6 +10488,7 @@ GEN_TESTS = _newselect.gen.test _newselect-P.gen.test accept.gen.test \
 	strace--absolute-timestamps-format-unix-precision-ns.gen.test \
 	strace--absolute-timestamps-format-unix-precision-s.gen.test \
 	strace--absolute-timestamps-format-unix-precision-us.gen.test \
+	strace--always-show-pid.gen.test \
 	strace--decode-pids-comm.gen.test \
 	strace--follow-forks-output-separately.gen.test \
 	strace--relative-timestamps.gen.test \
@@ -10282,8 +10526,9 @@ GEN_TESTS = _newselect.gen.test _newselect-P.gen.test accept.gen.test \
 	swap.gen.test sxetmask.gen.test symlink.gen.test \
 	symlink-P.gen.test symlinkat.gen.test sync.gen.test \
 	sync_file_range.gen.test sync_file_range2.gen.test \
-	sysctl.gen.test sysinfo.gen.test syslog.gen.test tee.gen.test \
-	tgkill.gen.test tgkill--pidns-translation.gen.test \
+	sysctl.gen.test sysinfo.gen.test syslog.gen.test \
+	tcp_ao.gen.test tee.gen.test tgkill.gen.test \
+	tgkill--pidns-translation.gen.test \
 	threads-execve--quiet-thread-execve.gen.test \
 	threads-execve-q.gen.test threads-execve-qq.gen.test \
 	threads-execve-qqq.gen.test time.gen.test \
@@ -10328,7 +10573,9 @@ GEN_TESTS = _newselect.gen.test _newselect-P.gen.test accept.gen.test \
 	xettimeofday.gen.test
 @ENABLE_STACKTRACE_FALSE@STACKTRACE_TESTS = 
 @ENABLE_STACKTRACE_TRUE@STACKTRACE_TESTS = strace-k.test \
-@ENABLE_STACKTRACE_TRUE@	strace-k-p.test $(am__append_2)
+@ENABLE_STACKTRACE_TRUE@	strace-k-p.test \
+@ENABLE_STACKTRACE_TRUE@	strace-k-with-depth-limit.test \
+@ENABLE_STACKTRACE_TRUE@	$(am__append_2) $(am__append_3)
 @ENABLE_STACKTRACE_FALSE@STACKTRACE_XFAIL_TESTS = 
 @ENABLE_STACKTRACE_TRUE@@USE_LIBUNWIND_FALSE@STACKTRACE_XFAIL_TESTS = 
 @ENABLE_STACKTRACE_TRUE@@USE_LIBUNWIND_TRUE@STACKTRACE_XFAIL_TESTS = $(STACKTRACE_TESTS)
@@ -10407,8 +10654,11 @@ MISC_TESTS = \
 	detach-running.test \
 	detach-sleeping.test \
 	detach-stopped.test \
+	detach-vfork.test \
+	exec-PATH.test \
 	fflush.test \
 	filter-unavailable.test \
+	filter_seccomp-exitkill.test \
 	filter_seccomp-perf.test \
 	filtering_fd-syntax.test \
 	filtering_syscall-syntax.test \
@@ -10418,6 +10668,7 @@ MISC_TESTS = \
 	gettid--pidns-translation.test \
 	inject-nf.test \
 	interactive_block.test \
+	kill-on-exit.test \
 	kill_child.test \
 	legacy_syscall_info.test \
 	localtime.test \
@@ -10475,6 +10726,7 @@ MISC_TESTS = \
 	strace-log-merge-suffix.test \
 	strace-p-Y-p.test \
 	strace-r.test \
+	strace-self.test \
 	strace-t.test \
 	strace-tt.test \
 	strace-ttt.test \
@@ -10512,7 +10764,10 @@ check_SCRIPTS = \
 	scno_tampering.sh \
 	strace-k-demangle.test \
 	strace-k-p.test \
+	strace-k-with-depth-limit.test \
 	strace-k.test \
+	strace-kk-p.test \
+	strace-kk.test \
 	syntax.sh \
 	# end of check_SCRIPTS
 
@@ -10568,7 +10823,10 @@ check_DATA = \
 	strace-ff.expected \
 	strace-k-demangle.expected \
 	strace-k-p.expected \
+	strace-k-with-depth-limit.expected \
 	strace-k.expected \
+	strace-kk-p.expected \
+	strace-kk.expected \
 	strace-r.expected \
 	strace.supp \
 	strauss_body.exp \
@@ -10619,6 +10877,7 @@ EXTRA_DIST = \
 	ioctl_kvm_run_common.c \
 	kernel_old_timespec.h \
 	kernel_old_timex.h \
+	kill-on-exit.sh \
 	ksysent.sed \
 	lstatx.c \
 	nlattr_ifla.h \
@@ -11109,6 +11368,10 @@ delete_module$(EXEEXT): $(delete_module_OBJECTS) $(delete_module_DEPENDENCIES) $
 	@rm -f delete_module$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(delete_module_OBJECTS) $(delete_module_LDADD) $(LIBS)
 
+detach-vfork$(EXEEXT): $(detach_vfork_OBJECTS) $(detach_vfork_DEPENDENCIES) $(EXTRA_detach_vfork_DEPENDENCIES) 
+	@rm -f detach-vfork$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(detach_vfork_OBJECTS) $(detach_vfork_LDADD) $(LIBS)
+
 dev--decode-fds-all$(EXEEXT): $(dev__decode_fds_all_OBJECTS) $(dev__decode_fds_all_DEPENDENCIES) $(EXTRA_dev__decode_fds_all_DEPENDENCIES) 
 	@rm -f dev--decode-fds-all$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(dev__decode_fds_all_OBJECTS) $(dev__decode_fds_all_LDADD) $(LIBS)
@@ -11128,6 +11391,10 @@ dev--decode-fds-path$(EXEEXT): $(dev__decode_fds_path_OBJECTS) $(dev__decode_fds
 dev--decode-fds-socket$(EXEEXT): $(dev__decode_fds_socket_OBJECTS) $(dev__decode_fds_socket_DEPENDENCIES) $(EXTRA_dev__decode_fds_socket_DEPENDENCIES) 
 	@rm -f dev--decode-fds-socket$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(dev__decode_fds_socket_OBJECTS) $(dev__decode_fds_socket_LDADD) $(LIBS)
+
+dev-pty-yy$(EXEEXT): $(dev_pty_yy_OBJECTS) $(dev_pty_yy_DEPENDENCIES) $(EXTRA_dev_pty_yy_DEPENDENCIES) 
+	@rm -f dev-pty-yy$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(dev_pty_yy_OBJECTS) $(dev_pty_yy_LDADD) $(LIBS)
 
 dev-yy$(EXEEXT): $(dev_yy_OBJECTS) $(dev_yy_DEPENDENCIES) $(EXTRA_dev_yy_DEPENDENCIES) 
 	@rm -f dev-yy$(EXEEXT)
@@ -11685,9 +11952,57 @@ futex$(EXEEXT): $(futex_OBJECTS) $(futex_DEPENDENCIES) $(EXTRA_futex_DEPENDENCIE
 	@rm -f futex$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(futex_OBJECTS) $(futex_LDADD) $(LIBS)
 
+futex_requeue$(EXEEXT): $(futex_requeue_OBJECTS) $(futex_requeue_DEPENDENCIES) $(EXTRA_futex_requeue_DEPENDENCIES) 
+	@rm -f futex_requeue$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(futex_requeue_OBJECTS) $(futex_requeue_LDADD) $(LIBS)
+
+futex_requeue-Xabbrev$(EXEEXT): $(futex_requeue_Xabbrev_OBJECTS) $(futex_requeue_Xabbrev_DEPENDENCIES) $(EXTRA_futex_requeue_Xabbrev_DEPENDENCIES) 
+	@rm -f futex_requeue-Xabbrev$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(futex_requeue_Xabbrev_OBJECTS) $(futex_requeue_Xabbrev_LDADD) $(LIBS)
+
+futex_requeue-Xraw$(EXEEXT): $(futex_requeue_Xraw_OBJECTS) $(futex_requeue_Xraw_DEPENDENCIES) $(EXTRA_futex_requeue_Xraw_DEPENDENCIES) 
+	@rm -f futex_requeue-Xraw$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(futex_requeue_Xraw_OBJECTS) $(futex_requeue_Xraw_LDADD) $(LIBS)
+
+futex_requeue-Xverbose$(EXEEXT): $(futex_requeue_Xverbose_OBJECTS) $(futex_requeue_Xverbose_DEPENDENCIES) $(EXTRA_futex_requeue_Xverbose_DEPENDENCIES) 
+	@rm -f futex_requeue-Xverbose$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(futex_requeue_Xverbose_OBJECTS) $(futex_requeue_Xverbose_LDADD) $(LIBS)
+
+futex_wait$(EXEEXT): $(futex_wait_OBJECTS) $(futex_wait_DEPENDENCIES) $(EXTRA_futex_wait_DEPENDENCIES) 
+	@rm -f futex_wait$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(futex_wait_OBJECTS) $(futex_wait_LDADD) $(LIBS)
+
+futex_wait-Xabbrev$(EXEEXT): $(futex_wait_Xabbrev_OBJECTS) $(futex_wait_Xabbrev_DEPENDENCIES) $(EXTRA_futex_wait_Xabbrev_DEPENDENCIES) 
+	@rm -f futex_wait-Xabbrev$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(futex_wait_Xabbrev_OBJECTS) $(futex_wait_Xabbrev_LDADD) $(LIBS)
+
+futex_wait-Xraw$(EXEEXT): $(futex_wait_Xraw_OBJECTS) $(futex_wait_Xraw_DEPENDENCIES) $(EXTRA_futex_wait_Xraw_DEPENDENCIES) 
+	@rm -f futex_wait-Xraw$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(futex_wait_Xraw_OBJECTS) $(futex_wait_Xraw_LDADD) $(LIBS)
+
+futex_wait-Xverbose$(EXEEXT): $(futex_wait_Xverbose_OBJECTS) $(futex_wait_Xverbose_DEPENDENCIES) $(EXTRA_futex_wait_Xverbose_DEPENDENCIES) 
+	@rm -f futex_wait-Xverbose$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(futex_wait_Xverbose_OBJECTS) $(futex_wait_Xverbose_LDADD) $(LIBS)
+
 futex_waitv$(EXEEXT): $(futex_waitv_OBJECTS) $(futex_waitv_DEPENDENCIES) $(EXTRA_futex_waitv_DEPENDENCIES) 
 	@rm -f futex_waitv$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(futex_waitv_OBJECTS) $(futex_waitv_LDADD) $(LIBS)
+
+futex_wake$(EXEEXT): $(futex_wake_OBJECTS) $(futex_wake_DEPENDENCIES) $(EXTRA_futex_wake_DEPENDENCIES) 
+	@rm -f futex_wake$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(futex_wake_OBJECTS) $(futex_wake_LDADD) $(LIBS)
+
+futex_wake-Xabbrev$(EXEEXT): $(futex_wake_Xabbrev_OBJECTS) $(futex_wake_Xabbrev_DEPENDENCIES) $(EXTRA_futex_wake_Xabbrev_DEPENDENCIES) 
+	@rm -f futex_wake-Xabbrev$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(futex_wake_Xabbrev_OBJECTS) $(futex_wake_Xabbrev_LDADD) $(LIBS)
+
+futex_wake-Xraw$(EXEEXT): $(futex_wake_Xraw_OBJECTS) $(futex_wake_Xraw_DEPENDENCIES) $(EXTRA_futex_wake_Xraw_DEPENDENCIES) 
+	@rm -f futex_wake-Xraw$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(futex_wake_Xraw_OBJECTS) $(futex_wake_Xraw_LDADD) $(LIBS)
+
+futex_wake-Xverbose$(EXEEXT): $(futex_wake_Xverbose_OBJECTS) $(futex_wake_Xverbose_DEPENDENCIES) $(EXTRA_futex_wake_Xverbose_DEPENDENCIES) 
+	@rm -f futex_wake-Xverbose$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(futex_wake_Xverbose_OBJECTS) $(futex_wake_Xverbose_LDADD) $(LIBS)
 
 futimesat$(EXEEXT): $(futimesat_OBJECTS) $(futimesat_DEPENDENCIES) $(EXTRA_futimesat_DEPENDENCIES) 
 	@rm -f futimesat$(EXEEXT)
@@ -12889,6 +13204,14 @@ list_sigaction_signum$(EXEEXT): $(list_sigaction_signum_OBJECTS) $(list_sigactio
 	@rm -f list_sigaction_signum$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(list_sigaction_signum_OBJECTS) $(list_sigaction_signum_LDADD) $(LIBS)
 
+listmount$(EXEEXT): $(listmount_OBJECTS) $(listmount_DEPENDENCIES) $(EXTRA_listmount_DEPENDENCIES) 
+	@rm -f listmount$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(listmount_OBJECTS) $(listmount_LDADD) $(LIBS)
+
+listmount-success$(EXEEXT): $(listmount_success_OBJECTS) $(listmount_success_DEPENDENCIES) $(EXTRA_listmount_success_DEPENDENCIES) 
+	@rm -f listmount-success$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(listmount_success_OBJECTS) $(listmount_success_LDADD) $(LIBS)
+
 llseek$(EXEEXT): $(llseek_OBJECTS) $(llseek_DEPENDENCIES) $(EXTRA_llseek_DEPENDENCIES) 
 	@rm -f llseek$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(llseek_OBJECTS) $(llseek_LDADD) $(LIBS)
@@ -12908,6 +13231,26 @@ looping_threads$(EXEEXT): $(looping_threads_OBJECTS) $(looping_threads_DEPENDENC
 lseek$(EXEEXT): $(lseek_OBJECTS) $(lseek_DEPENDENCIES) $(EXTRA_lseek_DEPENDENCIES) 
 	@rm -f lseek$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(lseek_OBJECTS) $(lseek_LDADD) $(LIBS)
+
+lsm_get_self_attr$(EXEEXT): $(lsm_get_self_attr_OBJECTS) $(lsm_get_self_attr_DEPENDENCIES) $(EXTRA_lsm_get_self_attr_DEPENDENCIES) 
+	@rm -f lsm_get_self_attr$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(lsm_get_self_attr_OBJECTS) $(lsm_get_self_attr_LDADD) $(LIBS)
+
+lsm_get_self_attr-success$(EXEEXT): $(lsm_get_self_attr_success_OBJECTS) $(lsm_get_self_attr_success_DEPENDENCIES) $(EXTRA_lsm_get_self_attr_success_DEPENDENCIES) 
+	@rm -f lsm_get_self_attr-success$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(lsm_get_self_attr_success_OBJECTS) $(lsm_get_self_attr_success_LDADD) $(LIBS)
+
+lsm_list_modules$(EXEEXT): $(lsm_list_modules_OBJECTS) $(lsm_list_modules_DEPENDENCIES) $(EXTRA_lsm_list_modules_DEPENDENCIES) 
+	@rm -f lsm_list_modules$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(lsm_list_modules_OBJECTS) $(lsm_list_modules_LDADD) $(LIBS)
+
+lsm_list_modules-success$(EXEEXT): $(lsm_list_modules_success_OBJECTS) $(lsm_list_modules_success_DEPENDENCIES) $(EXTRA_lsm_list_modules_success_DEPENDENCIES) 
+	@rm -f lsm_list_modules-success$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(lsm_list_modules_success_OBJECTS) $(lsm_list_modules_success_LDADD) $(LIBS)
+
+lsm_set_self_attr$(EXEEXT): $(lsm_set_self_attr_OBJECTS) $(lsm_set_self_attr_DEPENDENCIES) $(EXTRA_lsm_set_self_attr_DEPENDENCIES) 
+	@rm -f lsm_set_self_attr$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(lsm_set_self_attr_OBJECTS) $(lsm_set_self_attr_LDADD) $(LIBS)
 
 lstat$(EXEEXT): $(lstat_OBJECTS) $(lstat_DEPENDENCIES) $(EXTRA_lstat_DEPENDENCIES) 
 	@rm -f lstat$(EXEEXT)
@@ -12932,6 +13275,22 @@ madvise-Xraw$(EXEEXT): $(madvise_Xraw_OBJECTS) $(madvise_Xraw_DEPENDENCIES) $(EX
 madvise-Xverbose$(EXEEXT): $(madvise_Xverbose_OBJECTS) $(madvise_Xverbose_DEPENDENCIES) $(EXTRA_madvise_Xverbose_DEPENDENCIES) 
 	@rm -f madvise-Xverbose$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(madvise_Xverbose_OBJECTS) $(madvise_Xverbose_LDADD) $(LIBS)
+
+map_shadow_stack$(EXEEXT): $(map_shadow_stack_OBJECTS) $(map_shadow_stack_DEPENDENCIES) $(EXTRA_map_shadow_stack_DEPENDENCIES) 
+	@rm -f map_shadow_stack$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(map_shadow_stack_OBJECTS) $(map_shadow_stack_LDADD) $(LIBS)
+
+map_shadow_stack-Xabbrev$(EXEEXT): $(map_shadow_stack_Xabbrev_OBJECTS) $(map_shadow_stack_Xabbrev_DEPENDENCIES) $(EXTRA_map_shadow_stack_Xabbrev_DEPENDENCIES) 
+	@rm -f map_shadow_stack-Xabbrev$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(map_shadow_stack_Xabbrev_OBJECTS) $(map_shadow_stack_Xabbrev_LDADD) $(LIBS)
+
+map_shadow_stack-Xraw$(EXEEXT): $(map_shadow_stack_Xraw_OBJECTS) $(map_shadow_stack_Xraw_DEPENDENCIES) $(EXTRA_map_shadow_stack_Xraw_DEPENDENCIES) 
+	@rm -f map_shadow_stack-Xraw$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(map_shadow_stack_Xraw_OBJECTS) $(map_shadow_stack_Xraw_LDADD) $(LIBS)
+
+map_shadow_stack-Xverbose$(EXEEXT): $(map_shadow_stack_Xverbose_OBJECTS) $(map_shadow_stack_Xverbose_DEPENDENCIES) $(EXTRA_map_shadow_stack_Xverbose_DEPENDENCIES) 
+	@rm -f map_shadow_stack-Xverbose$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(map_shadow_stack_Xverbose_OBJECTS) $(map_shadow_stack_Xverbose_LDADD) $(LIBS)
 
 maybe_switch_current_tcp$(EXEEXT): $(maybe_switch_current_tcp_OBJECTS) $(maybe_switch_current_tcp_DEPENDENCIES) $(EXTRA_maybe_switch_current_tcp_DEPENDENCIES) 
 	@rm -f maybe_switch_current_tcp$(EXEEXT)
@@ -15107,11 +15466,11 @@ splice$(EXEEXT): $(splice_OBJECTS) $(splice_DEPENDENCIES) $(EXTRA_splice_DEPENDE
 
 stack-fcall$(EXEEXT): $(stack_fcall_OBJECTS) $(stack_fcall_DEPENDENCIES) $(EXTRA_stack_fcall_DEPENDENCIES) 
 	@rm -f stack-fcall$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(stack_fcall_OBJECTS) $(stack_fcall_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(stack_fcall_LINK) $(stack_fcall_OBJECTS) $(stack_fcall_LDADD) $(LIBS)
 
 stack-fcall-attach$(EXEEXT): $(stack_fcall_attach_OBJECTS) $(stack_fcall_attach_DEPENDENCIES) $(EXTRA_stack_fcall_attach_DEPENDENCIES) 
 	@rm -f stack-fcall-attach$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(stack_fcall_attach_OBJECTS) $(stack_fcall_attach_LDADD) $(LIBS)
+	$(AM_V_CCLD)$(stack_fcall_attach_LINK) $(stack_fcall_attach_OBJECTS) $(stack_fcall_attach_LDADD) $(LIBS)
 
 stack-fcall-mangled$(EXEEXT): $(stack_fcall_mangled_OBJECTS) $(stack_fcall_mangled_DEPENDENCIES) $(EXTRA_stack_fcall_mangled_DEPENDENCIES) 
 	@rm -f stack-fcall-mangled$(EXEEXT)
@@ -15132,6 +15491,14 @@ statfs$(EXEEXT): $(statfs_OBJECTS) $(statfs_DEPENDENCIES) $(EXTRA_statfs_DEPENDE
 statfs64$(EXEEXT): $(statfs64_OBJECTS) $(statfs64_DEPENDENCIES) $(EXTRA_statfs64_DEPENDENCIES) 
 	@rm -f statfs64$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(statfs64_OBJECTS) $(statfs64_LDADD) $(LIBS)
+
+statmount$(EXEEXT): $(statmount_OBJECTS) $(statmount_DEPENDENCIES) $(EXTRA_statmount_DEPENDENCIES) 
+	@rm -f statmount$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(statmount_OBJECTS) $(statmount_LDADD) $(LIBS)
+
+statmount-success$(EXEEXT): $(statmount_success_OBJECTS) $(statmount_success_DEPENDENCIES) $(EXTRA_statmount_success_DEPENDENCIES) 
+	@rm -f statmount-success$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(statmount_success_OBJECTS) $(statmount_success_LDADD) $(LIBS)
 
 status-all$(EXEEXT): $(status_all_OBJECTS) $(status_all_DEPENDENCIES) $(EXTRA_status_all_DEPENDENCIES) 
 	@rm -f status-all$(EXEEXT)
@@ -15192,6 +15559,10 @@ status-unfinished-threads$(EXEEXT): $(status_unfinished_threads_OBJECTS) $(statu
 statx$(EXEEXT): $(statx_OBJECTS) $(statx_DEPENDENCIES) $(EXTRA_statx_DEPENDENCIES) 
 	@rm -f statx$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(statx_OBJECTS) $(statx_LDADD) $(LIBS)
+
+strace--always-show-pid$(EXEEXT): $(strace__always_show_pid_OBJECTS) $(strace__always_show_pid_DEPENDENCIES) $(EXTRA_strace__always_show_pid_DEPENDENCIES) 
+	@rm -f strace--always-show-pid$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(strace__always_show_pid_OBJECTS) $(strace__always_show_pid_LDADD) $(LIBS)
 
 strace--decode-pids-comm$(EXEEXT): $(strace__decode_pids_comm_OBJECTS) $(strace__decode_pids_comm_DEPENDENCIES) $(EXTRA_strace__decode_pids_comm_DEPENDENCIES) 
 	@rm -f strace--decode-pids-comm$(EXEEXT)
@@ -15324,6 +15695,10 @@ syslog-success$(EXEEXT): $(syslog_success_OBJECTS) $(syslog_success_DEPENDENCIES
 tampering-notes$(EXEEXT): $(tampering_notes_OBJECTS) $(tampering_notes_DEPENDENCIES) $(EXTRA_tampering_notes_DEPENDENCIES) 
 	@rm -f tampering-notes$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(tampering_notes_OBJECTS) $(tampering_notes_LDADD) $(LIBS)
+
+tcp_ao$(EXEEXT): $(tcp_ao_OBJECTS) $(tcp_ao_DEPENDENCIES) $(EXTRA_tcp_ao_DEPENDENCIES) 
+	@rm -f tcp_ao$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(tcp_ao_OBJECTS) $(tcp_ao_LDADD) $(LIBS)
 
 tee$(EXEEXT): $(tee_OBJECTS) $(tee_DEPENDENCIES) $(EXTRA_tee_DEPENDENCIES) 
 	@rm -f tee$(EXEEXT)
@@ -15738,11 +16113,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/creat.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/delay.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/delete_module.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/detach-vfork.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dev--decode-fds-all.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dev--decode-fds-dev.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dev--decode-fds-none.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dev--decode-fds-path.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dev--decode-fds-socket.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dev-pty-yy.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dev-yy.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dup-P.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/dup-trace-fds-0-9.Po@am__quote@ # am--include-marker
@@ -15882,7 +16259,19 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ftruncate.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ftruncate64-ftruncate64.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/futex.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/futex_requeue-Xabbrev.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/futex_requeue-Xraw.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/futex_requeue-Xverbose.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/futex_requeue.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/futex_wait-Xabbrev.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/futex_wait-Xraw.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/futex_wait-Xverbose.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/futex_wait.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/futex_waitv.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/futex_wake-Xabbrev.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/futex_wake-Xraw.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/futex_wake-Xverbose.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/futex_wake.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/futimesat.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/get_mempolicy.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/get_process_reaper.Po@am__quote@ # am--include-marker
@@ -16221,17 +16610,28 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/linkat--secontext_mismatch.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/linkat.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/list_sigaction_signum.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/listmount-success.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/listmount.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/llseek.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/localtime.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lookup_dcookie.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/looping_threads.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lseek.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lsm_get_self_attr-success.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lsm_get_self_attr.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lsm_list_modules-success.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lsm_list_modules.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lsm_set_self_attr.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lstat.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/lstat64-lstat64.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/madvise-Xabbrev.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/madvise-Xraw.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/madvise-Xverbose.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/madvise.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/map_shadow_stack-Xabbrev.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/map_shadow_stack-Xraw.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/map_shadow_stack-Xverbose.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/map_shadow_stack.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maybe_switch_current_tcp--quiet-thread-execve.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/maybe_switch_current_tcp.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mbind-Xabbrev.Po@am__quote@ # am--include-marker
@@ -16775,21 +17175,27 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sockopt-sol_socket.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/sockopt-timestamp.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/splice.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack-fcall-0.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack-fcall-1.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack-fcall-2.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack-fcall-3.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack-fcall-attach.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack-fcall-mangled-0.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack-fcall-mangled-1.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack-fcall-mangled-2.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack-fcall-mangled-3.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack-fcall-mangled.Po@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack-fcall.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack_fcall-stack-fcall-0.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack_fcall-stack-fcall-1.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack_fcall-stack-fcall-2.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack_fcall-stack-fcall-3.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack_fcall-stack-fcall.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack_fcall_attach-stack-fcall-0.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack_fcall_attach-stack-fcall-1.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack_fcall_attach-stack-fcall-2.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack_fcall_attach-stack-fcall-3.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stack_fcall_attach-stack-fcall-attach.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stat.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/stat64-stat64.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/statfs-statfs.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/statfs64.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/statmount-success.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/statmount.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/status-all.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/status-detached-threads.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/status-failed-long.Po@am__quote@ # am--include-marker
@@ -16805,6 +17211,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/status-unfinished-threads.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/status-unfinished.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/statx.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strace--always-show-pid.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strace--decode-pids-comm.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strace--strings-in-hex-all.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/strace--strings-in-hex-non-ascii-chars.Po@am__quote@ # am--include-marker
@@ -16838,6 +17245,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/syslog-success.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/syslog.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tampering-notes.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tcp_ao.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tee.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tgkill--pidns-translation.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/tgkill.Po@am__quote@ # am--include-marker
@@ -17647,6 +18055,146 @@ pwritev-pwritev.obj: pwritev.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(pwritev_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o pwritev-pwritev.obj `if test -f 'pwritev.c'; then $(CYGPATH_W) 'pwritev.c'; else $(CYGPATH_W) '$(srcdir)/pwritev.c'; fi`
 
+stack_fcall-stack-fcall.o: stack-fcall.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -MT stack_fcall-stack-fcall.o -MD -MP -MF $(DEPDIR)/stack_fcall-stack-fcall.Tpo -c -o stack_fcall-stack-fcall.o `test -f 'stack-fcall.c' || echo '$(srcdir)/'`stack-fcall.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall-stack-fcall.Tpo $(DEPDIR)/stack_fcall-stack-fcall.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall.c' object='stack_fcall-stack-fcall.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -c -o stack_fcall-stack-fcall.o `test -f 'stack-fcall.c' || echo '$(srcdir)/'`stack-fcall.c
+
+stack_fcall-stack-fcall.obj: stack-fcall.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -MT stack_fcall-stack-fcall.obj -MD -MP -MF $(DEPDIR)/stack_fcall-stack-fcall.Tpo -c -o stack_fcall-stack-fcall.obj `if test -f 'stack-fcall.c'; then $(CYGPATH_W) 'stack-fcall.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall-stack-fcall.Tpo $(DEPDIR)/stack_fcall-stack-fcall.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall.c' object='stack_fcall-stack-fcall.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -c -o stack_fcall-stack-fcall.obj `if test -f 'stack-fcall.c'; then $(CYGPATH_W) 'stack-fcall.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall.c'; fi`
+
+stack_fcall-stack-fcall-0.o: stack-fcall-0.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -MT stack_fcall-stack-fcall-0.o -MD -MP -MF $(DEPDIR)/stack_fcall-stack-fcall-0.Tpo -c -o stack_fcall-stack-fcall-0.o `test -f 'stack-fcall-0.c' || echo '$(srcdir)/'`stack-fcall-0.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall-stack-fcall-0.Tpo $(DEPDIR)/stack_fcall-stack-fcall-0.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall-0.c' object='stack_fcall-stack-fcall-0.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -c -o stack_fcall-stack-fcall-0.o `test -f 'stack-fcall-0.c' || echo '$(srcdir)/'`stack-fcall-0.c
+
+stack_fcall-stack-fcall-0.obj: stack-fcall-0.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -MT stack_fcall-stack-fcall-0.obj -MD -MP -MF $(DEPDIR)/stack_fcall-stack-fcall-0.Tpo -c -o stack_fcall-stack-fcall-0.obj `if test -f 'stack-fcall-0.c'; then $(CYGPATH_W) 'stack-fcall-0.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall-0.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall-stack-fcall-0.Tpo $(DEPDIR)/stack_fcall-stack-fcall-0.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall-0.c' object='stack_fcall-stack-fcall-0.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -c -o stack_fcall-stack-fcall-0.obj `if test -f 'stack-fcall-0.c'; then $(CYGPATH_W) 'stack-fcall-0.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall-0.c'; fi`
+
+stack_fcall-stack-fcall-1.o: stack-fcall-1.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -MT stack_fcall-stack-fcall-1.o -MD -MP -MF $(DEPDIR)/stack_fcall-stack-fcall-1.Tpo -c -o stack_fcall-stack-fcall-1.o `test -f 'stack-fcall-1.c' || echo '$(srcdir)/'`stack-fcall-1.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall-stack-fcall-1.Tpo $(DEPDIR)/stack_fcall-stack-fcall-1.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall-1.c' object='stack_fcall-stack-fcall-1.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -c -o stack_fcall-stack-fcall-1.o `test -f 'stack-fcall-1.c' || echo '$(srcdir)/'`stack-fcall-1.c
+
+stack_fcall-stack-fcall-1.obj: stack-fcall-1.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -MT stack_fcall-stack-fcall-1.obj -MD -MP -MF $(DEPDIR)/stack_fcall-stack-fcall-1.Tpo -c -o stack_fcall-stack-fcall-1.obj `if test -f 'stack-fcall-1.c'; then $(CYGPATH_W) 'stack-fcall-1.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall-1.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall-stack-fcall-1.Tpo $(DEPDIR)/stack_fcall-stack-fcall-1.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall-1.c' object='stack_fcall-stack-fcall-1.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -c -o stack_fcall-stack-fcall-1.obj `if test -f 'stack-fcall-1.c'; then $(CYGPATH_W) 'stack-fcall-1.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall-1.c'; fi`
+
+stack_fcall-stack-fcall-2.o: stack-fcall-2.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -MT stack_fcall-stack-fcall-2.o -MD -MP -MF $(DEPDIR)/stack_fcall-stack-fcall-2.Tpo -c -o stack_fcall-stack-fcall-2.o `test -f 'stack-fcall-2.c' || echo '$(srcdir)/'`stack-fcall-2.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall-stack-fcall-2.Tpo $(DEPDIR)/stack_fcall-stack-fcall-2.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall-2.c' object='stack_fcall-stack-fcall-2.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -c -o stack_fcall-stack-fcall-2.o `test -f 'stack-fcall-2.c' || echo '$(srcdir)/'`stack-fcall-2.c
+
+stack_fcall-stack-fcall-2.obj: stack-fcall-2.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -MT stack_fcall-stack-fcall-2.obj -MD -MP -MF $(DEPDIR)/stack_fcall-stack-fcall-2.Tpo -c -o stack_fcall-stack-fcall-2.obj `if test -f 'stack-fcall-2.c'; then $(CYGPATH_W) 'stack-fcall-2.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall-2.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall-stack-fcall-2.Tpo $(DEPDIR)/stack_fcall-stack-fcall-2.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall-2.c' object='stack_fcall-stack-fcall-2.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -c -o stack_fcall-stack-fcall-2.obj `if test -f 'stack-fcall-2.c'; then $(CYGPATH_W) 'stack-fcall-2.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall-2.c'; fi`
+
+stack_fcall-stack-fcall-3.o: stack-fcall-3.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -MT stack_fcall-stack-fcall-3.o -MD -MP -MF $(DEPDIR)/stack_fcall-stack-fcall-3.Tpo -c -o stack_fcall-stack-fcall-3.o `test -f 'stack-fcall-3.c' || echo '$(srcdir)/'`stack-fcall-3.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall-stack-fcall-3.Tpo $(DEPDIR)/stack_fcall-stack-fcall-3.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall-3.c' object='stack_fcall-stack-fcall-3.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -c -o stack_fcall-stack-fcall-3.o `test -f 'stack-fcall-3.c' || echo '$(srcdir)/'`stack-fcall-3.c
+
+stack_fcall-stack-fcall-3.obj: stack-fcall-3.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -MT stack_fcall-stack-fcall-3.obj -MD -MP -MF $(DEPDIR)/stack_fcall-stack-fcall-3.Tpo -c -o stack_fcall-stack-fcall-3.obj `if test -f 'stack-fcall-3.c'; then $(CYGPATH_W) 'stack-fcall-3.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall-3.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall-stack-fcall-3.Tpo $(DEPDIR)/stack_fcall-stack-fcall-3.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall-3.c' object='stack_fcall-stack-fcall-3.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_CFLAGS) $(CFLAGS) -c -o stack_fcall-stack-fcall-3.obj `if test -f 'stack-fcall-3.c'; then $(CYGPATH_W) 'stack-fcall-3.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall-3.c'; fi`
+
+stack_fcall_attach-stack-fcall-attach.o: stack-fcall-attach.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -MT stack_fcall_attach-stack-fcall-attach.o -MD -MP -MF $(DEPDIR)/stack_fcall_attach-stack-fcall-attach.Tpo -c -o stack_fcall_attach-stack-fcall-attach.o `test -f 'stack-fcall-attach.c' || echo '$(srcdir)/'`stack-fcall-attach.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall_attach-stack-fcall-attach.Tpo $(DEPDIR)/stack_fcall_attach-stack-fcall-attach.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall-attach.c' object='stack_fcall_attach-stack-fcall-attach.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -c -o stack_fcall_attach-stack-fcall-attach.o `test -f 'stack-fcall-attach.c' || echo '$(srcdir)/'`stack-fcall-attach.c
+
+stack_fcall_attach-stack-fcall-attach.obj: stack-fcall-attach.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -MT stack_fcall_attach-stack-fcall-attach.obj -MD -MP -MF $(DEPDIR)/stack_fcall_attach-stack-fcall-attach.Tpo -c -o stack_fcall_attach-stack-fcall-attach.obj `if test -f 'stack-fcall-attach.c'; then $(CYGPATH_W) 'stack-fcall-attach.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall-attach.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall_attach-stack-fcall-attach.Tpo $(DEPDIR)/stack_fcall_attach-stack-fcall-attach.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall-attach.c' object='stack_fcall_attach-stack-fcall-attach.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -c -o stack_fcall_attach-stack-fcall-attach.obj `if test -f 'stack-fcall-attach.c'; then $(CYGPATH_W) 'stack-fcall-attach.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall-attach.c'; fi`
+
+stack_fcall_attach-stack-fcall-0.o: stack-fcall-0.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -MT stack_fcall_attach-stack-fcall-0.o -MD -MP -MF $(DEPDIR)/stack_fcall_attach-stack-fcall-0.Tpo -c -o stack_fcall_attach-stack-fcall-0.o `test -f 'stack-fcall-0.c' || echo '$(srcdir)/'`stack-fcall-0.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall_attach-stack-fcall-0.Tpo $(DEPDIR)/stack_fcall_attach-stack-fcall-0.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall-0.c' object='stack_fcall_attach-stack-fcall-0.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -c -o stack_fcall_attach-stack-fcall-0.o `test -f 'stack-fcall-0.c' || echo '$(srcdir)/'`stack-fcall-0.c
+
+stack_fcall_attach-stack-fcall-0.obj: stack-fcall-0.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -MT stack_fcall_attach-stack-fcall-0.obj -MD -MP -MF $(DEPDIR)/stack_fcall_attach-stack-fcall-0.Tpo -c -o stack_fcall_attach-stack-fcall-0.obj `if test -f 'stack-fcall-0.c'; then $(CYGPATH_W) 'stack-fcall-0.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall-0.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall_attach-stack-fcall-0.Tpo $(DEPDIR)/stack_fcall_attach-stack-fcall-0.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall-0.c' object='stack_fcall_attach-stack-fcall-0.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -c -o stack_fcall_attach-stack-fcall-0.obj `if test -f 'stack-fcall-0.c'; then $(CYGPATH_W) 'stack-fcall-0.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall-0.c'; fi`
+
+stack_fcall_attach-stack-fcall-1.o: stack-fcall-1.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -MT stack_fcall_attach-stack-fcall-1.o -MD -MP -MF $(DEPDIR)/stack_fcall_attach-stack-fcall-1.Tpo -c -o stack_fcall_attach-stack-fcall-1.o `test -f 'stack-fcall-1.c' || echo '$(srcdir)/'`stack-fcall-1.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall_attach-stack-fcall-1.Tpo $(DEPDIR)/stack_fcall_attach-stack-fcall-1.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall-1.c' object='stack_fcall_attach-stack-fcall-1.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -c -o stack_fcall_attach-stack-fcall-1.o `test -f 'stack-fcall-1.c' || echo '$(srcdir)/'`stack-fcall-1.c
+
+stack_fcall_attach-stack-fcall-1.obj: stack-fcall-1.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -MT stack_fcall_attach-stack-fcall-1.obj -MD -MP -MF $(DEPDIR)/stack_fcall_attach-stack-fcall-1.Tpo -c -o stack_fcall_attach-stack-fcall-1.obj `if test -f 'stack-fcall-1.c'; then $(CYGPATH_W) 'stack-fcall-1.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall-1.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall_attach-stack-fcall-1.Tpo $(DEPDIR)/stack_fcall_attach-stack-fcall-1.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall-1.c' object='stack_fcall_attach-stack-fcall-1.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -c -o stack_fcall_attach-stack-fcall-1.obj `if test -f 'stack-fcall-1.c'; then $(CYGPATH_W) 'stack-fcall-1.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall-1.c'; fi`
+
+stack_fcall_attach-stack-fcall-2.o: stack-fcall-2.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -MT stack_fcall_attach-stack-fcall-2.o -MD -MP -MF $(DEPDIR)/stack_fcall_attach-stack-fcall-2.Tpo -c -o stack_fcall_attach-stack-fcall-2.o `test -f 'stack-fcall-2.c' || echo '$(srcdir)/'`stack-fcall-2.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall_attach-stack-fcall-2.Tpo $(DEPDIR)/stack_fcall_attach-stack-fcall-2.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall-2.c' object='stack_fcall_attach-stack-fcall-2.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -c -o stack_fcall_attach-stack-fcall-2.o `test -f 'stack-fcall-2.c' || echo '$(srcdir)/'`stack-fcall-2.c
+
+stack_fcall_attach-stack-fcall-2.obj: stack-fcall-2.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -MT stack_fcall_attach-stack-fcall-2.obj -MD -MP -MF $(DEPDIR)/stack_fcall_attach-stack-fcall-2.Tpo -c -o stack_fcall_attach-stack-fcall-2.obj `if test -f 'stack-fcall-2.c'; then $(CYGPATH_W) 'stack-fcall-2.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall-2.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall_attach-stack-fcall-2.Tpo $(DEPDIR)/stack_fcall_attach-stack-fcall-2.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall-2.c' object='stack_fcall_attach-stack-fcall-2.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -c -o stack_fcall_attach-stack-fcall-2.obj `if test -f 'stack-fcall-2.c'; then $(CYGPATH_W) 'stack-fcall-2.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall-2.c'; fi`
+
+stack_fcall_attach-stack-fcall-3.o: stack-fcall-3.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -MT stack_fcall_attach-stack-fcall-3.o -MD -MP -MF $(DEPDIR)/stack_fcall_attach-stack-fcall-3.Tpo -c -o stack_fcall_attach-stack-fcall-3.o `test -f 'stack-fcall-3.c' || echo '$(srcdir)/'`stack-fcall-3.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall_attach-stack-fcall-3.Tpo $(DEPDIR)/stack_fcall_attach-stack-fcall-3.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall-3.c' object='stack_fcall_attach-stack-fcall-3.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -c -o stack_fcall_attach-stack-fcall-3.o `test -f 'stack-fcall-3.c' || echo '$(srcdir)/'`stack-fcall-3.c
+
+stack_fcall_attach-stack-fcall-3.obj: stack-fcall-3.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -MT stack_fcall_attach-stack-fcall-3.obj -MD -MP -MF $(DEPDIR)/stack_fcall_attach-stack-fcall-3.Tpo -c -o stack_fcall_attach-stack-fcall-3.obj `if test -f 'stack-fcall-3.c'; then $(CYGPATH_W) 'stack-fcall-3.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall-3.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stack_fcall_attach-stack-fcall-3.Tpo $(DEPDIR)/stack_fcall_attach-stack-fcall-3.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='stack-fcall-3.c' object='stack_fcall_attach-stack-fcall-3.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(stack_fcall_attach_CFLAGS) $(CFLAGS) -c -o stack_fcall_attach-stack-fcall-3.obj `if test -f 'stack-fcall-3.c'; then $(CYGPATH_W) 'stack-fcall-3.c'; else $(CYGPATH_W) '$(srcdir)/stack-fcall-3.c'; fi`
+
 stat64-stat64.o: stat64.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(stat64_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT stat64-stat64.o -MD -MP -MF $(DEPDIR)/stat64-stat64.Tpo -c -o stat64-stat64.o `test -f 'stat64.c' || echo '$(srcdir)/'`stat64.c
 @am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/stat64-stat64.Tpo $(DEPDIR)/stat64-stat64.Po
@@ -18159,11 +18707,13 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/creat.Po
 	-rm -f ./$(DEPDIR)/delay.Po
 	-rm -f ./$(DEPDIR)/delete_module.Po
+	-rm -f ./$(DEPDIR)/detach-vfork.Po
 	-rm -f ./$(DEPDIR)/dev--decode-fds-all.Po
 	-rm -f ./$(DEPDIR)/dev--decode-fds-dev.Po
 	-rm -f ./$(DEPDIR)/dev--decode-fds-none.Po
 	-rm -f ./$(DEPDIR)/dev--decode-fds-path.Po
 	-rm -f ./$(DEPDIR)/dev--decode-fds-socket.Po
+	-rm -f ./$(DEPDIR)/dev-pty-yy.Po
 	-rm -f ./$(DEPDIR)/dev-yy.Po
 	-rm -f ./$(DEPDIR)/dup-P.Po
 	-rm -f ./$(DEPDIR)/dup-trace-fds-0-9.Po
@@ -18303,7 +18853,19 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/ftruncate.Po
 	-rm -f ./$(DEPDIR)/ftruncate64-ftruncate64.Po
 	-rm -f ./$(DEPDIR)/futex.Po
+	-rm -f ./$(DEPDIR)/futex_requeue-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/futex_requeue-Xraw.Po
+	-rm -f ./$(DEPDIR)/futex_requeue-Xverbose.Po
+	-rm -f ./$(DEPDIR)/futex_requeue.Po
+	-rm -f ./$(DEPDIR)/futex_wait-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/futex_wait-Xraw.Po
+	-rm -f ./$(DEPDIR)/futex_wait-Xverbose.Po
+	-rm -f ./$(DEPDIR)/futex_wait.Po
 	-rm -f ./$(DEPDIR)/futex_waitv.Po
+	-rm -f ./$(DEPDIR)/futex_wake-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/futex_wake-Xraw.Po
+	-rm -f ./$(DEPDIR)/futex_wake-Xverbose.Po
+	-rm -f ./$(DEPDIR)/futex_wake.Po
 	-rm -f ./$(DEPDIR)/futimesat.Po
 	-rm -f ./$(DEPDIR)/get_mempolicy.Po
 	-rm -f ./$(DEPDIR)/get_process_reaper.Po
@@ -18642,17 +19204,28 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/linkat--secontext_mismatch.Po
 	-rm -f ./$(DEPDIR)/linkat.Po
 	-rm -f ./$(DEPDIR)/list_sigaction_signum.Po
+	-rm -f ./$(DEPDIR)/listmount-success.Po
+	-rm -f ./$(DEPDIR)/listmount.Po
 	-rm -f ./$(DEPDIR)/llseek.Po
 	-rm -f ./$(DEPDIR)/localtime.Po
 	-rm -f ./$(DEPDIR)/lookup_dcookie.Po
 	-rm -f ./$(DEPDIR)/looping_threads.Po
 	-rm -f ./$(DEPDIR)/lseek.Po
+	-rm -f ./$(DEPDIR)/lsm_get_self_attr-success.Po
+	-rm -f ./$(DEPDIR)/lsm_get_self_attr.Po
+	-rm -f ./$(DEPDIR)/lsm_list_modules-success.Po
+	-rm -f ./$(DEPDIR)/lsm_list_modules.Po
+	-rm -f ./$(DEPDIR)/lsm_set_self_attr.Po
 	-rm -f ./$(DEPDIR)/lstat.Po
 	-rm -f ./$(DEPDIR)/lstat64-lstat64.Po
 	-rm -f ./$(DEPDIR)/madvise-Xabbrev.Po
 	-rm -f ./$(DEPDIR)/madvise-Xraw.Po
 	-rm -f ./$(DEPDIR)/madvise-Xverbose.Po
 	-rm -f ./$(DEPDIR)/madvise.Po
+	-rm -f ./$(DEPDIR)/map_shadow_stack-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/map_shadow_stack-Xraw.Po
+	-rm -f ./$(DEPDIR)/map_shadow_stack-Xverbose.Po
+	-rm -f ./$(DEPDIR)/map_shadow_stack.Po
 	-rm -f ./$(DEPDIR)/maybe_switch_current_tcp--quiet-thread-execve.Po
 	-rm -f ./$(DEPDIR)/maybe_switch_current_tcp.Po
 	-rm -f ./$(DEPDIR)/mbind-Xabbrev.Po
@@ -19196,21 +19769,27 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/sockopt-sol_socket.Po
 	-rm -f ./$(DEPDIR)/sockopt-timestamp.Po
 	-rm -f ./$(DEPDIR)/splice.Po
-	-rm -f ./$(DEPDIR)/stack-fcall-0.Po
-	-rm -f ./$(DEPDIR)/stack-fcall-1.Po
-	-rm -f ./$(DEPDIR)/stack-fcall-2.Po
-	-rm -f ./$(DEPDIR)/stack-fcall-3.Po
-	-rm -f ./$(DEPDIR)/stack-fcall-attach.Po
 	-rm -f ./$(DEPDIR)/stack-fcall-mangled-0.Po
 	-rm -f ./$(DEPDIR)/stack-fcall-mangled-1.Po
 	-rm -f ./$(DEPDIR)/stack-fcall-mangled-2.Po
 	-rm -f ./$(DEPDIR)/stack-fcall-mangled-3.Po
 	-rm -f ./$(DEPDIR)/stack-fcall-mangled.Po
-	-rm -f ./$(DEPDIR)/stack-fcall.Po
+	-rm -f ./$(DEPDIR)/stack_fcall-stack-fcall-0.Po
+	-rm -f ./$(DEPDIR)/stack_fcall-stack-fcall-1.Po
+	-rm -f ./$(DEPDIR)/stack_fcall-stack-fcall-2.Po
+	-rm -f ./$(DEPDIR)/stack_fcall-stack-fcall-3.Po
+	-rm -f ./$(DEPDIR)/stack_fcall-stack-fcall.Po
+	-rm -f ./$(DEPDIR)/stack_fcall_attach-stack-fcall-0.Po
+	-rm -f ./$(DEPDIR)/stack_fcall_attach-stack-fcall-1.Po
+	-rm -f ./$(DEPDIR)/stack_fcall_attach-stack-fcall-2.Po
+	-rm -f ./$(DEPDIR)/stack_fcall_attach-stack-fcall-3.Po
+	-rm -f ./$(DEPDIR)/stack_fcall_attach-stack-fcall-attach.Po
 	-rm -f ./$(DEPDIR)/stat.Po
 	-rm -f ./$(DEPDIR)/stat64-stat64.Po
 	-rm -f ./$(DEPDIR)/statfs-statfs.Po
 	-rm -f ./$(DEPDIR)/statfs64.Po
+	-rm -f ./$(DEPDIR)/statmount-success.Po
+	-rm -f ./$(DEPDIR)/statmount.Po
 	-rm -f ./$(DEPDIR)/status-all.Po
 	-rm -f ./$(DEPDIR)/status-detached-threads.Po
 	-rm -f ./$(DEPDIR)/status-failed-long.Po
@@ -19226,6 +19805,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/status-unfinished-threads.Po
 	-rm -f ./$(DEPDIR)/status-unfinished.Po
 	-rm -f ./$(DEPDIR)/statx.Po
+	-rm -f ./$(DEPDIR)/strace--always-show-pid.Po
 	-rm -f ./$(DEPDIR)/strace--decode-pids-comm.Po
 	-rm -f ./$(DEPDIR)/strace--strings-in-hex-all.Po
 	-rm -f ./$(DEPDIR)/strace--strings-in-hex-non-ascii-chars.Po
@@ -19259,6 +19839,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/syslog-success.Po
 	-rm -f ./$(DEPDIR)/syslog.Po
 	-rm -f ./$(DEPDIR)/tampering-notes.Po
+	-rm -f ./$(DEPDIR)/tcp_ao.Po
 	-rm -f ./$(DEPDIR)/tee.Po
 	-rm -f ./$(DEPDIR)/tgkill--pidns-translation.Po
 	-rm -f ./$(DEPDIR)/tgkill.Po
@@ -19465,11 +20046,13 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/creat.Po
 	-rm -f ./$(DEPDIR)/delay.Po
 	-rm -f ./$(DEPDIR)/delete_module.Po
+	-rm -f ./$(DEPDIR)/detach-vfork.Po
 	-rm -f ./$(DEPDIR)/dev--decode-fds-all.Po
 	-rm -f ./$(DEPDIR)/dev--decode-fds-dev.Po
 	-rm -f ./$(DEPDIR)/dev--decode-fds-none.Po
 	-rm -f ./$(DEPDIR)/dev--decode-fds-path.Po
 	-rm -f ./$(DEPDIR)/dev--decode-fds-socket.Po
+	-rm -f ./$(DEPDIR)/dev-pty-yy.Po
 	-rm -f ./$(DEPDIR)/dev-yy.Po
 	-rm -f ./$(DEPDIR)/dup-P.Po
 	-rm -f ./$(DEPDIR)/dup-trace-fds-0-9.Po
@@ -19609,7 +20192,19 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/ftruncate.Po
 	-rm -f ./$(DEPDIR)/ftruncate64-ftruncate64.Po
 	-rm -f ./$(DEPDIR)/futex.Po
+	-rm -f ./$(DEPDIR)/futex_requeue-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/futex_requeue-Xraw.Po
+	-rm -f ./$(DEPDIR)/futex_requeue-Xverbose.Po
+	-rm -f ./$(DEPDIR)/futex_requeue.Po
+	-rm -f ./$(DEPDIR)/futex_wait-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/futex_wait-Xraw.Po
+	-rm -f ./$(DEPDIR)/futex_wait-Xverbose.Po
+	-rm -f ./$(DEPDIR)/futex_wait.Po
 	-rm -f ./$(DEPDIR)/futex_waitv.Po
+	-rm -f ./$(DEPDIR)/futex_wake-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/futex_wake-Xraw.Po
+	-rm -f ./$(DEPDIR)/futex_wake-Xverbose.Po
+	-rm -f ./$(DEPDIR)/futex_wake.Po
 	-rm -f ./$(DEPDIR)/futimesat.Po
 	-rm -f ./$(DEPDIR)/get_mempolicy.Po
 	-rm -f ./$(DEPDIR)/get_process_reaper.Po
@@ -19948,17 +20543,28 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/linkat--secontext_mismatch.Po
 	-rm -f ./$(DEPDIR)/linkat.Po
 	-rm -f ./$(DEPDIR)/list_sigaction_signum.Po
+	-rm -f ./$(DEPDIR)/listmount-success.Po
+	-rm -f ./$(DEPDIR)/listmount.Po
 	-rm -f ./$(DEPDIR)/llseek.Po
 	-rm -f ./$(DEPDIR)/localtime.Po
 	-rm -f ./$(DEPDIR)/lookup_dcookie.Po
 	-rm -f ./$(DEPDIR)/looping_threads.Po
 	-rm -f ./$(DEPDIR)/lseek.Po
+	-rm -f ./$(DEPDIR)/lsm_get_self_attr-success.Po
+	-rm -f ./$(DEPDIR)/lsm_get_self_attr.Po
+	-rm -f ./$(DEPDIR)/lsm_list_modules-success.Po
+	-rm -f ./$(DEPDIR)/lsm_list_modules.Po
+	-rm -f ./$(DEPDIR)/lsm_set_self_attr.Po
 	-rm -f ./$(DEPDIR)/lstat.Po
 	-rm -f ./$(DEPDIR)/lstat64-lstat64.Po
 	-rm -f ./$(DEPDIR)/madvise-Xabbrev.Po
 	-rm -f ./$(DEPDIR)/madvise-Xraw.Po
 	-rm -f ./$(DEPDIR)/madvise-Xverbose.Po
 	-rm -f ./$(DEPDIR)/madvise.Po
+	-rm -f ./$(DEPDIR)/map_shadow_stack-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/map_shadow_stack-Xraw.Po
+	-rm -f ./$(DEPDIR)/map_shadow_stack-Xverbose.Po
+	-rm -f ./$(DEPDIR)/map_shadow_stack.Po
 	-rm -f ./$(DEPDIR)/maybe_switch_current_tcp--quiet-thread-execve.Po
 	-rm -f ./$(DEPDIR)/maybe_switch_current_tcp.Po
 	-rm -f ./$(DEPDIR)/mbind-Xabbrev.Po
@@ -20502,21 +21108,27 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/sockopt-sol_socket.Po
 	-rm -f ./$(DEPDIR)/sockopt-timestamp.Po
 	-rm -f ./$(DEPDIR)/splice.Po
-	-rm -f ./$(DEPDIR)/stack-fcall-0.Po
-	-rm -f ./$(DEPDIR)/stack-fcall-1.Po
-	-rm -f ./$(DEPDIR)/stack-fcall-2.Po
-	-rm -f ./$(DEPDIR)/stack-fcall-3.Po
-	-rm -f ./$(DEPDIR)/stack-fcall-attach.Po
 	-rm -f ./$(DEPDIR)/stack-fcall-mangled-0.Po
 	-rm -f ./$(DEPDIR)/stack-fcall-mangled-1.Po
 	-rm -f ./$(DEPDIR)/stack-fcall-mangled-2.Po
 	-rm -f ./$(DEPDIR)/stack-fcall-mangled-3.Po
 	-rm -f ./$(DEPDIR)/stack-fcall-mangled.Po
-	-rm -f ./$(DEPDIR)/stack-fcall.Po
+	-rm -f ./$(DEPDIR)/stack_fcall-stack-fcall-0.Po
+	-rm -f ./$(DEPDIR)/stack_fcall-stack-fcall-1.Po
+	-rm -f ./$(DEPDIR)/stack_fcall-stack-fcall-2.Po
+	-rm -f ./$(DEPDIR)/stack_fcall-stack-fcall-3.Po
+	-rm -f ./$(DEPDIR)/stack_fcall-stack-fcall.Po
+	-rm -f ./$(DEPDIR)/stack_fcall_attach-stack-fcall-0.Po
+	-rm -f ./$(DEPDIR)/stack_fcall_attach-stack-fcall-1.Po
+	-rm -f ./$(DEPDIR)/stack_fcall_attach-stack-fcall-2.Po
+	-rm -f ./$(DEPDIR)/stack_fcall_attach-stack-fcall-3.Po
+	-rm -f ./$(DEPDIR)/stack_fcall_attach-stack-fcall-attach.Po
 	-rm -f ./$(DEPDIR)/stat.Po
 	-rm -f ./$(DEPDIR)/stat64-stat64.Po
 	-rm -f ./$(DEPDIR)/statfs-statfs.Po
 	-rm -f ./$(DEPDIR)/statfs64.Po
+	-rm -f ./$(DEPDIR)/statmount-success.Po
+	-rm -f ./$(DEPDIR)/statmount.Po
 	-rm -f ./$(DEPDIR)/status-all.Po
 	-rm -f ./$(DEPDIR)/status-detached-threads.Po
 	-rm -f ./$(DEPDIR)/status-failed-long.Po
@@ -20532,6 +21144,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/status-unfinished-threads.Po
 	-rm -f ./$(DEPDIR)/status-unfinished.Po
 	-rm -f ./$(DEPDIR)/statx.Po
+	-rm -f ./$(DEPDIR)/strace--always-show-pid.Po
 	-rm -f ./$(DEPDIR)/strace--decode-pids-comm.Po
 	-rm -f ./$(DEPDIR)/strace--strings-in-hex-all.Po
 	-rm -f ./$(DEPDIR)/strace--strings-in-hex-non-ascii-chars.Po
@@ -20565,6 +21178,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/syslog-success.Po
 	-rm -f ./$(DEPDIR)/syslog.Po
 	-rm -f ./$(DEPDIR)/tampering-notes.Po
+	-rm -f ./$(DEPDIR)/tcp_ao.Po
 	-rm -f ./$(DEPDIR)/tee.Po
 	-rm -f ./$(DEPDIR)/tgkill--pidns-translation.Po
 	-rm -f ./$(DEPDIR)/tgkill.Po
@@ -20912,6 +21526,9 @@ $(srcdir)/dev--decode-fds-path.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/ge
 	$(AM_V_GEN) $^ $@
 
 $(srcdir)/dev--decode-fds-socket.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/dev-pty-yy.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
 $(srcdir)/dev-yy.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
@@ -21301,7 +21918,43 @@ $(srcdir)/ftruncate.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 $(srcdir)/ftruncate64.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
+$(srcdir)/futex_requeue.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/futex_requeue-Xabbrev.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/futex_requeue-Xraw.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/futex_requeue-Xverbose.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/futex_wait.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/futex_wait-Xabbrev.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/futex_wait-Xraw.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/futex_wait-Xverbose.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
 $(srcdir)/futex_waitv.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/futex_wake.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/futex_wake-Xabbrev.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/futex_wake-Xraw.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/futex_wake-Xverbose.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
 $(srcdir)/futimesat.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
@@ -22189,7 +22842,28 @@ $(srcdir)/linkat--secontext_full_mismatch.gen.test: $(abs_srcdir)/gen_tests.sh $
 $(srcdir)/linkat--secontext_mismatch.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
+$(srcdir)/listmount.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/listmount-success.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
 $(srcdir)/lookup_dcookie.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/lsm_get_self_attr.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/lsm_get_self_attr-success.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/lsm_list_modules.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/lsm_list_modules-success.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/lsm_set_self_attr.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
 $(srcdir)/lstat.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
@@ -22208,6 +22882,18 @@ $(srcdir)/madvise-Xraw.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.
 	$(AM_V_GEN) $^ $@
 
 $(srcdir)/madvise-Xverbose.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/map_shadow_stack.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/map_shadow_stack-Xabbrev.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/map_shadow_stack-Xraw.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/map_shadow_stack-Xverbose.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
 $(srcdir)/maybe_switch_current_tcp.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
@@ -23734,6 +24420,12 @@ $(srcdir)/statfs.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 $(srcdir)/statfs64.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
+$(srcdir)/statmount.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/statmount-success.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
 $(srcdir)/status-all.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
@@ -23792,6 +24484,9 @@ $(srcdir)/strace--absolute-timestamps-format-unix-precision-s.gen.test: $(abs_sr
 	$(AM_V_GEN) $^ $@
 
 $(srcdir)/strace--absolute-timestamps-format-unix-precision-us.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/strace--always-show-pid.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
 $(srcdir)/strace--decode-pids-comm.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
@@ -23939,6 +24634,9 @@ $(srcdir)/sysinfo.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
 $(srcdir)/syslog.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/tcp_ao.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
 $(srcdir)/tee.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in

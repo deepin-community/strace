@@ -24,12 +24,18 @@ static const struct xlat_data uffd_register_ioctl_flags_xdata[] = {
  XLAT_TYPE_PAIR(uint64_t, 1ULL<<_UFFDIO_ZEROPAGE, "1<<_UFFDIO_ZEROPAGE"),
  #define XLAT_VAL_2 ((uint64_t) (1ULL<<_UFFDIO_ZEROPAGE))
  #define XLAT_STR_2 "1<<_UFFDIO_ZEROPAGE"
+ XLAT_TYPE_PAIR(uint64_t, 1ULL<<_UFFDIO_MOVE, "1<<_UFFDIO_MOVE"),
+ #define XLAT_VAL_3 ((uint64_t) (1ULL<<_UFFDIO_MOVE))
+ #define XLAT_STR_3 "1<<_UFFDIO_MOVE"
  XLAT_TYPE_PAIR(uint64_t, 1ULL<<_UFFDIO_WRITEPROTECT, "1<<_UFFDIO_WRITEPROTECT"),
- #define XLAT_VAL_3 ((uint64_t) (1ULL<<_UFFDIO_WRITEPROTECT))
- #define XLAT_STR_3 "1<<_UFFDIO_WRITEPROTECT"
+ #define XLAT_VAL_4 ((uint64_t) (1ULL<<_UFFDIO_WRITEPROTECT))
+ #define XLAT_STR_4 "1<<_UFFDIO_WRITEPROTECT"
  XLAT_TYPE_PAIR(uint64_t, 1ULL<<_UFFDIO_CONTINUE, "1<<_UFFDIO_CONTINUE"),
- #define XLAT_VAL_4 ((uint64_t) (1ULL<<_UFFDIO_CONTINUE))
- #define XLAT_STR_4 "1<<_UFFDIO_CONTINUE"
+ #define XLAT_VAL_5 ((uint64_t) (1ULL<<_UFFDIO_CONTINUE))
+ #define XLAT_STR_5 "1<<_UFFDIO_CONTINUE"
+ XLAT_TYPE_PAIR(uint64_t, 1ULL<<_UFFDIO_POISON, "1<<_UFFDIO_POISON"),
+ #define XLAT_VAL_6 ((uint64_t) (1ULL<<_UFFDIO_POISON))
+ #define XLAT_STR_6 "1<<_UFFDIO_POISON"
 };
 static
 const struct xlat uffd_register_ioctl_flags[1] = { {
@@ -52,6 +58,12 @@ const struct xlat uffd_register_ioctl_flags[1] = { {
 #  ifdef XLAT_VAL_4
   | XLAT_VAL_4
 #  endif
+#  ifdef XLAT_VAL_5
+  | XLAT_VAL_5
+#  endif
+#  ifdef XLAT_VAL_6
+  | XLAT_VAL_6
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -69,6 +81,12 @@ const struct xlat uffd_register_ioctl_flags[1] = { {
 #  ifdef XLAT_STR_4
   + sizeof(XLAT_STR_4)
 #  endif
+#  ifdef XLAT_STR_5
+  + sizeof(XLAT_STR_5)
+#  endif
+#  ifdef XLAT_STR_6
+  + sizeof(XLAT_STR_6)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -83,6 +101,10 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_3
 #  undef XLAT_STR_4
 #  undef XLAT_VAL_4
+#  undef XLAT_STR_5
+#  undef XLAT_VAL_5
+#  undef XLAT_STR_6
+#  undef XLAT_VAL_6
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

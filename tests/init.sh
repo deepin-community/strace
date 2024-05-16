@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # Copyright (c) 2011-2016 Dmitry V. Levin <ldv@strace.io>
-# Copyright (c) 2011-2023 The strace developers.
+# Copyright (c) 2011-2024 The strace developers.
 # All rights reserved.
 #
 # SPDX-License-Identifier: GPL-2.0-or-later
@@ -52,7 +52,7 @@ get_config_option()
 	local opt
 	opt=$(sed -E -n 's/#define[[:space:]]*'"$1"'[[:space:]]*([0-9]+)$/\1/p' \
 		"$CONFIG_H")
-	if [ -n "$opt" -a "$opt" -ne 0 ]; then
+	if [ -n "$opt" ] && [ "$opt" -ne 0 ]; then
 		printf "%s" "$2"
 	else
 		printf "%s" "${3-}"
@@ -280,9 +280,9 @@ run_strace_match_diff()
 	sed_cmd='p'
 
 	args="$*"
-	[ -n "$args" -a \( -z "${args##*-e trace=*}" -o \
-			   -z "${args##*-etrace=*}" -o \
-			   -z "${args##*--trace=*}" \) ] ||
+	[ -n "$args" ] && [ -z "${args##*-e trace=*}" -o \
+			    -z "${args##*-etrace=*}" -o \
+			    -z "${args##*--trace=*}" ] ||
 		set -- -e trace="$NAME" "$@"
 
 	set -- "$@" END_OF_ARGUMENTS
@@ -323,9 +323,9 @@ run_strace_match_diff()
 run_strace_match_grep()
 {
 	args="$*"
-	[ -n "$args" -a \( -z "${args##*-e trace=*}" -o \
-			   -z "${args##*-etrace=*}" -o \
-			   -z "${args##*--trace=*}" \) ] ||
+	[ -n "$args" ] && [ -z "${args##*-e trace=*}" -o \
+			    -z "${args##*-etrace=*}" -o \
+			    -z "${args##*--trace=*}" ] ||
 		set -- -e trace="$NAME" "$@"
 	run_prog > /dev/null
 	run_strace "$@" $args > "$EXP"
@@ -575,9 +575,10 @@ esac
 STRACE_EXE=
 if [ -n "$NAME" ]; then
 	TESTDIR="$NAME.dir"
-	rm -rf -- "$TESTDIR"
-	mkdir -- "$TESTDIR"
-	cd "$TESTDIR"
+	rm -rf -- "$TESTDIR" &&
+	mkdir -- "$TESTDIR" &&
+	cd "$TESTDIR" ||
+	framework_failure_ "Cannot setup $TESTDIR"
 
 	case "$srcdir" in
 		/*) ;;

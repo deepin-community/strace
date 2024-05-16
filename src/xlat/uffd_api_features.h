@@ -57,6 +57,15 @@ static const struct xlat_data uffd_api_features_xdata[] = {
  XLAT_TYPE(uint64_t, UFFD_FEATURE_WP_UNPOPULATED),
  #define XLAT_VAL_13 ((uint64_t) (UFFD_FEATURE_WP_UNPOPULATED))
  #define XLAT_STR_13 STRINGIFY(UFFD_FEATURE_WP_UNPOPULATED)
+ XLAT_TYPE(uint64_t, UFFD_FEATURE_POISON),
+ #define XLAT_VAL_14 ((uint64_t) (UFFD_FEATURE_POISON))
+ #define XLAT_STR_14 STRINGIFY(UFFD_FEATURE_POISON)
+ XLAT_TYPE(uint64_t, UFFD_FEATURE_WP_ASYNC),
+ #define XLAT_VAL_15 ((uint64_t) (UFFD_FEATURE_WP_ASYNC))
+ #define XLAT_STR_15 STRINGIFY(UFFD_FEATURE_WP_ASYNC)
+ XLAT_TYPE(uint64_t, UFFD_FEATURE_MOVE),
+ #define XLAT_VAL_16 ((uint64_t) (UFFD_FEATURE_MOVE))
+ #define XLAT_STR_16 STRINGIFY(UFFD_FEATURE_MOVE)
 };
 static
 const struct xlat uffd_api_features[1] = { {
@@ -106,6 +115,15 @@ const struct xlat uffd_api_features[1] = { {
 #  ifdef XLAT_VAL_13
   | XLAT_VAL_13
 #  endif
+#  ifdef XLAT_VAL_14
+  | XLAT_VAL_14
+#  endif
+#  ifdef XLAT_VAL_15
+  | XLAT_VAL_15
+#  endif
+#  ifdef XLAT_VAL_16
+  | XLAT_VAL_16
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -150,6 +168,15 @@ const struct xlat uffd_api_features[1] = { {
 #  ifdef XLAT_STR_13
   + sizeof(XLAT_STR_13)
 #  endif
+#  ifdef XLAT_STR_14
+  + sizeof(XLAT_STR_14)
+#  endif
+#  ifdef XLAT_STR_15
+  + sizeof(XLAT_STR_15)
+#  endif
+#  ifdef XLAT_STR_16
+  + sizeof(XLAT_STR_16)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -182,6 +209,12 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_12
 #  undef XLAT_STR_13
 #  undef XLAT_VAL_13
+#  undef XLAT_STR_14
+#  undef XLAT_VAL_14
+#  undef XLAT_STR_15
+#  undef XLAT_VAL_15
+#  undef XLAT_STR_16
+#  undef XLAT_VAL_16
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

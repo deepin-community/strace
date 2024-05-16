@@ -255,6 +255,13 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define BPF_PROG_BIND_MAP 35
 #endif
+#if defined(BPF_TOKEN_CREATE) || (defined(HAVE_DECL_BPF_TOKEN_CREATE) && HAVE_DECL_BPF_TOKEN_CREATE)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((BPF_TOKEN_CREATE) == (36), "BPF_TOKEN_CREATE != 36");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define BPF_TOKEN_CREATE 36
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -375,6 +382,9 @@ static const struct xlat_data bpf_commands_xdata[] = {
  [BPF_PROG_BIND_MAP] = XLAT(BPF_PROG_BIND_MAP),
  #define XLAT_VAL_35 ((unsigned) (BPF_PROG_BIND_MAP))
  #define XLAT_STR_35 STRINGIFY(BPF_PROG_BIND_MAP)
+ [BPF_TOKEN_CREATE] = XLAT(BPF_TOKEN_CREATE),
+ #define XLAT_VAL_36 ((unsigned) (BPF_TOKEN_CREATE))
+ #define XLAT_STR_36 STRINGIFY(BPF_TOKEN_CREATE)
 };
 static
 const struct xlat bpf_commands[1] = { {
@@ -490,6 +500,9 @@ const struct xlat bpf_commands[1] = { {
 #  ifdef XLAT_VAL_35
   | XLAT_VAL_35
 #  endif
+#  ifdef XLAT_VAL_36
+  | XLAT_VAL_36
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -600,6 +613,9 @@ const struct xlat bpf_commands[1] = { {
 #  ifdef XLAT_STR_35
   + sizeof(XLAT_STR_35)
 #  endif
+#  ifdef XLAT_STR_36
+  + sizeof(XLAT_STR_36)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -676,6 +692,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_34
 #  undef XLAT_STR_35
 #  undef XLAT_VAL_35
+#  undef XLAT_STR_36
+#  undef XLAT_VAL_36
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

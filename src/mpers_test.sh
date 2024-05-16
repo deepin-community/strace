@@ -2,7 +2,7 @@
 #
 # Copyright (c) 2015 Elvira Khabirova <lineprinter0@gmail.com>
 # Copyright (c) 2015 Dmitry V. Levin <ldv@strace.io>
-# Copyright (c) 2015-2021 The strace developers.
+# Copyright (c) 2015-2024 The strace developers.
 # All rights reserved.
 #
 # SPDX-License-Identifier: LGPL-2.1-or-later
@@ -126,7 +126,7 @@ int16_t f[0];
 #define MPERS_${mpers_name}_sample_struct ${mpers_name}_sample_struct
 EOF
 
-CFLAGS="$CPPFLAGS -I${srcdir} -DMPERS_IS_${mpers_name}" \
-CPPFLAGS="$CPPFLAGS -I${srcdir} -DIN_MPERS -DMPERS_IS_${mpers_name}" \
+cflags="$CPPFLAGS -I${srcdir} -DMPERS_IS_${mpers_name}"
+CFLAGS="$cflags" CPPFLAGS="$cflags -DIN_MPERS" \
 "$mpers_sh" "$mpers_name" "$mpers_cc_flags" "$sample"
 cmp "$expected" "$mpers_dir"/sample_struct.h > /dev/null

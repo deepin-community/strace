@@ -3,7 +3,7 @@
  * of sendmmsg and recvmmsg syscalls.
  *
  * Copyright (c) 2016 Dmitry V. Levin <ldv@strace.io>
- * Copyright (c) 2016-2021 The strace developers.
+ * Copyright (c) 2016-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -62,11 +62,10 @@ print_msghdr(const struct msghdr *const msg, const int user_msg_namelen)
 static void
 test_mmsg_name(const int send_fd, const int recv_fd)
 {
-	struct sockaddr_un *const send_addr =
-		tail_alloc(sizeof(*send_addr) * IOV_MAX1);
-	char *const send_buf = tail_alloc(sizeof(*send_buf) * IOV_MAX1);
-	struct iovec *const send_iov = tail_alloc(sizeof(*send_iov) * IOV_MAX1);
-	struct mmsghdr *const send_mh = tail_alloc(sizeof(*send_mh) * IOV_MAX1);
+	TAIL_ALLOC_OBJECT_CONST_ARR(struct sockaddr_un, send_addr, IOV_MAX1);
+	TAIL_ALLOC_OBJECT_CONST_ARR(char, send_buf, IOV_MAX1);
+	TAIL_ALLOC_OBJECT_CONST_ARR(struct iovec, send_iov, IOV_MAX1);
+	TAIL_ALLOC_OBJECT_CONST_ARR(struct mmsghdr, send_mh, IOV_MAX1);
 
 	int rc;
 
@@ -112,8 +111,8 @@ test_mmsg_name(const int send_fd, const int recv_fd)
 		printf("}");
 	}
 	errno = saved_errno;
-	printf("], %u, MSG_DONTWAIT) = %d %s (%m)\n",
-	       IOV_MAX1, rc, errno2name());
+	printf("], %u, MSG_DONTWAIT) = %s\n",
+	       IOV_MAX1, sprintrc(rc));
 
 	for (int i = 0; i < IOV_MAX1; ++i) {
 		send_mh[i].msg_hdr.msg_name = 0;
@@ -132,8 +131,8 @@ test_mmsg_name(const int send_fd, const int recv_fd)
 	printf("sendmmsg(-1, [{msg_hdr=");
 	print_msghdr(&send_mh[IOV_MAX].msg_hdr, 0);
 	errno = saved_errno;
-	printf("}, ... /* %p */], %u, MSG_DONTWAIT) = %d %s (%m)\n",
-	       &send_mh[IOV_MAX1], 2, rc, errno2name());
+	printf("}, ... /* %p */], %u, MSG_DONTWAIT) = %s\n",
+	       &send_mh[IOV_MAX1], 2, sprintrc(rc));
 
 	rc = send_mmsg(send_fd, send_mh, IOV_MAX1, MSG_DONTWAIT);
 	if (rc < 0)
@@ -157,11 +156,10 @@ test_mmsg_name(const int send_fd, const int recv_fd)
 	}
 	printf("], %u, MSG_DONTWAIT) = %d\n", IOV_MAX1, rc);
 
-	struct sockaddr_un *const recv_addr =
-		tail_alloc(sizeof(*recv_addr) * IOV_MAX1);
-	char *const recv_buf = tail_alloc(sizeof(*recv_buf) * IOV_MAX1);
-	struct iovec *const recv_iov = tail_alloc(sizeof(*recv_iov) * IOV_MAX1);
-	struct mmsghdr *const recv_mh = tail_alloc(sizeof(*recv_mh) * IOV_MAX1);
+	TAIL_ALLOC_OBJECT_CONST_ARR(struct sockaddr_un, recv_addr, IOV_MAX1);
+	TAIL_ALLOC_OBJECT_CONST_ARR(char, recv_buf, IOV_MAX1);
+	TAIL_ALLOC_OBJECT_CONST_ARR(struct iovec, recv_iov, IOV_MAX1);
+	TAIL_ALLOC_OBJECT_CONST_ARR(struct mmsghdr, recv_mh, IOV_MAX1);
 
 	for (int i = 0; i < IOV_MAX1; ++i) {
 		recv_iov[i].iov_base = &recv_buf[i];

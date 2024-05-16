@@ -2,7 +2,7 @@
  * Check decoding of utimensat syscall.
  *
  * Copyright (c) 2015-2017 Dmitry V. Levin <ldv@strace.io>
- * Copyright (c) 2015-2023 The strace developers.
+ * Copyright (c) 2015-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -93,7 +93,7 @@ main(void)
 
 	char *const fname = tail_memdup(proto_fname, sizeof(proto_fname));
 	const kernel_ulong_t kfname = (uintptr_t) fname;
-	kernel_old_timespec_t *const ts = tail_alloc(sizeof(*ts) * 2);
+	TAIL_ALLOC_OBJECT_CONST_ARR(kernel_old_timespec_t, ts, 2);
 
 	(void) close(0);
 

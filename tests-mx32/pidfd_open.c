@@ -2,7 +2,7 @@
  * Check decoding of pidfd_open syscall.
  *
  * Copyright (c) 2019 Dmitry V. Levin <ldv@strace.io>
- * Copyright (c) 2019-2021 The strace developers.
+ * Copyright (c) 2019-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -72,14 +72,26 @@ main(void)
 	printf("pidfd_open(-1, PIDFD_NONBLOCK) = %s\n", errstr);
 #endif
 
+	k_pidfd_open(0, O_EXCL);
+#ifndef PATH_TRACING
+	pidns_print_leader();
+	printf("pidfd_open(0, PIDFD_THREAD) = %s\n", errstr);
+#endif
+
+	k_pidfd_open(-1U, O_EXCL);
+#ifndef PATH_TRACING
+	pidns_print_leader();
+	printf("pidfd_open(-1, PIDFD_THREAD) = %s\n", errstr);
+#endif
+
 	k_pidfd_open(0, -1U);
 #ifndef PATH_TRACING
 	pidns_print_leader();
-	printf("pidfd_open(0, PIDFD_NONBLOCK|%#x) = %s\n",
-	       -1U & (~O_NONBLOCK), errstr);
+	printf("pidfd_open(0, PIDFD_NONBLOCK|PIDFD_THREAD|%#x) = %s\n",
+	       -1U & (~(O_NONBLOCK | O_EXCL)), errstr);
 #endif
 
-	const unsigned int flags = 0xfacefeed & (~O_NONBLOCK);
+	const unsigned int flags = 0xfacefeed & (~(O_NONBLOCK | O_EXCL));
 	const int pid = getpid();
 
 	k_pidfd_open(pid, flags);
@@ -104,7 +116,7 @@ main(void)
 # if defined PRINT_PIDFD
 	       "%ld<pid:%d>\n", pid, pid_str, rc, pid
 # elif defined PRINT_PATHS
-	       "%ld<anon_inode:[pidfd]>\n", pid, pid_str, rc
+	       "%ld<%s>\n", pid, pid_str, rc, get_fd_path(rc)
 # else
 	       "%s\n", pid, pid_str, errstr
 # endif

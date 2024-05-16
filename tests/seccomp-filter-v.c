@@ -2,7 +2,7 @@
  * Check verbose decoding of seccomp SECCOMP_SET_MODE_FILTER.
  *
  * Copyright (c) 2015-2016 Dmitry V. Levin <ldv@strace.io>
- * Copyright (c) 2016-2022 The strace developers.
+ * Copyright (c) 2016-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -70,8 +70,7 @@ main(void)
 		"BPF_STMT(BPF_RET|BPF_K, SECCOMP_RET_KILL_THREAD)";
 	struct sock_filter *const filter =
 		tail_memdup(filter_c, sizeof(filter_c));
-	struct sock_filter *const big_filter =
-		tail_alloc(sizeof(*big_filter) * (BPF_MAXINSNS + 1));
+	TAIL_ALLOC_OBJECT_CONST_ARR(struct sock_filter, big_filter, (BPF_MAXINSNS + 1));
 	TAIL_ALLOC_OBJECT_CONST_PTR(struct sock_fprog, prog);
 
 	int fds[2];
@@ -84,19 +83,19 @@ main(void)
 	prog->len = 1;
 	syscall(__NR_seccomp, SECCOMP_SET_MODE_FILTER, 0, prog);
 	tprintf("seccomp(SECCOMP_SET_MODE_FILTER, 0, {len=1, filter=%p})"
-		" = -1 EFAULT (%m)\n", prog->filter);
+		RVAL_EFAULT, prog->filter);
 
 	prog->filter = filter +  ARRAY_SIZE(filter_c) - 1;
 	prog->len = 3;
 	syscall(__NR_seccomp, SECCOMP_SET_MODE_FILTER, 0, prog);
 	tprintf("seccomp(SECCOMP_SET_MODE_FILTER, 0, {len=%u"
-		", filter=[%s, ... /* %p */]}) = -1 EFAULT (%m)\n",
+		", filter=[%s, ... /* %p */]})" RVAL_EFAULT,
 		prog->len, kill_stmt_txt, filter +  ARRAY_SIZE(filter_c));
 
 	prog->len = 0;
 	syscall(__NR_seccomp, SECCOMP_SET_MODE_FILTER, 0, prog);
 	tprintf("seccomp(SECCOMP_SET_MODE_FILTER, 0, {len=0, filter=[]})"
-		" = -1 EINVAL (%m)\n");
+		RVAL_EINVAL);
 
 	for (unsigned int i = 0; i <= BPF_MAXINSNS; ++i) {
 		const struct sock_filter stmt =
@@ -147,7 +146,7 @@ main(void)
 	}
 	tprintf(", ...]})");
 	syscall(__NR_seccomp, SECCOMP_SET_MODE_FILTER, -1, prog);
-	tprintf(" = -1 EINVAL (%m)\n");
+	tprintf(RVAL_EINVAL);
 
 	prog->filter = filter;
 	prog->len = ARRAY_SIZE(filter_c);

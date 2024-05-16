@@ -2,7 +2,7 @@
  * Check decoding of select/_newselect syscalls.
  *
  * Copyright (c) 2015-2018 Dmitry V. Levin <ldv@strace.io>
- * Copyright (c) 2015-2023 The strace developers.
+ * Copyright (c) 2015-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -95,15 +95,15 @@ main(void)
 	kernel_old_timeval_t *const tv = tail_memdup(&tv_in, sizeof(tv_in));
 	const uintptr_t a_tv = (uintptr_t) tv;
 
-	TAIL_ALLOC_OBJECT_VAR_PTR(kernel_ulong_t, l_rs);
+	TAIL_ALLOC_OBJECT_CONST_PTR(kernel_ulong_t, l_rs);
 	fd_set *const rs = (void *) l_rs;
 	const uintptr_t a_rs = (uintptr_t) rs;
 
-	TAIL_ALLOC_OBJECT_VAR_PTR(kernel_ulong_t, l_ws);
+	TAIL_ALLOC_OBJECT_CONST_PTR(kernel_ulong_t, l_ws);
 	fd_set *const ws = (void *) l_ws;
 	const uintptr_t a_ws = (uintptr_t) ws;
 
-	TAIL_ALLOC_OBJECT_VAR_PTR(kernel_ulong_t, l_es);
+	TAIL_ALLOC_OBJECT_CONST_PTR(kernel_ulong_t, l_es);
 	fd_set *const es = (void *) l_es;
 	const uintptr_t a_es = (uintptr_t) es;
 
@@ -213,7 +213,7 @@ main(void)
 	 * Very odd timeout.
 	 */
 	*l_rs = (1UL << fds[0]) | (1UL << fds[1]);
-	tv_in.tv_sec = (time_t) 0xcafef00ddeadbeefLL;
+	tv_in.tv_sec = (typeof(tv_in.tv_sec)) 0xcafef00ddeadbeefLL;
 	tv_in.tv_usec = (suseconds_t) 0xbadc0dedfacefeedLL;
 	memcpy(tv, &tv_in, sizeof(tv_in));
 	rc = xselect(nfds, a_rs, a_rs, a_rs, a_tv);

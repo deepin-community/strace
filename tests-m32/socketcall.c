@@ -2,7 +2,7 @@
  * Check decoding of socketcall syscall.
  *
  * Copyright (c) 2016-2018 Dmitry V. Levin <ldv@strace.io>
- * Copyright (c) 2016-2021 The strace developers.
+ * Copyright (c) 2016-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -41,13 +41,13 @@ test_socketcall(const int i, const void *const addr)
 	long rc = syscall(__NR_socketcall, call, addr);
 
 	if (i < sc_min || i > sc_max) {
-		printf("socketcall(%d, %p) = %ld %s (%m)\n",
-		       (int) call, addr, rc, errno2name());
+		printf("socketcall(%d, %p) = %s\n",
+		       (int) call, addr, sprintrc(rc));
 	} else if (addr == efault) {
 		const char *const str = xlookup_uint(socketcalls, i);
 		assert(str);
-		printf("socketcall(%s, %p) = %ld %s (%m)\n",
-		       str, addr, rc, errno2name());
+		printf("socketcall(%s, %p) = %s\n",
+		       str, addr, sprintrc(rc));
 	}
 }
 int
@@ -56,7 +56,7 @@ main(void)
 	assert(0 == socketcalls->data[0].val);
 	assert((unsigned) sc_max == socketcalls->data[socketcalls->size - 1].val);
 
-	const unsigned long *const args = tail_alloc(sizeof(*args) * 6);
+	TAIL_ALLOC_OBJECT_CONST_ARR(const unsigned long, args, 6);
 	efault = tail_alloc(1) + 1;
 
 	for (int i = sc_min - 3; i <= sc_max + 3; ++i) {

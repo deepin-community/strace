@@ -1,7 +1,7 @@
 /*
  * This file is part of caps strace test.
  *
- * Copyright (c) 2014-2021 Dmitry V. Levin <ldv@strace.io>
+ * Copyright (c) 2014-2024 Dmitry V. Levin <ldv@strace.io>
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -22,7 +22,7 @@ main(void)
 	const int v2 = 0x20071026;
 	const int v3 = 0x20080522;
 
-	int * const head = tail_alloc(sizeof(int) * 2);
+	TAIL_ALLOC_OBJECT_CONST_ARR(int, head, 2);
 	head[0] = v3;
 	head[1] = 0;
 	int * const tail_data = tail_alloc(sizeof(data));

@@ -38,6 +38,13 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define RWF_APPEND 0x10
 #endif
+#if defined(RWF_NOAPPEND) || (defined(HAVE_DECL_RWF_NOAPPEND) && HAVE_DECL_RWF_NOAPPEND)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((RWF_NOAPPEND) == (0x20), "RWF_NOAPPEND != 0x20");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define RWF_NOAPPEND 0x20
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -61,6 +68,9 @@ static const struct xlat_data rwf_flags_xdata[] = {
  XLAT(RWF_APPEND),
  #define XLAT_VAL_4 ((unsigned) (RWF_APPEND))
  #define XLAT_STR_4 STRINGIFY(RWF_APPEND)
+ XLAT(RWF_NOAPPEND),
+ #define XLAT_VAL_5 ((unsigned) (RWF_NOAPPEND))
+ #define XLAT_STR_5 STRINGIFY(RWF_NOAPPEND)
 };
 const struct xlat rwf_flags[1] = { {
  .data = rwf_flags_xdata,
@@ -82,6 +92,9 @@ const struct xlat rwf_flags[1] = { {
 #  ifdef XLAT_VAL_4
   | XLAT_VAL_4
 #  endif
+#  ifdef XLAT_VAL_5
+  | XLAT_VAL_5
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -99,6 +112,9 @@ const struct xlat rwf_flags[1] = { {
 #  ifdef XLAT_STR_4
   + sizeof(XLAT_STR_4)
 #  endif
+#  ifdef XLAT_STR_5
+  + sizeof(XLAT_STR_5)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -113,6 +129,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_3
 #  undef XLAT_STR_4
 #  undef XLAT_VAL_4
+#  undef XLAT_STR_5
+#  undef XLAT_VAL_5
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */
