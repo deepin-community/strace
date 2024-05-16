@@ -66,6 +66,13 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define SEGV_MTESERR 9
 #endif
+#if defined(SEGV_CPERR) || (defined(HAVE_DECL_SEGV_CPERR) && HAVE_DECL_SEGV_CPERR)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((SEGV_CPERR) == (10), "SEGV_CPERR != 10");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define SEGV_CPERR 10
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -115,6 +122,9 @@ static const struct xlat_data sigsegv_codes_xdata[] = {
  XLAT(SEGV_MTESERR),
  #define XLAT_VAL_10 ((unsigned) (SEGV_MTESERR))
  #define XLAT_STR_10 STRINGIFY(SEGV_MTESERR)
+ XLAT(SEGV_CPERR),
+ #define XLAT_VAL_11 ((unsigned) (SEGV_CPERR))
+ #define XLAT_STR_11 STRINGIFY(SEGV_CPERR)
 };
 #  if !(defined HAVE_M32_MPERS || defined HAVE_MX32_MPERS)
 static
@@ -157,6 +167,9 @@ const struct xlat sigsegv_codes[1] = { {
 #  ifdef XLAT_VAL_10
   | XLAT_VAL_10
 #  endif
+#  ifdef XLAT_VAL_11
+  | XLAT_VAL_11
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -192,6 +205,9 @@ const struct xlat sigsegv_codes[1] = { {
 #  ifdef XLAT_STR_10
   + sizeof(XLAT_STR_10)
 #  endif
+#  ifdef XLAT_STR_11
+  + sizeof(XLAT_STR_11)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -218,6 +234,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_9
 #  undef XLAT_STR_10
 #  undef XLAT_VAL_10
+#  undef XLAT_STR_11
+#  undef XLAT_VAL_11
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

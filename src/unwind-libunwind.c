@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2013 Luca Clementi <luca.clementi@gmail.com>
- * Copyright (c) 2013-2021 The strace developers.
+ * Copyright (c) 2013-2024 The strace developers.
  *
  * SPDX-License-Identifier: LGPL-2.1-or-later
  */
@@ -12,10 +12,13 @@
 #include <libunwind-ptrace.h>
 
 static unw_addr_space_t libunwind_as;
+static int stack_trace_limit;
 
 static void
-init(void)
+init(bool unused_with_srcinfo, int stack_trace_limit_)
 {
+	stack_trace_limit = stack_trace_limit_;
+
 	mmap_cache_enable();
 
 	libunwind_as = unw_create_addr_space(&_UPT_accessors, 0);
@@ -90,7 +93,8 @@ print_stack_frame(struct tcb *tcp,
 			    entry->binary_filename,
 			    *symbol_name,
 			    function_offset,
-			    true_offset);
+			    true_offset,
+			    NULL, 0);
 
 		return 0;
 	}
@@ -124,14 +128,14 @@ walk(struct tcb *tcp,
 	if (unw_init_remote(&cursor, libunwind_as, tcp->unwind_ctx) < 0)
 		perror_func_msg_and_die("cannot initialize libunwind");
 
-	for (stack_depth = 0; stack_depth < 256; ++stack_depth) {
+	for (stack_depth = 0; stack_depth < stack_trace_limit; ++stack_depth) {
 		if (print_stack_frame(tcp, call_action, error_action, data,
 				&cursor, &symbol_name, &symbol_name_size) < 0)
 			break;
 		if (unw_step(&cursor) <= 0)
 			break;
 	}
-	if (stack_depth >= 256)
+	if (stack_depth >= stack_trace_limit)
 		error_action(data, "too many stack frames", 0);
 
 	free(symbol_name);

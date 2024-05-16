@@ -1,3 +1,75 @@
+Noteworthy changes in release 6.9 (2024-05-14)
+==============================================
+
+* Improvements
+  * Implemented --always-show-pid option.
+  * The --user|-u option has learned to recognize numeric UID:GID pair, allowing
+    e.g. statically-built strace to be used without invoking nss plugins.
+  * Implemented decoding of IORING_REGISTER_SYNC_CANCEL,
+    IORING_REGISTER_FILE_ALLOC_RANGE, IORING_REGISTER_PBUF_STATUS,
+    IORING_REGISTER_NAPI, and IORING_UNREGISTER_NAPI opcodes of
+    io_uring_register syscall.
+  * Implemented decoding of BPF_TOKEN_CREATE bpf syscall command.
+  * Updated decoding of io_uring_register and pidfd_send_signal syscalls.
+  * Updated lists of BPF_*, CAN_*, IORING_*, KEY_*, LSM_*, MPOL_*, NT_*, RWF_*,
+    PIDFD_*, PTP_*, TCP_*, and *_MAGIC constants.
+  * Updated lists of ioctl commands from Linux 6.9.
+
+Noteworthy changes in release 6.8 (2024-03-20)
+==============================================
+
+* Improvements
+  * Renamed --stack-traces to --stack-trace for consistency.
+    Old option is retained for backwards compatibility.
+  * Implemented --stack-trace-frame-limit=N option for configuring the limit
+    of the number of printed backtrace frames.
+  * Implemented decoding of statmount, listmount, lsm_get_self_attr,
+    lsm_set_self_attr, and lsm_list_modules syscalls.
+  * Implemented decoding of setsockopt(TCP_AO_ADD_KEY).
+  * Updated decoding of landlock_create_ruleset and landlock_add_rule syscalls.
+  * Updated decoding of SMC_DIAG_DMBINFO netlink attribute.
+  * Updated decoding of UBI_IOCATT ioctl command.
+  * Enhanced decoding of mount attributes of fsmount and mount_setattr syscalls.
+  * Updated lists of BPF_*, KEXEC_*, KVM_*, PERF_*, SOL_*, STATX_*, UFFD_*,
+    and V4L2_* constants.
+  * Updated lists of ioctl commands from Linux 6.8.
+
+Noteworthy changes in release 6.7 (2024-01-29)
+==============================================
+
+* Improvements
+  * Implemented -kk/--stack-traces=source option for libdw-based stack tracing.
+  * Implemented decoding of futex_wake, futex_wait, and sys_futex_requeue
+    syscalls.
+  * Updated lists of BPF_*, BTRFS_*, IORING_*, KVM_*, LANDLOCK_*, PR_*,
+    and TCP_* constants.
+  * Updated lists of ioctl commands from Linux 6.7.
+
+* Bug fixes
+  * Fix strace -r during the first second after booting to show correct relative
+    timestamps.
+  * Fix strace -f entering deadlock on exit if there are tracee processes
+    spawned using vfork semantics.
+
+Noteworthy changes in release 6.6 (2023-10-31)
+==============================================
+
+* Improvements
+  * Implemented --kill-on-exit option that instructs the tracer to set
+    PTRACE_O_EXITKILL option to all tracee processes and not to detach them
+    on cleanup so they will not be left running after the tracer exit.
+  * Implemented automatic activation of --kill-on-exit option when
+    --seccomp-bpf is enabled and -p/--attach option is not used.
+  * Implemented decoding of map_shadow_stack syscall.
+  * Implemented decoding of FSCONFIG_CMD_CREATE_EXCL fsconfig command.
+  * Implemented decoding of IFLA_BRPORT_BACKUP_NHID netlink attribute.
+  * Implemented decoding of SECCOMP_IOCTL_NOTIF_SET_FLAGS ioctl.
+  * Implemented decoding of UFFDIO_CONTINUE, UFFDIO_POISON, and
+    UFFDIO_WRITEPROTECT ioctls.
+  * Updated lists of ARCH_*, BPF_*, DEVCONF_*, IORING_*, KEXEC_*, MAP_*, NT_*,
+    PTRACE_*, QFMT_*, SEGV_*, UFFD_*, V4L2_*, and XDP_* constants.
+  * Updated lists of ioctl commands from Linux 6.6.
+
 Noteworthy changes in release 6.5 (2023-09-01)
 ==============================================
 

@@ -1461,4 +1461,21 @@ static_assert(BPF_LINK_DETACH_struct_size == expected_BPF_LINK_DETACH_struct_siz
 static_assert(BPF_PROG_BIND_MAP_struct_size == expected_BPF_PROG_BIND_MAP_struct_size,
 	      "BPF_PROG_BIND_MAP_struct_size mismatch");
 
+# ifdef HAVE_UNION_BPF_ATTR_TOKEN_CREATE_FLAGS
+	static_assert(sizeof_field(struct BPF_TOKEN_CREATE_struct, flags) == sizeof_field(union bpf_attr, token_create.flags),
+		      "BPF_TOKEN_CREATE_struct.flags size mismatch");
+	static_assert(offsetof(struct BPF_TOKEN_CREATE_struct, flags) == offsetof(union bpf_attr, token_create.flags),
+		      "BPF_TOKEN_CREATE_struct.flags offset mismatch");
+# endif /* HAVE_UNION_BPF_ATTR_TOKEN_CREATE_FLAGS */
+
+# ifdef HAVE_UNION_BPF_ATTR_TOKEN_CREATE_BPFFS_FD
+	static_assert(sizeof_field(struct BPF_TOKEN_CREATE_struct, bpffs_fd) == sizeof_field(union bpf_attr, token_create.bpffs_fd),
+		      "BPF_TOKEN_CREATE_struct.bpffs_fd size mismatch");
+	static_assert(offsetof(struct BPF_TOKEN_CREATE_struct, bpffs_fd) == offsetof(union bpf_attr, token_create.bpffs_fd),
+		      "BPF_TOKEN_CREATE_struct.bpffs_fd offset mismatch");
+# endif /* HAVE_UNION_BPF_ATTR_TOKEN_CREATE_BPFFS_FD */
+
+static_assert(BPF_TOKEN_CREATE_struct_size == expected_BPF_TOKEN_CREATE_struct_size,
+	      "BPF_TOKEN_CREATE_struct_size mismatch");
+
 #endif /* HAVE_LINUX_BPF_H */

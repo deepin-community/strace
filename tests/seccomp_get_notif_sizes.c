@@ -2,7 +2,7 @@
  * Check decoding of seccomp SECCOMP_GET_NOTIF_SIZES.
  *
  * Copyright (c) 2017-2021 Dmitry V. Levin <ldv@strace.io>
- * Copyright (c) 2021 The strace developers.
+ * Copyright (c) 2021-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -46,7 +46,7 @@ k_seccomp(const kernel_ulong_t op, const kernel_ulong_t flags,
 int
 main(void)
 {
-	uint16_t *sizes = tail_alloc(sizeof(*sizes) * 3);
+	TAIL_ALLOC_OBJECT_CONST_ARR(uint16_t, sizes, 3);
 	kernel_ulong_t op = (kernel_ulong_t) 0xfacefeed00000000ULL
 				| SECCOMP_GET_NOTIF_SIZES;
 	kernel_ulong_t flags = (kernel_ulong_t) 0xdeadbeef00000000ULL;

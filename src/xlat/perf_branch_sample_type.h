@@ -136,6 +136,13 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define PERF_SAMPLE_BRANCH_PRIV_SAVE 1U << 18
 #endif
+#if defined(PERF_SAMPLE_BRANCH_COUNTERS) || (defined(HAVE_DECL_PERF_SAMPLE_BRANCH_COUNTERS) && HAVE_DECL_PERF_SAMPLE_BRANCH_COUNTERS)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((PERF_SAMPLE_BRANCH_COUNTERS) == (1U << 19), "PERF_SAMPLE_BRANCH_COUNTERS != 1U << 19");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define PERF_SAMPLE_BRANCH_COUNTERS 1U << 19
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -205,6 +212,9 @@ static const struct xlat_data perf_branch_sample_type_xdata[] = {
  XLAT(PERF_SAMPLE_BRANCH_PRIV_SAVE),
  #define XLAT_VAL_18 ((unsigned) (PERF_SAMPLE_BRANCH_PRIV_SAVE))
  #define XLAT_STR_18 STRINGIFY(PERF_SAMPLE_BRANCH_PRIV_SAVE)
+ XLAT(PERF_SAMPLE_BRANCH_COUNTERS),
+ #define XLAT_VAL_19 ((unsigned) (PERF_SAMPLE_BRANCH_COUNTERS))
+ #define XLAT_STR_19 STRINGIFY(PERF_SAMPLE_BRANCH_COUNTERS)
 };
 static
 const struct xlat perf_branch_sample_type[1] = { {
@@ -269,6 +279,9 @@ const struct xlat perf_branch_sample_type[1] = { {
 #  ifdef XLAT_VAL_18
   | XLAT_VAL_18
 #  endif
+#  ifdef XLAT_VAL_19
+  | XLAT_VAL_19
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -328,6 +341,9 @@ const struct xlat perf_branch_sample_type[1] = { {
 #  ifdef XLAT_STR_18
   + sizeof(XLAT_STR_18)
 #  endif
+#  ifdef XLAT_STR_19
+  + sizeof(XLAT_STR_19)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -370,6 +386,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_17
 #  undef XLAT_STR_18
 #  undef XLAT_VAL_18
+#  undef XLAT_STR_19
+#  undef XLAT_VAL_19
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

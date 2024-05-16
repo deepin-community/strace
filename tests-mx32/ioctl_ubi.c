@@ -1,7 +1,7 @@
 /*
  * Check decoding of UBI ioctl commands.
  *
- * Copyright (c) 2016-2021 The strace developers.
+ * Copyright (c) 2016-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -160,10 +160,12 @@ main(int argc, const char *argv[])
 	for (size_t i = 0; i < ARRAY_SIZE(attach_cmds); ++i) {
 		int rc = do_ioctl_ptr(attach_cmds[i].cmd, attach);
 		printf("ioctl(-1, %s, {ubi_num=%d, mtd_num=%d"
-		       ", vid_hdr_offset=%d, max_beb_per1024=%hd}",
+		       ", vid_hdr_offset=%d, max_beb_per1024=%hd"
+		       ", disable_fm=%hhd, need_resv_pool=%hhd}",
 		       attach_cmds[i].str, attach->ubi_num,
 		       attach->mtd_num, attach->vid_hdr_offset,
-		       attach->max_beb_per1024);
+		       attach->max_beb_per1024, attach->disable_fm,
+		       attach->need_resv_pool);
 		if (rc >= 0)
 			printf(" => [%d]", attach->ubi_num);
 		printf(") = %s\n", errstr);

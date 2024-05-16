@@ -1,7 +1,7 @@
 /*
  * Check decoding of successful PERF_EVENT_IOC_{ID,QUERY_BPF} ioctls.
  *
- * Copyright (c) 2018-2021 The strace developers.
+ * Copyright (c) 2018-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -23,7 +23,7 @@ main(int argc, char **argv)
 
 	TAIL_ALLOC_OBJECT_CONST_PTR(uint64_t, u64_ptr);
 	uint64_t *const u64_efault = u64_ptr + 1;
-	uint32_t *const u32_arr = tail_alloc(sizeof(uint32_t) * 4);
+	TAIL_ALLOC_OBJECT_CONST_ARR(uint32_t, u32_arr, 4);
 	uint32_t *const u32_efault = u32_arr + 4;
 
 	unsigned long num_skip;

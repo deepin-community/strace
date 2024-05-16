@@ -1,7 +1,7 @@
 /*
  * Check decoding of openat2 syscall.
  *
- * Copyright (c) 2020-2021 The strace developers.
+ * Copyright (c) 2020-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -50,7 +50,7 @@ main(void)
 #endif
 	long rc;
 	const char *rcstr;
-	struct open_how *how = tail_alloc(sizeof(*how));
+	TAIL_ALLOC_OBJECT_CONST_PTR(struct open_how, how);
 	struct open_how *how_big = tail_alloc(sizeof(*how_big) + 8);
 
 	rc = syscall(__NR_openat2, 0, NULL, NULL,

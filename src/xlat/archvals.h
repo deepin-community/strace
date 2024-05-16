@@ -241,6 +241,159 @@ static_assert((unsigned long long) (ARCH_MAP_VDSO_64)
 #undef XLAT_PREV_VAL
 #define XLAT_PREV_VAL (ARCH_MAP_VDSO_64)
 #endif
+#if defined(ARCH_GET_UNTAG_MASK) || (defined(HAVE_DECL_ARCH_GET_UNTAG_MASK) && HAVE_DECL_ARCH_GET_UNTAG_MASK)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((ARCH_GET_UNTAG_MASK) == (0x4001), "ARCH_GET_UNTAG_MASK != 0x4001");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define ARCH_GET_UNTAG_MASK 0x4001
+#endif
+#if defined(ARCH_GET_UNTAG_MASK) || (defined(HAVE_DECL_ARCH_GET_UNTAG_MASK) && HAVE_DECL_ARCH_GET_UNTAG_MASK)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (ARCH_GET_UNTAG_MASK)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: ARCH_GET_UNTAG_MASK"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (ARCH_GET_UNTAG_MASK)
+#endif
+#if defined(ARCH_ENABLE_TAGGED_ADDR) || (defined(HAVE_DECL_ARCH_ENABLE_TAGGED_ADDR) && HAVE_DECL_ARCH_ENABLE_TAGGED_ADDR)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((ARCH_ENABLE_TAGGED_ADDR) == (0x4002), "ARCH_ENABLE_TAGGED_ADDR != 0x4002");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define ARCH_ENABLE_TAGGED_ADDR 0x4002
+#endif
+#if defined(ARCH_ENABLE_TAGGED_ADDR) || (defined(HAVE_DECL_ARCH_ENABLE_TAGGED_ADDR) && HAVE_DECL_ARCH_ENABLE_TAGGED_ADDR)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (ARCH_ENABLE_TAGGED_ADDR)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: ARCH_ENABLE_TAGGED_ADDR"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (ARCH_ENABLE_TAGGED_ADDR)
+#endif
+#if defined(ARCH_GET_MAX_TAG_BITS) || (defined(HAVE_DECL_ARCH_GET_MAX_TAG_BITS) && HAVE_DECL_ARCH_GET_MAX_TAG_BITS)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((ARCH_GET_MAX_TAG_BITS) == (0x4003), "ARCH_GET_MAX_TAG_BITS != 0x4003");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define ARCH_GET_MAX_TAG_BITS 0x4003
+#endif
+#if defined(ARCH_GET_MAX_TAG_BITS) || (defined(HAVE_DECL_ARCH_GET_MAX_TAG_BITS) && HAVE_DECL_ARCH_GET_MAX_TAG_BITS)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (ARCH_GET_MAX_TAG_BITS)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: ARCH_GET_MAX_TAG_BITS"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (ARCH_GET_MAX_TAG_BITS)
+#endif
+#if defined(ARCH_FORCE_TAGGED_SVA) || (defined(HAVE_DECL_ARCH_FORCE_TAGGED_SVA) && HAVE_DECL_ARCH_FORCE_TAGGED_SVA)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((ARCH_FORCE_TAGGED_SVA) == (0x4004), "ARCH_FORCE_TAGGED_SVA != 0x4004");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define ARCH_FORCE_TAGGED_SVA 0x4004
+#endif
+#if defined(ARCH_FORCE_TAGGED_SVA) || (defined(HAVE_DECL_ARCH_FORCE_TAGGED_SVA) && HAVE_DECL_ARCH_FORCE_TAGGED_SVA)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (ARCH_FORCE_TAGGED_SVA)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: ARCH_FORCE_TAGGED_SVA"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (ARCH_FORCE_TAGGED_SVA)
+#endif
+#if defined(ARCH_SHSTK_ENABLE) || (defined(HAVE_DECL_ARCH_SHSTK_ENABLE) && HAVE_DECL_ARCH_SHSTK_ENABLE)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((ARCH_SHSTK_ENABLE) == (0x5001), "ARCH_SHSTK_ENABLE != 0x5001");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define ARCH_SHSTK_ENABLE 0x5001
+#endif
+#if defined(ARCH_SHSTK_ENABLE) || (defined(HAVE_DECL_ARCH_SHSTK_ENABLE) && HAVE_DECL_ARCH_SHSTK_ENABLE)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (ARCH_SHSTK_ENABLE)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: ARCH_SHSTK_ENABLE"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (ARCH_SHSTK_ENABLE)
+#endif
+#if defined(ARCH_SHSTK_DISABLE) || (defined(HAVE_DECL_ARCH_SHSTK_DISABLE) && HAVE_DECL_ARCH_SHSTK_DISABLE)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((ARCH_SHSTK_DISABLE) == (0x5002), "ARCH_SHSTK_DISABLE != 0x5002");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define ARCH_SHSTK_DISABLE 0x5002
+#endif
+#if defined(ARCH_SHSTK_DISABLE) || (defined(HAVE_DECL_ARCH_SHSTK_DISABLE) && HAVE_DECL_ARCH_SHSTK_DISABLE)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (ARCH_SHSTK_DISABLE)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: ARCH_SHSTK_DISABLE"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (ARCH_SHSTK_DISABLE)
+#endif
+#if defined(ARCH_SHSTK_LOCK) || (defined(HAVE_DECL_ARCH_SHSTK_LOCK) && HAVE_DECL_ARCH_SHSTK_LOCK)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((ARCH_SHSTK_LOCK) == (0x5003), "ARCH_SHSTK_LOCK != 0x5003");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define ARCH_SHSTK_LOCK 0x5003
+#endif
+#if defined(ARCH_SHSTK_LOCK) || (defined(HAVE_DECL_ARCH_SHSTK_LOCK) && HAVE_DECL_ARCH_SHSTK_LOCK)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (ARCH_SHSTK_LOCK)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: ARCH_SHSTK_LOCK"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (ARCH_SHSTK_LOCK)
+#endif
+#if defined(ARCH_SHSTK_UNLOCK) || (defined(HAVE_DECL_ARCH_SHSTK_UNLOCK) && HAVE_DECL_ARCH_SHSTK_UNLOCK)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((ARCH_SHSTK_UNLOCK) == (0x5004), "ARCH_SHSTK_UNLOCK != 0x5004");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define ARCH_SHSTK_UNLOCK 0x5004
+#endif
+#if defined(ARCH_SHSTK_UNLOCK) || (defined(HAVE_DECL_ARCH_SHSTK_UNLOCK) && HAVE_DECL_ARCH_SHSTK_UNLOCK)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (ARCH_SHSTK_UNLOCK)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: ARCH_SHSTK_UNLOCK"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (ARCH_SHSTK_UNLOCK)
+#endif
+#if defined(ARCH_SHSTK_STATUS) || (defined(HAVE_DECL_ARCH_SHSTK_STATUS) && HAVE_DECL_ARCH_SHSTK_STATUS)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((ARCH_SHSTK_STATUS) == (0x5005), "ARCH_SHSTK_STATUS != 0x5005");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define ARCH_SHSTK_STATUS 0x5005
+#endif
+#if defined(ARCH_SHSTK_STATUS) || (defined(HAVE_DECL_ARCH_SHSTK_STATUS) && HAVE_DECL_ARCH_SHSTK_STATUS)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (ARCH_SHSTK_STATUS)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: ARCH_SHSTK_STATUS"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (ARCH_SHSTK_STATUS)
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -295,6 +448,33 @@ static const struct xlat_data archvals_xdata[] = {
  XLAT(ARCH_MAP_VDSO_64),
  #define XLAT_VAL_13 ((unsigned) (ARCH_MAP_VDSO_64))
  #define XLAT_STR_13 STRINGIFY(ARCH_MAP_VDSO_64)
+ XLAT(ARCH_GET_UNTAG_MASK),
+ #define XLAT_VAL_14 ((unsigned) (ARCH_GET_UNTAG_MASK))
+ #define XLAT_STR_14 STRINGIFY(ARCH_GET_UNTAG_MASK)
+ XLAT(ARCH_ENABLE_TAGGED_ADDR),
+ #define XLAT_VAL_15 ((unsigned) (ARCH_ENABLE_TAGGED_ADDR))
+ #define XLAT_STR_15 STRINGIFY(ARCH_ENABLE_TAGGED_ADDR)
+ XLAT(ARCH_GET_MAX_TAG_BITS),
+ #define XLAT_VAL_16 ((unsigned) (ARCH_GET_MAX_TAG_BITS))
+ #define XLAT_STR_16 STRINGIFY(ARCH_GET_MAX_TAG_BITS)
+ XLAT(ARCH_FORCE_TAGGED_SVA),
+ #define XLAT_VAL_17 ((unsigned) (ARCH_FORCE_TAGGED_SVA))
+ #define XLAT_STR_17 STRINGIFY(ARCH_FORCE_TAGGED_SVA)
+ XLAT(ARCH_SHSTK_ENABLE),
+ #define XLAT_VAL_18 ((unsigned) (ARCH_SHSTK_ENABLE))
+ #define XLAT_STR_18 STRINGIFY(ARCH_SHSTK_ENABLE)
+ XLAT(ARCH_SHSTK_DISABLE),
+ #define XLAT_VAL_19 ((unsigned) (ARCH_SHSTK_DISABLE))
+ #define XLAT_STR_19 STRINGIFY(ARCH_SHSTK_DISABLE)
+ XLAT(ARCH_SHSTK_LOCK),
+ #define XLAT_VAL_20 ((unsigned) (ARCH_SHSTK_LOCK))
+ #define XLAT_STR_20 STRINGIFY(ARCH_SHSTK_LOCK)
+ XLAT(ARCH_SHSTK_UNLOCK),
+ #define XLAT_VAL_21 ((unsigned) (ARCH_SHSTK_UNLOCK))
+ #define XLAT_STR_21 STRINGIFY(ARCH_SHSTK_UNLOCK)
+ XLAT(ARCH_SHSTK_STATUS),
+ #define XLAT_VAL_22 ((unsigned) (ARCH_SHSTK_STATUS))
+ #define XLAT_STR_22 STRINGIFY(ARCH_SHSTK_STATUS)
 };
 static
 const struct xlat archvals[1] = { {
@@ -344,6 +524,33 @@ const struct xlat archvals[1] = { {
 #  ifdef XLAT_VAL_13
   | XLAT_VAL_13
 #  endif
+#  ifdef XLAT_VAL_14
+  | XLAT_VAL_14
+#  endif
+#  ifdef XLAT_VAL_15
+  | XLAT_VAL_15
+#  endif
+#  ifdef XLAT_VAL_16
+  | XLAT_VAL_16
+#  endif
+#  ifdef XLAT_VAL_17
+  | XLAT_VAL_17
+#  endif
+#  ifdef XLAT_VAL_18
+  | XLAT_VAL_18
+#  endif
+#  ifdef XLAT_VAL_19
+  | XLAT_VAL_19
+#  endif
+#  ifdef XLAT_VAL_20
+  | XLAT_VAL_20
+#  endif
+#  ifdef XLAT_VAL_21
+  | XLAT_VAL_21
+#  endif
+#  ifdef XLAT_VAL_22
+  | XLAT_VAL_22
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -388,6 +595,33 @@ const struct xlat archvals[1] = { {
 #  ifdef XLAT_STR_13
   + sizeof(XLAT_STR_13)
 #  endif
+#  ifdef XLAT_STR_14
+  + sizeof(XLAT_STR_14)
+#  endif
+#  ifdef XLAT_STR_15
+  + sizeof(XLAT_STR_15)
+#  endif
+#  ifdef XLAT_STR_16
+  + sizeof(XLAT_STR_16)
+#  endif
+#  ifdef XLAT_STR_17
+  + sizeof(XLAT_STR_17)
+#  endif
+#  ifdef XLAT_STR_18
+  + sizeof(XLAT_STR_18)
+#  endif
+#  ifdef XLAT_STR_19
+  + sizeof(XLAT_STR_19)
+#  endif
+#  ifdef XLAT_STR_20
+  + sizeof(XLAT_STR_20)
+#  endif
+#  ifdef XLAT_STR_21
+  + sizeof(XLAT_STR_21)
+#  endif
+#  ifdef XLAT_STR_22
+  + sizeof(XLAT_STR_22)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -420,6 +654,24 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_12
 #  undef XLAT_STR_13
 #  undef XLAT_VAL_13
+#  undef XLAT_STR_14
+#  undef XLAT_VAL_14
+#  undef XLAT_STR_15
+#  undef XLAT_VAL_15
+#  undef XLAT_STR_16
+#  undef XLAT_VAL_16
+#  undef XLAT_STR_17
+#  undef XLAT_VAL_17
+#  undef XLAT_STR_18
+#  undef XLAT_VAL_18
+#  undef XLAT_STR_19
+#  undef XLAT_VAL_19
+#  undef XLAT_STR_20
+#  undef XLAT_VAL_20
+#  undef XLAT_STR_21
+#  undef XLAT_VAL_21
+#  undef XLAT_STR_22
+#  undef XLAT_VAL_22
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

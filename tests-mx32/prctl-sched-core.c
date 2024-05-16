@@ -2,6 +2,7 @@
  * Check decoding of prctl PR_SCHED_CORE operation.
  *
  * Copyright (c) 2021 Eugene Syromyatnikov <evgsyr@gmail.com>.
+ * Copyright (c) 2021-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -95,7 +96,7 @@ main(int argc, char *argv[])
 	ids[3] = getsid(0);
 	ids[4] = -1;
 
-	TAIL_ALLOC_OBJECT_VAR_PTR(uint64_t, uptr);
+	TAIL_ALLOC_OBJECT_CONST_PTR(uint64_t, uptr);
 	uint64_t *uptrs[] = { NULL, uptr + 1, uptr };
 
 	for (size_t i = 0; i < ARRAY_SIZE(ops); i++) {

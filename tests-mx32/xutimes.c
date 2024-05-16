@@ -1,7 +1,7 @@
 /*
  * Check decoding of utimes/osf_utimes syscall.
  *
- * Copyright (c) 2015-2021 Dmitry V. Levin <ldv@strace.io>
+ * Copyright (c) 2015-2024 Dmitry V. Levin <ldv@strace.io>
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -52,7 +52,7 @@ main(void)
 
 	char *const fname = tail_memdup(proto_fname, sizeof(proto_fname));
 	const kernel_ulong_t kfname = (uintptr_t) fname;
-	TEST_STRUCT *const tv = tail_alloc(sizeof(*tv) * 2);
+	TAIL_ALLOC_OBJECT_CONST_ARR(TEST_STRUCT, tv, 2);
 
 	/* pathname */
 	k_utimes(0, 0);
@@ -86,7 +86,7 @@ main(void)
 
 	tv[0].tv_sec = 0xdeadbeefU;
 	tv[0].tv_usec = 0xfacefeedU;
-	tv[1].tv_sec = (time_t) 0xcafef00ddeadbeefLL;
+	tv[1].tv_sec = (typeof(tv[1].tv_sec)) 0xcafef00ddeadbeefLL;
 	tv[1].tv_usec = (suseconds_t) 0xbadc0dedfacefeedLL;
 
 	k_utimes(kfname, (uintptr_t) tv);

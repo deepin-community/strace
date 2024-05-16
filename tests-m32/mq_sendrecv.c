@@ -3,7 +3,7 @@
  * mq_unlink syscalls.
  *
  * Copyright (c) 2016 Eugene Syromyatnikov <evgsyr@gmail.com>
- * Copyright (c) 2016-2023 The strace developers.
+ * Copyright (c) 2016-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -195,11 +195,11 @@ main(void)
 	static const kernel_ulong_t bogus_prio =
 		(kernel_ulong_t) 0xdec0ded1defaced3ULL;
 	static const kernel_old_timespec_t bogus_tmout_data = {
-		.tv_sec = (time_t) 0xdeadfacebeeff00dLL,
+		.tv_sec = (typeof(bogus_tmout_data.tv_sec)) 0xdeadfacebeeff00dLL,
 		.tv_nsec = (long) 0xfacefee1deadfeedLL,
 	};
 	static const kernel_old_timespec_t future_tmout_data = {
-		.tv_sec = (time_t) 0x7ea1fade7e57faceLL,
+		.tv_sec = (typeof(future_tmout_data.tv_sec)) 0x7ea1fade7e57faceLL,
 		.tv_nsec = 999999999,
 	};
 	struct_sigevent bogus_sev_data = {
@@ -211,8 +211,7 @@ main(void)
 
 	const char *errstr;
 	long rc;
-	kernel_long_t *bogus_attrs = tail_alloc(sizeof(*bogus_attrs) *
-		NUM_ATTRS);
+	TAIL_ALLOC_OBJECT_CONST_ARR(kernel_long_t, bogus_attrs, NUM_ATTRS);
 	char *msg = tail_alloc(MSG_SIZE);
 	TAIL_ALLOC_OBJECT_CONST_PTR(unsigned, bogus_prio_ptr);
 	kernel_old_timespec_t *bogus_tmout = tail_memdup(&bogus_tmout_data,

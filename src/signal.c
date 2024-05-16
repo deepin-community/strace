@@ -6,7 +6,7 @@
  * Copyright (c) 1999 IBM Deutschland Entwicklung GmbH, IBM Corporation
  *                     Linux for s390 port by D.J. Barrow
  *                    <barrow_dj@mail.yahoo.com,djbarrow@de.ibm.com>
- * Copyright (c) 1999-2023 The strace developers.
+ * Copyright (c) 1999-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: LGPL-2.1-or-later
@@ -729,6 +729,8 @@ SYS_FUNC(rt_tgsigqueueinfo)
 	return RVAL_DECODED;
 }
 
+#include "xlat/pidfd_send_signal_flags.h"
+
 SYS_FUNC(pidfd_send_signal)
 {
 	/* int pidfd */
@@ -740,7 +742,7 @@ SYS_FUNC(pidfd_send_signal)
 	tprint_arg_next();
 
 	/* unsigned int flags */
-	PRINT_VAL_X((unsigned int) tcp->u_arg[3]);
+	printflags(pidfd_send_signal_flags, tcp->u_arg[3], "PIDFD_SIGNAL_???");
 
 	return RVAL_DECODED;
 }

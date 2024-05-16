@@ -39,6 +39,9 @@ static const struct xlat_data fsconfig_cmds_xdata[] = {
  [FSCONFIG_CMD_RECONFIGURE] = XLAT(FSCONFIG_CMD_RECONFIGURE),
  #define XLAT_VAL_7 ((unsigned) (FSCONFIG_CMD_RECONFIGURE))
  #define XLAT_STR_7 STRINGIFY(FSCONFIG_CMD_RECONFIGURE)
+ [FSCONFIG_CMD_CREATE_EXCL] = XLAT(FSCONFIG_CMD_CREATE_EXCL),
+ #define XLAT_VAL_8 ((unsigned) (FSCONFIG_CMD_CREATE_EXCL))
+ #define XLAT_STR_8 STRINGIFY(FSCONFIG_CMD_CREATE_EXCL)
 };
 static
 const struct xlat fsconfig_cmds[1] = { {
@@ -70,6 +73,9 @@ const struct xlat fsconfig_cmds[1] = { {
 #  ifdef XLAT_VAL_7
   | XLAT_VAL_7
 #  endif
+#  ifdef XLAT_VAL_8
+  | XLAT_VAL_8
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -96,6 +102,9 @@ const struct xlat fsconfig_cmds[1] = { {
 #  ifdef XLAT_STR_7
   + sizeof(XLAT_STR_7)
 #  endif
+#  ifdef XLAT_STR_8
+  + sizeof(XLAT_STR_8)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -116,6 +125,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_6
 #  undef XLAT_STR_7
 #  undef XLAT_VAL_7
+#  undef XLAT_STR_8
+#  undef XLAT_VAL_8
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

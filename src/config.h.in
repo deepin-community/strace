@@ -1294,6 +1294,12 @@
 /* Define to 1 if `test.retval' is a member of `union bpf_attr'. */
 #undef HAVE_UNION_BPF_ATTR_TEST_RETVAL
 
+/* Define to 1 if `token_create.bpffs_fd' is a member of `union bpf_attr'. */
+#undef HAVE_UNION_BPF_ATTR_TOKEN_CREATE_BPFFS_FD
+
+/* Define to 1 if `token_create.flags' is a member of `union bpf_attr'. */
+#undef HAVE_UNION_BPF_ATTR_TOKEN_CREATE_FLAGS
+
 /* Define to 1 if `value' is a member of `union bpf_attr'. */
 #undef HAVE_UNION_BPF_ATTR_VALUE
 

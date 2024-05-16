@@ -87,6 +87,13 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define TCP_NEW_SYN_RECV 12
 #endif
+#if defined(TCP_BOUND_INACTIVE) || (defined(HAVE_DECL_TCP_BOUND_INACTIVE) && HAVE_DECL_TCP_BOUND_INACTIVE)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((TCP_BOUND_INACTIVE) == (13), "TCP_BOUND_INACTIVE != 13");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define TCP_BOUND_INACTIVE 13
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -131,6 +138,9 @@ static const struct xlat_data tcp_states_xdata[] = {
  [TCP_NEW_SYN_RECV] = XLAT(TCP_NEW_SYN_RECV),
  #define XLAT_VAL_11 ((unsigned) (TCP_NEW_SYN_RECV))
  #define XLAT_STR_11 STRINGIFY(TCP_NEW_SYN_RECV)
+ [TCP_BOUND_INACTIVE] = XLAT(TCP_BOUND_INACTIVE),
+ #define XLAT_VAL_12 ((unsigned) (TCP_BOUND_INACTIVE))
+ #define XLAT_STR_12 STRINGIFY(TCP_BOUND_INACTIVE)
 };
 const struct xlat tcp_states[1] = { {
  .data = tcp_states_xdata,
@@ -173,6 +183,9 @@ const struct xlat tcp_states[1] = { {
 #  ifdef XLAT_VAL_11
   | XLAT_VAL_11
 #  endif
+#  ifdef XLAT_VAL_12
+  | XLAT_VAL_12
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -211,6 +224,9 @@ const struct xlat tcp_states[1] = { {
 #  ifdef XLAT_STR_11
   + sizeof(XLAT_STR_11)
 #  endif
+#  ifdef XLAT_STR_12
+  + sizeof(XLAT_STR_12)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -239,6 +255,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_10
 #  undef XLAT_STR_11
 #  undef XLAT_VAL_11
+#  undef XLAT_STR_12
+#  undef XLAT_VAL_12
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

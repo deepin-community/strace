@@ -24,6 +24,34 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define BPF_F_REPLACE (1U << 2)
 #endif
+#if defined(BPF_F_BEFORE) || (defined(HAVE_DECL_BPF_F_BEFORE) && HAVE_DECL_BPF_F_BEFORE)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((BPF_F_BEFORE) == ((1U << 3)), "BPF_F_BEFORE != (1U << 3)");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define BPF_F_BEFORE (1U << 3)
+#endif
+#if defined(BPF_F_AFTER) || (defined(HAVE_DECL_BPF_F_AFTER) && HAVE_DECL_BPF_F_AFTER)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((BPF_F_AFTER) == ((1U << 4)), "BPF_F_AFTER != (1U << 4)");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define BPF_F_AFTER (1U << 4)
+#endif
+#if defined(BPF_F_ID) || (defined(HAVE_DECL_BPF_F_ID) && HAVE_DECL_BPF_F_ID)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((BPF_F_ID) == ((1U << 5)), "BPF_F_ID != (1U << 5)");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define BPF_F_ID (1U << 5)
+#endif
+#if defined(BPF_F_LINK) || (defined(HAVE_DECL_BPF_F_LINK) && HAVE_DECL_BPF_F_LINK)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((BPF_F_LINK) == ((1U << 13)), "BPF_F_LINK != (1U << 13)");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define BPF_F_LINK (1U << 13)
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -45,6 +73,18 @@ static const struct xlat_data bpf_attach_flags_xdata[] = {
  XLAT(BPF_F_REPLACE),
  #define XLAT_VAL_2 ((unsigned) (BPF_F_REPLACE))
  #define XLAT_STR_2 STRINGIFY(BPF_F_REPLACE)
+ XLAT(BPF_F_BEFORE),
+ #define XLAT_VAL_3 ((unsigned) (BPF_F_BEFORE))
+ #define XLAT_STR_3 STRINGIFY(BPF_F_BEFORE)
+ XLAT(BPF_F_AFTER),
+ #define XLAT_VAL_4 ((unsigned) (BPF_F_AFTER))
+ #define XLAT_STR_4 STRINGIFY(BPF_F_AFTER)
+ XLAT(BPF_F_ID),
+ #define XLAT_VAL_5 ((unsigned) (BPF_F_ID))
+ #define XLAT_STR_5 STRINGIFY(BPF_F_ID)
+ XLAT(BPF_F_LINK),
+ #define XLAT_VAL_6 ((unsigned) (BPF_F_LINK))
+ #define XLAT_STR_6 STRINGIFY(BPF_F_LINK)
 };
 static
 const struct xlat bpf_attach_flags[1] = { {
@@ -61,6 +101,18 @@ const struct xlat bpf_attach_flags[1] = { {
 #  ifdef XLAT_VAL_2
   | XLAT_VAL_2
 #  endif
+#  ifdef XLAT_VAL_3
+  | XLAT_VAL_3
+#  endif
+#  ifdef XLAT_VAL_4
+  | XLAT_VAL_4
+#  endif
+#  ifdef XLAT_VAL_5
+  | XLAT_VAL_5
+#  endif
+#  ifdef XLAT_VAL_6
+  | XLAT_VAL_6
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -72,6 +124,18 @@ const struct xlat bpf_attach_flags[1] = { {
 #  ifdef XLAT_STR_2
   + sizeof(XLAT_STR_2)
 #  endif
+#  ifdef XLAT_STR_3
+  + sizeof(XLAT_STR_3)
+#  endif
+#  ifdef XLAT_STR_4
+  + sizeof(XLAT_STR_4)
+#  endif
+#  ifdef XLAT_STR_5
+  + sizeof(XLAT_STR_5)
+#  endif
+#  ifdef XLAT_STR_6
+  + sizeof(XLAT_STR_6)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -82,6 +146,14 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_1
 #  undef XLAT_STR_2
 #  undef XLAT_VAL_2
+#  undef XLAT_STR_3
+#  undef XLAT_VAL_3
+#  undef XLAT_STR_4
+#  undef XLAT_VAL_4
+#  undef XLAT_STR_5
+#  undef XLAT_VAL_5
+#  undef XLAT_STR_6
+#  undef XLAT_VAL_6
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */
