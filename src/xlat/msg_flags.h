@@ -143,6 +143,13 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define MSG_NO_SHARED_FRAGS 0x80000
 #endif
+#if defined(MSG_SOCK_DEVMEM) || (defined(HAVE_DECL_MSG_SOCK_DEVMEM) && HAVE_DECL_MSG_SOCK_DEVMEM)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((MSG_SOCK_DEVMEM) == (0x2000000), "MSG_SOCK_DEVMEM != 0x2000000");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define MSG_SOCK_DEVMEM 0x2000000
+#endif
 #if defined(MSG_ZEROCOPY) || (defined(HAVE_DECL_MSG_ZEROCOPY) && HAVE_DECL_MSG_ZEROCOPY)
 DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
 static_assert((MSG_ZEROCOPY) == (0x4000000), "MSG_ZEROCOPY != 0x4000000");
@@ -244,16 +251,19 @@ static const struct xlat_data msg_flags_xdata[] = {
  XLAT(MSG_NO_SHARED_FRAGS),
  #define XLAT_VAL_19 ((unsigned) (MSG_NO_SHARED_FRAGS))
  #define XLAT_STR_19 STRINGIFY(MSG_NO_SHARED_FRAGS)
+ XLAT(MSG_SOCK_DEVMEM),
+ #define XLAT_VAL_20 ((unsigned) (MSG_SOCK_DEVMEM))
+ #define XLAT_STR_20 STRINGIFY(MSG_SOCK_DEVMEM)
  XLAT(MSG_ZEROCOPY),
- #define XLAT_VAL_20 ((unsigned) (MSG_ZEROCOPY))
- #define XLAT_STR_20 STRINGIFY(MSG_ZEROCOPY)
+ #define XLAT_VAL_21 ((unsigned) (MSG_ZEROCOPY))
+ #define XLAT_STR_21 STRINGIFY(MSG_ZEROCOPY)
 
  XLAT(MSG_FASTOPEN),
- #define XLAT_VAL_21 ((unsigned) (MSG_FASTOPEN))
- #define XLAT_STR_21 STRINGIFY(MSG_FASTOPEN)
+ #define XLAT_VAL_22 ((unsigned) (MSG_FASTOPEN))
+ #define XLAT_STR_22 STRINGIFY(MSG_FASTOPEN)
  XLAT(MSG_CMSG_CLOEXEC),
- #define XLAT_VAL_22 ((unsigned) (MSG_CMSG_CLOEXEC))
- #define XLAT_STR_22 STRINGIFY(MSG_CMSG_CLOEXEC)
+ #define XLAT_VAL_23 ((unsigned) (MSG_CMSG_CLOEXEC))
+ #define XLAT_STR_23 STRINGIFY(MSG_CMSG_CLOEXEC)
 #ifndef STRACE_WORKAROUND_FOR_MSG_CMSG_COMPAT
 # define STRACE_WORKAROUND_FOR_MSG_CMSG_COMPAT
 /*
@@ -263,8 +273,8 @@ static const struct xlat_data msg_flags_xdata[] = {
 # undef MSG_CMSG_COMPAT
 #endif
  XLAT(MSG_CMSG_COMPAT),
- #define XLAT_VAL_23 ((unsigned) (MSG_CMSG_COMPAT))
- #define XLAT_STR_23 STRINGIFY(MSG_CMSG_COMPAT)
+ #define XLAT_VAL_24 ((unsigned) (MSG_CMSG_COMPAT))
+ #define XLAT_STR_24 STRINGIFY(MSG_CMSG_COMPAT)
 };
 const struct xlat msg_flags[1] = { {
  .data = msg_flags_xdata,
@@ -343,6 +353,9 @@ const struct xlat msg_flags[1] = { {
 #  ifdef XLAT_VAL_23
   | XLAT_VAL_23
 #  endif
+#  ifdef XLAT_VAL_24
+  | XLAT_VAL_24
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -417,6 +430,9 @@ const struct xlat msg_flags[1] = { {
 #  ifdef XLAT_STR_23
   + sizeof(XLAT_STR_23)
 #  endif
+#  ifdef XLAT_STR_24
+  + sizeof(XLAT_STR_24)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -469,6 +485,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_22
 #  undef XLAT_STR_23
 #  undef XLAT_VAL_23
+#  undef XLAT_STR_24
+#  undef XLAT_VAL_24
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

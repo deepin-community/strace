@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2015-2016 Dmitry V. Levin <ldv@strace.io>
- * Copyright (c) 2015-2021 The strace developers.
+ * Copyright (c) 2015-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -345,6 +345,8 @@ test_fcntl_others(void)
 		{ 0, ARG_STR(F_DUPFD_CLOEXEC), ARG_STR(0) },
 		{ 0, ARG_STR(F_SETFL), ARG_STR(O_RDWR|O_LARGEFILE) },
 		{ 0, ARG_STR(F_NOTIFY), ARG_STR(DN_ACCESS) },
+		{ 0, ARG_STR(F_DUPFD_QUERY), ARG_STR(0) },
+		{ 0, ARG_STR(F_CREATED_QUERY), ARG_STR(0) },
 		{ 1, ARG_STR(F_SETLEASE), ARG_STR(F_RDLCK) },
 		{ 0, ARG_STR(F_SETSIG), 0, "0" },
 		{ 1, ARG_STR(F_SETSIG), 1, "SIGHUP" }

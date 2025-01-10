@@ -740,6 +740,20 @@ static_assert(BPF_PROG_QUERY_struct_size == expected_BPF_PROG_QUERY_struct_size,
 		      "BPF_RAW_TRACEPOINT_OPEN_struct.prog_fd offset mismatch");
 # endif /* HAVE_UNION_BPF_ATTR_RAW_TRACEPOINT_PROG_FD */
 
+# ifdef HAVE_UNION_BPF_ATTR_RAW_TRACEPOINT_DUMMY
+	static_assert(sizeof_field(struct BPF_RAW_TRACEPOINT_OPEN_struct, dummy) == sizeof_field(union bpf_attr, raw_tracepoint.dummy),
+		      "BPF_RAW_TRACEPOINT_OPEN_struct.dummy size mismatch");
+	static_assert(offsetof(struct BPF_RAW_TRACEPOINT_OPEN_struct, dummy) == offsetof(union bpf_attr, raw_tracepoint.dummy),
+		      "BPF_RAW_TRACEPOINT_OPEN_struct.dummy offset mismatch");
+# endif /* HAVE_UNION_BPF_ATTR_RAW_TRACEPOINT_DUMMY */
+
+# ifdef HAVE_UNION_BPF_ATTR_RAW_TRACEPOINT_COOKIE
+	static_assert(sizeof_field(struct BPF_RAW_TRACEPOINT_OPEN_struct, cookie) == sizeof_field(union bpf_attr, raw_tracepoint.cookie),
+		      "BPF_RAW_TRACEPOINT_OPEN_struct.cookie size mismatch");
+	static_assert(offsetof(struct BPF_RAW_TRACEPOINT_OPEN_struct, cookie) == offsetof(union bpf_attr, raw_tracepoint.cookie),
+		      "BPF_RAW_TRACEPOINT_OPEN_struct.cookie offset mismatch");
+# endif /* HAVE_UNION_BPF_ATTR_RAW_TRACEPOINT_COOKIE */
+
 static_assert(BPF_RAW_TRACEPOINT_OPEN_struct_size == expected_BPF_RAW_TRACEPOINT_OPEN_struct_size,
 	      "BPF_RAW_TRACEPOINT_OPEN_struct_size mismatch");
 

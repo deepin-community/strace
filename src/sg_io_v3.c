@@ -2,7 +2,7 @@
  * Copyright (c) 2007 Vladimir Nadvornik <nadvornik@suse.cz>
  * Copyright (c) 2007-2021 Dmitry V. Levin <ldv@strace.io>
  * Copyright (c) 2015 Bart Van Assche <bart.vanassche@sandisk.com>
- * Copyright (c) 2021-2023 The strace developers.
+ * Copyright (c) 2021-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: LGPL-2.1-or-later
@@ -87,8 +87,8 @@ decode_request(struct tcb *const tcp, const kernel_ulong_t arg)
 		PRINT_FIELD_SG_IO_BUFFER(sg_io, dxferp, sg_io.dxfer_len, sg_io.iovec_count, tcp);
 	}
 
+	sg_io.interface_id = (unsigned char) 'S';
 	struct_sg_io_hdr *entering_sg_io = xobjdup(&sg_io);
-	entering_sg_io->interface_id = (unsigned char) 'S';
 	set_tcb_priv_data(tcp, entering_sg_io, free);
 
 	return 0;

@@ -1,0 +1,7 @@
+---
+Name: strace
+Bug-Database: https://github.com/strace/strace/issues
+Bug-Submit: https://github.com/strace/strace/issues/new
+Repository: https://github.com/strace/strace.git
+Repository-Browse: https://github.com/strace/strace
+

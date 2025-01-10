@@ -149,6 +149,8 @@ AC_DEFUN([st_BPF_ATTR], [dnl
 		union bpf_attr.query.prog_ids,
 		union bpf_attr.query.query_flags,
 		union bpf_attr.query.target_fd,
+		union bpf_attr.raw_tracepoint.cookie,
+		union bpf_attr.raw_tracepoint.dummy,
 		union bpf_attr.raw_tracepoint.name,
 		union bpf_attr.raw_tracepoint.prog_fd,
 		union bpf_attr.replace_bpf_fd,

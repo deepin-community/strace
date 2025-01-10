@@ -75,7 +75,7 @@ clone_ptrace-q +clone_ptrace.test -q
 clone_ptrace-qq +clone_ptrace.test -qq
 close_range	-a21 7>>/dev/full
 copy_file_range
-creat	-a20
+creat	-a16
 delete_module	-a23
 dev--decode-fds-all	-a30 -e trace=openat,fsync -P "/dev/full" -P "/dev/zero" -P "/dev/sda" -e decode-fds=all
 dev--decode-fds-dev	-a30 -e trace=openat,fsync -P "/dev/full" -P "/dev/zero" -P "/dev/sda" -e decode-fds=dev
@@ -113,6 +113,8 @@ epoll_pwait2-P	--trace=epoll_pwait2 -P /dev/full
 epoll_pwait2-y	--trace=epoll_pwait2 -y
 epoll_wait	-a26
 erestartsys	-a34 -e signal=none -e trace=recvfrom
+eventfd-yy -a15 --trace=eventfd2,fchdir -yy -qq
+eventfd--decode-fd-eventfd	-a15 --trace=eventfd2,fchdir --decode-fds=eventfd -qq
 execve--secontext	+execve.test --secontext
 execve--secontext_full	+execve.test --secontext=full
 execve--secontext_full_mismatch	+execve.test --secontext=full,mismatch
@@ -291,6 +293,7 @@ io_uring_register-success-Xabbrev	-einject=io_uring_register:retval=42 -etrace=i
 io_uring_register-success-Xraw		-einject=io_uring_register:retval=42 -etrace=io_uring_register -y -Xraw
 io_uring_register-success-Xverbose	-einject=io_uring_register:retval=42 -etrace=io_uring_register -y -Xverbose
 io_uring_setup	-a26 -y
+ioctl-v	+ioctl.test -v
 ioctl_block	+ioctl.test
 ioctl_counter	+ioctl.test -a39
 ioctl_counter-Xabbrev	+ioctl.test -a39 -Xabbrev
@@ -298,6 +301,14 @@ ioctl_counter-Xraw	+ioctl.test -a18 -Xraw
 ioctl_counter-Xverbose	+ioctl.test -a52 -Xverbose
 ioctl_dm	+ioctl.test -s9
 ioctl_dm-v	+ioctl.test -v -s9
+ioctl_epoll		+ioctl.test -a30
+ioctl_epoll-Xabbrev	+ioctl.test -a30 -Xabbrev
+ioctl_epoll-Xraw		+ioctl.test -a28 -Xraw
+ioctl_epoll-Xverbose	+ioctl.test -a47 -Xverbose
+ioctl_epoll-success		+ioctl-success.sh -a30
+ioctl_epoll-success-Xabbrev	+ioctl-success.sh -a30 -Xabbrev
+ioctl_epoll-success-Xraw		+ioctl-success.sh -a28 -Xraw
+ioctl_epoll-success-Xverbose	+ioctl-success.sh -a47 -Xverbose
 ioctl_evdev	+ioctl.test -a26
 ioctl_evdev-Xabbrev	+ioctl.test -a26 -Xabbrev
 ioctl_evdev-Xraw	+ioctl.test -a28 -Xraw
@@ -394,6 +405,9 @@ ioctl_mtd	+ioctl.test
 ioctl_mtd-success	+ioctl-success.sh -a26
 ioctl_nbd	+ioctl.test -y
 ioctl_nsfs	+ioctl.test -esignal=none
+ioctl_nsfs-ns_get_pid	+ioctl.test -a33
+ioctl_nsfs-ns_get_pid--pidns-translation	test_pidns -etrace=ioctl -a25 "QUIRK:START-OF-TEST-OUTPUT:ioctl(-1, NS_GET_USERNS)"
+ioctl_nsfs-ns_mnt_get	+ioctl.test
 ioctl_perf	+ioctl.test
 ioctl_perf-success +ioctl-success.sh -a35
 ioctl_ptp			+ioctl.test -a29
@@ -448,7 +462,9 @@ ioctl_v4l2-v	+ioctl.test -v
 ioctl_v4l2-v-Xabbrev	+ioctl.test -v -Xabbrev
 ioctl_v4l2-v-Xraw	+ioctl.test -v -Xraw
 ioctl_v4l2-v-Xverbose	+ioctl.test -v -Xverbose
-ioctl_watchdog	+ioctl.test
+ioctl_watchdog	+ioctl.test -a14
+ioctl_watchdog-success	+ioctl-success.sh -a14
+ioctl_watchdog-success-v	+ioctl-success.sh -a14 -v
 ioctl_winsize	+ioctl.test
 ioperm	-a27
 iopl	-a8
@@ -526,7 +542,7 @@ lookup_dcookie	-a27
 lsm_get_self_attr	-a49 -s2
 lsm_get_self_attr-success	--inject=lsm_get_self_attr:retval=96 -a49 -s2 --trace=lsm_get_self_attr
 lsm_list_modules	-a32
-lsm_list_modules-success	--inject=lsm_list_modules:retval=17 -a32 --trace=lsm_list_modules
+lsm_list_modules-success	--inject=lsm_list_modules:retval=18 -a32 --trace=lsm_list_modules
 lsm_set_self_attr	-a46
 lstat	-a31 --no-abbrev --trace-path=stat.sample --trace-path=/dev/full
 lstat64	-a32 --no-abbrev --trace-path=stat.sample --trace-path=/dev/full
@@ -555,8 +571,8 @@ memfd_secret-success-y -einject=memfd_secret:retval=7 -a16 -etrace=memfd_secret 
 migrate_pages	-a33
 migrate_pages--pidns-translation	test_pidns -a33 -e trace=migrate_pages
 mincore	-a22
-mkdir	-a20
-mkdirat	-a28
+mkdir	-a16
+mkdirat	-a22
 mknod	-a18
 mknodat	-a35
 mlock	-a20 -e trace=mlock,munlock
@@ -591,6 +607,7 @@ mq	-a32 -e trace=mq_getsetattr,mq_open,mq_unlink
 mq_sendrecv	-a14 -e trace=mq_open,mq_notify,mq_timedsend,mq_timedreceive,mq_unlink
 mq_sendrecv-read	-eread=0 -a14 -e trace=mq_open,mq_notify,mq_timedsend,mq_timedreceive,mq_unlink
 mq_sendrecv-write	-ewrite=0 -a14 -e trace=mq_open,mq_notify,mq_timedsend,mq_timedreceive,mq_unlink
+mseal
 msg_control	-a21 -e trace=sendmsg
 msg_control-v	-v -a21 -e trace=sendmsg
 msg_name	-a20 -e trace=recvmsg
@@ -614,9 +631,10 @@ net-tpacket_stats-success -einject=getsockopt:retval=42 -etrace=getsockopt
 net-yy-inet6	+net-yy-inet.test
 netlink_audit	+netlink_sock_diag.test
 netlink_crypto	+netlink_sock_diag.test
-netlink_generic	+netlink_sock_diag.test -e trace=sendto,sendmsg
+netlink_generic	+netlink_sock_diag.test
 netlink_kobject_uevent	+netlink_sock_diag.test
 netlink_netfilter	+netlink_sock_diag.test
+netlink_nlctrl	+netlink_sock_diag.test
 netlink_protocol	+netlink_sock_diag.test
 netlink_route	+netlink_sock_diag.test
 netlink_selinux	+netlink_sock_diag.test
@@ -756,7 +774,7 @@ pipe2	-a15
 pkey_alloc	-a17
 pkey_free	-a13
 pkey_mprotect	-a37
-poke-sendfile	--trace=/sendfile --inject=all:poke_enter=@arg3=0000000000000000:poke_exit=@arg3=ffffffffffffffff
+poke-sendfile	--inject=all:poke_enter=@arg3=0000000000000000:poke_exit=@arg3=ffffffffffffffff --trace=/sendfile
 ppoll				-s2
 ppoll-P				-s2 -e trace=ppoll -P /dev/full 9>>/dev/full
 ppoll-e-trace-fds-23		-s2 -e trace=ppoll -e trace-fds=23
@@ -772,6 +790,13 @@ prctl-mce-kill		+prctl.sh -a21
 prctl-mdwe		+prctl-success.sh PRCTL_INJECT_RETVALS="error=ENOTTY 0 1 2 3 2124532476" -a31
 prctl-name		+prctl.sh -a23
 prctl-no-args		+prctl.sh -a21
+prctl-no-args-Xabbrev	+prctl.sh -a21 -Xabbrev
+prctl-no-args-Xraw	+prctl.sh -a11 -Xraw
+prctl-no-args-Xverbose	+prctl.sh -a31 -Xverbose
+prctl-no-args-success		+prctl-success.sh PRCTL_INJECT_RETVALS="0 1 2 3 4 8 16 32 64 128 256 4096 65536 16777216 2124532476" -a21
+prctl-no-args-success-Xabbrev	+prctl-success.sh PRCTL_INJECT_RETVALS="0 1 2 3 4 8 16 32 64 128 256 4096 65536 16777216 2124532476" -a21 -Xabbrev
+prctl-no-args-success-Xraw	+prctl-success.sh PRCTL_INJECT_RETVALS="0 1 2 3 4 8 16 32 64 128 256 4096 65536 16777216 2124532476" -a11 -Xraw
+prctl-no-args-success-Xverbose	+prctl-success.sh PRCTL_INJECT_RETVALS="0 1 2 3 4 8 16 32 64 128 256 4096 65536 16777216 2124532476" -a31 -Xverbose
 prctl-pac-enabled-keys		+prctl.sh -a43
 prctl-pac-enabled-keys-Xabbrev	+prctl.sh -a43 -Xabbrev
 prctl-pac-enabled-keys-Xraw	+prctl.sh -a24 -Xraw
@@ -782,6 +807,26 @@ prctl-pac-enabled-keys-success-Xraw	+prctl-success.sh PRCTL_INJECT_RETVALS="0 1 
 prctl-pac-enabled-keys-success-Xverbose	+prctl-success.sh PRCTL_INJECT_RETVALS="0 1 30 0xbeef0" -a54 -Xverbose
 prctl-pac-reset-keys	+prctl.sh -a43
 prctl-pdeathsig		+prctl.sh -a30
+prctl-ppc-dexcr			+prctl.sh -a52
+prctl-ppc-dexcr-Xabbrev		+prctl.sh -Xabbrev -a52
+prctl-ppc-dexcr-Xraw		+prctl.sh -Xraw -a20
+prctl-ppc-dexcr-Xverbose	+prctl.sh -Xverbose -a71
+prctl-ppc-dexcr-success			+prctl-success.sh PRCTL_INJECT_RETVALS="0 1 2 3 23 42 96 224 0x5a7ebee5 0x57ae57e9" -a52
+prctl-ppc-dexcr-success-Xabbrev		+prctl-success.sh PRCTL_INJECT_RETVALS="0 1 2 3 23 42 96 224 0x5a7ebee5 0x57ae57e9" -a52 -Xabbrev
+prctl-ppc-dexcr-success-Xraw		+prctl-success.sh PRCTL_INJECT_RETVALS="0 1 2 3 23 42 96 224 0x5a7ebee5 0x57ae57e9" -a20 -Xraw
+prctl-ppc-dexcr-success-Xverbose	+prctl-success.sh PRCTL_INJECT_RETVALS="0 1 2 3 23 42 96 224 0x5a7ebee5 0x57ae57e9" -a71 -Xverbose
+prctl-riscv-icache-flush-ctx		+prctl.sh -a91
+prctl-riscv-icache-flush-ctx-Xabbrev	+prctl.sh -a91 -Xabbrev
+prctl-riscv-icache-flush-ctx-Xraw	+prctl.sh -a18 -Xraw
+prctl-riscv-icache-flush-ctx-Xverbose	+prctl.sh -a106 -Xverbose
+prctl-riscv-v-ctrl		+prctl.sh -a30
+prctl-riscv-v-ctrl-Xabbrev	+prctl.sh -Xabbrev -a30
+prctl-riscv-v-ctrl-Xraw		+prctl.sh -Xraw -a12
+prctl-riscv-v-ctrl-Xverbose	+prctl.sh -Xverbose -a40
+prctl-riscv-v-ctrl-success		+prctl-success.sh PRCTL_INJECT_RETVALS="0 6 11 12 17 31 32 42 0x57ae57f4" -a30
+prctl-riscv-v-ctrl-success-Xabbrev	+prctl-success.sh PRCTL_INJECT_RETVALS="0 6 11 12 17 31 32 42 0x57ae57f4" -a30 -Xabbrev
+prctl-riscv-v-ctrl-success-Xraw		+prctl-success.sh PRCTL_INJECT_RETVALS="0 6 11 12 17 31 32 42 0x57ae57f4" -a12 -Xraw
+prctl-riscv-v-ctrl-success-Xverbose	+prctl-success.sh PRCTL_INJECT_RETVALS="0 6 11 12 17 31 32 42 0x57ae57f4" -a40 -Xverbose
 prctl-sched-core		+prctl.sh -a71
 prctl-sched-core--pidns-translation		test_pidns -etrace=prctl -a73 "QUIRK:START-OF-TEST-OUTPUT:prctl(0xffffffff /* PR_??? */, 0xfffffffe, 0xfffffffd, 0xfffffffc, 0xfffffffb)"
 prctl-sched-core--pidns-translation-Xabbrev	test_pidns -etrace=prctl -a73 "QUIRK:START-OF-TEST-OUTPUT:prctl(0xffffffff /* PR_??? */, 0xfffffffe, 0xfffffffd, 0xfffffffc, 0xfffffffb)" -Xabbrev
@@ -858,7 +903,7 @@ printstrn-umoven-peekdata	-e signal=none -e trace=add_key
 printstrn-umoven-undumpable	-e signal=none -e trace=add_key
 prlimit64			-a36 "QUIRK:START-OF-TEST-OUTPUT:prlimit64(0, 0x10 /* RLIMIT_??? */, NULL, NULL)"
 prlimit64--pidns-translation	test_pidns -a36 -e trace=prlimit64 "QUIRK:START-OF-TEST-OUTPUT:prlimit64(0, 0x10 /* RLIMIT_??? */, NULL, NULL)"
-prlimit64-success			-a36 -einject=prlimit64:retval=42:when=256+ -etrace=prlimit64 "QUIRK:START-OF-TEST-OUTPUT:prlimit64(0, 0x10 /* RLIMIT_??? */, NULL, NULL)"
+prlimit64-success			check_scno_tampering; run_strace_match_diff -a36 -einject=prlimit64:retval=42:when=256+ -etrace=prlimit64 "QUIRK:START-OF-TEST-OUTPUT:prlimit64(0, 0x10 /* RLIMIT_??? */, NULL, NULL)"
 prlimit64-success--pidns-translation	check_scno_tampering; test_pidns -a36 -einject=prlimit64:retval=42:when=256+ -etrace=prlimit64 "QUIRK:START-OF-TEST-OUTPUT:prlimit64(0, 0x10 /* RLIMIT_??? */, NULL, NULL)"
 process_madvise
 process_madvise-y	--trace=process_madvise -y

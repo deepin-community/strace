@@ -79,6 +79,8 @@ PURE_EXECUTABLES = \
   epoll_wait \
   erestartsys \
   eventfd \
+  eventfd--decode-fd-eventfd \
+  eventfd-yy \
   execve \
   execveat \
   faccessat \
@@ -195,12 +197,17 @@ PURE_EXECUTABLES = \
   io_uring_register-Xverbose \
   io_uring_setup \
   ioctl \
+  ioctl-v \
   ioctl_block \
   ioctl_counter \
   ioctl_counter-Xabbrev \
   ioctl_counter-Xraw \
   ioctl_counter-Xverbose \
   ioctl_dm \
+  ioctl_epoll \
+  ioctl_epoll-Xabbrev \
+  ioctl_epoll-Xraw \
+  ioctl_epoll-Xverbose \
   ioctl_evdev \
   ioctl_evdev-Xabbrev \
   ioctl_evdev-Xraw \
@@ -249,6 +256,7 @@ PURE_EXECUTABLES = \
   ioctl_loop \
   ioctl_mtd \
   ioctl_nbd \
+  ioctl_nsfs-ns_mnt_get \
   ioctl_perf \
   ioctl_ptp \
   ioctl_ptp-Xabbrev \
@@ -401,6 +409,7 @@ PURE_EXECUTABLES = \
   mq_sendrecv \
   mq_sendrecv-read \
   mq_sendrecv-write \
+  mseal \
   msg_control \
   msg_name \
   munlockall \
@@ -428,6 +437,7 @@ PURE_EXECUTABLES = \
   netlink_generic \
   netlink_kobject_uevent \
   netlink_netfilter \
+  netlink_nlctrl \
   netlink_protocol \
   netlink_route \
   netlink_selinux \
@@ -565,12 +575,27 @@ PURE_EXECUTABLES = \
   prctl-mce-kill \
   prctl-name \
   prctl-no-args \
+  prctl-no-args-Xabbrev \
+  prctl-no-args-Xraw \
+  prctl-no-args-Xverbose \
   prctl-pac-enabled-keys \
   prctl-pac-enabled-keys-Xabbrev \
   prctl-pac-enabled-keys-Xraw \
   prctl-pac-enabled-keys-Xverbose \
   prctl-pac-reset-keys \
   prctl-pdeathsig \
+  prctl-ppc-dexcr \
+  prctl-ppc-dexcr-Xabbrev \
+  prctl-ppc-dexcr-Xraw \
+  prctl-ppc-dexcr-Xverbose \
+  prctl-riscv-icache-flush-ctx \
+  prctl-riscv-icache-flush-ctx-Xabbrev \
+  prctl-riscv-icache-flush-ctx-Xraw \
+  prctl-riscv-icache-flush-ctx-Xverbose \
+  prctl-riscv-v-ctrl \
+  prctl-riscv-v-ctrl-Xabbrev \
+  prctl-riscv-v-ctrl-Xraw \
+  prctl-riscv-v-ctrl-Xverbose \
   prctl-sched-core \
   prctl-sched-core-Xabbrev \
   prctl-sched-core-Xraw \

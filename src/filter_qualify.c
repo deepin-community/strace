@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2016 Dmitry V. Levin <ldv@strace.io>
- * Copyright (c) 2016-2023 The strace developers.
+ * Copyright (c) 2016-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: LGPL-2.1-or-later
@@ -105,6 +105,7 @@ decode_fd_str_to_uint(const char *str)
 		{ DECODE_FD_PATH,      "path" },
 		{ DECODE_FD_SOCKET,    "socket" },
 		{ DECODE_FD_DEV,       "dev" },
+		{ DECODE_FD_EVENTFD,   "eventfd" },
 		{ DECODE_FD_PIDFD,     "pidfd" },
 		{ DECODE_FD_SIGNALFD,  "signalfd" },
 	};

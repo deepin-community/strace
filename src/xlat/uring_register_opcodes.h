@@ -102,6 +102,12 @@ static const struct xlat_data uring_register_opcodes_xdata[] = {
  [IORING_UNREGISTER_NAPI] = XLAT(IORING_UNREGISTER_NAPI),
  #define XLAT_VAL_28 ((unsigned) (IORING_UNREGISTER_NAPI))
  #define XLAT_STR_28 STRINGIFY(IORING_UNREGISTER_NAPI)
+ [IORING_REGISTER_CLOCK] = XLAT(IORING_REGISTER_CLOCK),
+ #define XLAT_VAL_29 ((unsigned) (IORING_REGISTER_CLOCK))
+ #define XLAT_STR_29 STRINGIFY(IORING_REGISTER_CLOCK)
+ [IORING_REGISTER_CLONE_BUFFERS] = XLAT(IORING_REGISTER_CLONE_BUFFERS),
+ #define XLAT_VAL_30 ((unsigned) (IORING_REGISTER_CLONE_BUFFERS))
+ #define XLAT_STR_30 STRINGIFY(IORING_REGISTER_CLONE_BUFFERS)
 };
 static
 const struct xlat uring_register_opcodes[1] = { {
@@ -196,6 +202,12 @@ const struct xlat uring_register_opcodes[1] = { {
 #  ifdef XLAT_VAL_28
   | XLAT_VAL_28
 #  endif
+#  ifdef XLAT_VAL_29
+  | XLAT_VAL_29
+#  endif
+#  ifdef XLAT_VAL_30
+  | XLAT_VAL_30
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -285,6 +297,12 @@ const struct xlat uring_register_opcodes[1] = { {
 #  ifdef XLAT_STR_28
   + sizeof(XLAT_STR_28)
 #  endif
+#  ifdef XLAT_STR_29
+  + sizeof(XLAT_STR_29)
+#  endif
+#  ifdef XLAT_STR_30
+  + sizeof(XLAT_STR_30)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -347,6 +365,10 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_27
 #  undef XLAT_STR_28
 #  undef XLAT_VAL_28
+#  undef XLAT_STR_29
+#  undef XLAT_VAL_29
+#  undef XLAT_STR_30
+#  undef XLAT_VAL_30
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

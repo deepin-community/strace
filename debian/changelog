@@ -1,9 +1,38 @@
-strace (6.9-0deepin) unstable; urgency=medium
+strace (6.12+ds-1) unstable; urgency=medium
 
-  * New upstream version 6.9.
-  * from: https://github.com/strace/strace/tree/v6.9
+  * New upstream version 6.12+ds
+  * Refresh d/patches/*
+    - Drop decrease-the-maximal-pipe-fd.patch which upstream has applied
 
- -- LiChengGang <lichenggang@uniontech.com>  Wed, 15 May 2024 16:35:45 +0800
+ -- Bo YU <tsu.yubo@gmail.com>  Sun, 24 Nov 2024 22:04:01 +0800
+
+strace (6.11+ds-1) unstable; urgency=medium
+
+  [ Bo YU ]
+  * Repack the package
+    - update debian/watch
+    - update debian/copyright
+  * New upstream version 6.11+ds. (closes: #1078842)
+  * Drop 03-fix-arm-time_t-ftbfs.patch which upstream has been appiled
+  * Add Rules-Requires-Root
+  * Update d/copyright
+  * Add metadata file
+  * Add myself as uploader
+  * Restore build-deps with upstream.
+  * Add decrease-the-maximal-pipe-fd.patch from upstream
+
+  [ Kirill Rekhov ]
+  * remove field prefix XC-Package-Type
+
+ -- Bo YU <tsu.yubo@gmail.com>  Mon, 04 Nov 2024 14:57:32 +0800
+
+strace (6.8-2) unstable; urgency=medium
+
+  * Team upload.
+  * Only use libunwind on amd64 (Closes: #1070853)
+    Thanks to Emanuele Rocca <ema@debian.org>
+
+ -- Bo YU <tsu.yubo@gmail.com>  Thu, 06 Jun 2024 18:22:04 +0800
 
 strace (6.8-1) unstable; urgency=medium
 
@@ -16,7 +45,7 @@ strace (6.8-1) unstable; urgency=medium
   * New upstream version 6.8. (Closes: #1060789).
   * Rebase debian/patches/*
   * Add 03-fix-arm-time_t-ftbfs.patch to fix FTBFS. (Closes: #1068758)
-  * Depend libunwind and libiberty on more architectures. 
+  * Depend libunwind and libiberty on more architectures.
     Thanks to Balint Reczey. See MR!3.
 
  -- Bo YU <tsu.yubo@gmail.com>  Fri, 10 May 2024 14:53:53 +0800

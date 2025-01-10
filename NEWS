@@ -1,3 +1,57 @@
+Noteworthy changes in release 6.12 (2024-11-18)
+===============================================
+
+* Improvements
+  * Implemented decoding of EPIOCGPARAMS and EPIOCSPARAMS ioctl commands.
+  * Implemented decoding of NS_GET_MNTNS_ID, NS_GET_PID_FROM_PIDNS,
+    NS_GET_TGID_FROM_PIDNS, NS_GET_PID_IN_PIDNS, NS_GET_TGID_IN_PIDNS,
+    NS_MNT_GET_INFO, NS_MNT_GET_NEXT, and NS_MNT_GET_PREV ioctl commands.
+  * Implemented decoding of FRA_DSCP netlink attribute.
+  * Implemented decoding of IORING_REGISTER_CLOCK and
+    IORING_REGISTER_CLONE_BUFFERS opcodes of io_uring_register syscall.
+  * Updated decoding of struct landlock_ruleset_attr.
+  * Updated lists of AUDIT_*, ETHTOOL_*, F_*, IORING_*, LSM_*, MAP_*, MSG_*,
+    NT_*, SCHED_*, SCM_*, SO_*, and V4L2_* constants.
+  * Updated lists of ioctl commands from Linux 6.12.
+
+* Bug fixes
+  * Fix the syscall name printed by strace when PTRACE_GET_SYSCALL_INFO
+    is in use and a syscall is restarted by a just attached tracee using
+    restart_syscall mechanism.
+
+Noteworthy changes in release 6.11 (2024-09-15)
+===============================================
+
+* Improvements
+  * Implemented decoding of uretprobe syscall.
+  * Implemented decoding of WDIOC_GETSUPPORT and WDIOC_SETOPTIONS ioctl
+    commands.
+  * Enhanced decoding of unknown ioctl commands in non-abbreviated mode
+    by printing the contents of the ioctl argument buffer in hexadecimal format.
+  * Updated decoding of listmount, statmount, and statx syscalls.
+  * Updated lists of ETHTOOL_*, IORING_*, IPPROTO_*, RWF_*, STATX_*, and V4L2_*
+    constants.
+  * Updated lists of ioctl commands from Linux 6.11.
+
+Noteworthy changes in release 6.10 (2024-07-21)
+===============================================
+
+* Improvements
+  * Implemented --decode-fds=eventfd option to retrieve eventfd object details
+    associated with eventfd file descriptors.
+  * Implemented decoding of NETLINK_GENERIC nlctrl protocol.
+  * Implemented decoding of F_DUPFD_QUERY fcntl.
+  * Implemented decoding of mseal syscall.
+  * Updated decoding of statx and prctl syscalls.
+  * Updated decoding of BPF_RAW_TRACEPOINT_OPEN bpf command.
+  * Updated lists of BPF_*, IORING_*, KEXEC_*, KEY_*, LANDLOCK_*, PR_*, STATX_*,
+    TCP_*, TEE_*, V4L2_*, and *_MAGIC constants.
+  * Updated lists of ioctl commands from Linux 6.10.
+
+* Bug fixes
+  * Worked around a bug introduced in Linux 6.5 that affected system call
+    tampering on riscv64.
+
 Noteworthy changes in release 6.9 (2024-05-14)
 ==============================================
 

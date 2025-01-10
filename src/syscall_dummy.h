@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1993 Branko Lankester <branko@hacktic.nl>
  * Copyright (c) 1993, 1994, 1995 Rick Sladkey <jrs@world.std.com>
- * Copyright (c) 1995-2021 The strace developers.
+ * Copyright (c) 1995-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: LGPL-2.1-or-later
@@ -98,6 +98,7 @@
 # define sys_setup		printargs
 # define sys_sync		printargs
 # define sys_syscall		printargs
+# define sys_uretprobe		printargs
 # define sys_vhangup		printargs
 
 /* printargs_u does the right thing */

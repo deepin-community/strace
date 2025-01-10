@@ -4,6 +4,14 @@
 #include "static_assert.h"
 
 #if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (V4L2_META_FMT_RPI_BE_CFG)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: V4L2_META_FMT_RPI_BE_CFG"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (V4L2_META_FMT_RPI_BE_CFG)
+#if defined XLAT_PREV_VAL
 static_assert((unsigned long long) (V4L2_META_FMT_VIVID)
       > (unsigned long long) (XLAT_PREV_VAL),
       "Incorrect order in #sorted xlat: V4L2_META_FMT_VIVID"
@@ -11,6 +19,14 @@ static_assert((unsigned long long) (V4L2_META_FMT_VIVID)
 #endif
 #undef XLAT_PREV_VAL
 #define XLAT_PREV_VAL (V4L2_META_FMT_VIVID)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (V4L2_META_FMT_RK_ISP1_EXT_PARAMS)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: V4L2_META_FMT_RK_ISP1_EXT_PARAMS"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (V4L2_META_FMT_RK_ISP1_EXT_PARAMS)
 #if defined XLAT_PREV_VAL
 static_assert((unsigned long long) (V4L2_META_FMT_UVC)
       > (unsigned long long) (XLAT_PREV_VAL),
@@ -71,27 +87,33 @@ extern const struct xlat v4l2_meta_fmts[];
 
 DIAG_PUSH_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 static const struct xlat_data v4l2_meta_fmts_xdata[] = {
+ XLAT(V4L2_META_FMT_RPI_BE_CFG),
+ #define XLAT_VAL_0 ((unsigned) (V4L2_META_FMT_RPI_BE_CFG))
+ #define XLAT_STR_0 STRINGIFY(V4L2_META_FMT_RPI_BE_CFG)
  XLAT(V4L2_META_FMT_VIVID),
- #define XLAT_VAL_0 ((unsigned) (V4L2_META_FMT_VIVID))
- #define XLAT_STR_0 STRINGIFY(V4L2_META_FMT_VIVID)
+ #define XLAT_VAL_1 ((unsigned) (V4L2_META_FMT_VIVID))
+ #define XLAT_STR_1 STRINGIFY(V4L2_META_FMT_VIVID)
+ XLAT(V4L2_META_FMT_RK_ISP1_EXT_PARAMS),
+ #define XLAT_VAL_2 ((unsigned) (V4L2_META_FMT_RK_ISP1_EXT_PARAMS))
+ #define XLAT_STR_2 STRINGIFY(V4L2_META_FMT_RK_ISP1_EXT_PARAMS)
  XLAT(V4L2_META_FMT_UVC),
- #define XLAT_VAL_1 ((unsigned) (V4L2_META_FMT_UVC))
- #define XLAT_STR_1 STRINGIFY(V4L2_META_FMT_UVC)
+ #define XLAT_VAL_3 ((unsigned) (V4L2_META_FMT_UVC))
+ #define XLAT_STR_3 STRINGIFY(V4L2_META_FMT_UVC)
  XLAT(V4L2_META_FMT_VSP1_HGO),
- #define XLAT_VAL_2 ((unsigned) (V4L2_META_FMT_VSP1_HGO))
- #define XLAT_STR_2 STRINGIFY(V4L2_META_FMT_VSP1_HGO)
+ #define XLAT_VAL_4 ((unsigned) (V4L2_META_FMT_VSP1_HGO))
+ #define XLAT_STR_4 STRINGIFY(V4L2_META_FMT_VSP1_HGO)
  XLAT(V4L2_META_FMT_RK_ISP1_PARAMS),
- #define XLAT_VAL_3 ((unsigned) (V4L2_META_FMT_RK_ISP1_PARAMS))
- #define XLAT_STR_3 STRINGIFY(V4L2_META_FMT_RK_ISP1_PARAMS)
+ #define XLAT_VAL_5 ((unsigned) (V4L2_META_FMT_RK_ISP1_PARAMS))
+ #define XLAT_STR_5 STRINGIFY(V4L2_META_FMT_RK_ISP1_PARAMS)
  XLAT(V4L2_META_FMT_RK_ISP1_STAT_3A),
- #define XLAT_VAL_4 ((unsigned) (V4L2_META_FMT_RK_ISP1_STAT_3A))
- #define XLAT_STR_4 STRINGIFY(V4L2_META_FMT_RK_ISP1_STAT_3A)
+ #define XLAT_VAL_6 ((unsigned) (V4L2_META_FMT_RK_ISP1_STAT_3A))
+ #define XLAT_STR_6 STRINGIFY(V4L2_META_FMT_RK_ISP1_STAT_3A)
  XLAT(V4L2_META_FMT_VSP1_HGT),
- #define XLAT_VAL_5 ((unsigned) (V4L2_META_FMT_VSP1_HGT))
- #define XLAT_STR_5 STRINGIFY(V4L2_META_FMT_VSP1_HGT)
+ #define XLAT_VAL_7 ((unsigned) (V4L2_META_FMT_VSP1_HGT))
+ #define XLAT_STR_7 STRINGIFY(V4L2_META_FMT_VSP1_HGT)
  XLAT(V4L2_META_FMT_D4XX),
- #define XLAT_VAL_6 ((unsigned) (V4L2_META_FMT_D4XX))
- #define XLAT_STR_6 STRINGIFY(V4L2_META_FMT_D4XX)
+ #define XLAT_VAL_8 ((unsigned) (V4L2_META_FMT_D4XX))
+ #define XLAT_STR_8 STRINGIFY(V4L2_META_FMT_D4XX)
 };
 #  if !(defined HAVE_M32_MPERS || defined HAVE_MX32_MPERS)
 static
@@ -122,6 +144,12 @@ const struct xlat v4l2_meta_fmts[1] = { {
 #  ifdef XLAT_VAL_6
   | XLAT_VAL_6
 #  endif
+#  ifdef XLAT_VAL_7
+  | XLAT_VAL_7
+#  endif
+#  ifdef XLAT_VAL_8
+  | XLAT_VAL_8
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -145,6 +173,12 @@ const struct xlat v4l2_meta_fmts[1] = { {
 #  ifdef XLAT_STR_6
   + sizeof(XLAT_STR_6)
 #  endif
+#  ifdef XLAT_STR_7
+  + sizeof(XLAT_STR_7)
+#  endif
+#  ifdef XLAT_STR_8
+  + sizeof(XLAT_STR_8)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -163,6 +197,10 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_5
 #  undef XLAT_STR_6
 #  undef XLAT_VAL_6
+#  undef XLAT_STR_7
+#  undef XLAT_VAL_7
+#  undef XLAT_STR_8
+#  undef XLAT_VAL_8
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

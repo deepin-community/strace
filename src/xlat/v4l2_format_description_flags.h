@@ -42,6 +42,9 @@ static const struct xlat_data v4l2_format_description_flags_xdata[] = {
  XLAT(V4L2_FMT_FLAG_CSC_QUANTIZATION),
  #define XLAT_VAL_8 ((unsigned) (V4L2_FMT_FLAG_CSC_QUANTIZATION))
  #define XLAT_STR_8 STRINGIFY(V4L2_FMT_FLAG_CSC_QUANTIZATION)
+ XLAT(V4L2_FMT_FLAG_META_LINE_BASED),
+ #define XLAT_VAL_9 ((unsigned) (V4L2_FMT_FLAG_META_LINE_BASED))
+ #define XLAT_STR_9 STRINGIFY(V4L2_FMT_FLAG_META_LINE_BASED)
 };
 #  if !(defined HAVE_M32_MPERS || defined HAVE_MX32_MPERS)
 static
@@ -78,6 +81,9 @@ const struct xlat v4l2_format_description_flags[1] = { {
 #  ifdef XLAT_VAL_8
   | XLAT_VAL_8
 #  endif
+#  ifdef XLAT_VAL_9
+  | XLAT_VAL_9
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -107,6 +113,9 @@ const struct xlat v4l2_format_description_flags[1] = { {
 #  ifdef XLAT_STR_8
   + sizeof(XLAT_STR_8)
 #  endif
+#  ifdef XLAT_STR_9
+  + sizeof(XLAT_STR_9)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -129,6 +138,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_7
 #  undef XLAT_STR_8
 #  undef XLAT_VAL_8
+#  undef XLAT_STR_9
+#  undef XLAT_VAL_9
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

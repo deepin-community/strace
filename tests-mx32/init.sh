@@ -32,6 +32,30 @@ sed_slash_escape()
 	printf "%s" "$*" | sed 's/[/]/\\&/g'
 }
 
+# Calculate an integer approximation of the square root of $1:
+# returns 0 and prints the largest number the square of which is no greater
+# than $1 if $1 is non-negative, returns 1 and prints nothing otherwise.
+sq_root()
+{
+	# Handling the negative cases
+	[ 0 -le "$1" ] || return 1;
+
+	# Handling the 0 and 1 cases
+	[ 1 -lt "$1" ] || { echo "$1"; return 0; }
+
+	local upper="$1"
+	local lower=1
+	local cur
+
+	while :; do
+		cur="$(( (lower + upper) / 2 ))"
+		[ "$((cur * cur))" -ne "$1" ] || { echo "$cur"; return 0; }
+		[ "$((cur * cur))" -lt "$1" ] || { upper="$cur"; continue; }
+		[ "$cur" -ne "$lower" ] || { echo "$cur"; return 0; }
+		lower="$cur"
+	done
+}
+
 # get_config_str OPTION
 #
 # Returns the value of OPTION from config.h (path to which set
@@ -433,9 +457,9 @@ test_pure_prog_set()
 	} < /dev/null; done
 }
 
-# Run strace against list of programs put in "$NAME.in" and then against the
-# rest of pure_executables.list with the expectation of empty output in the
-# latter case.
+# Run strace against list of programs put in "$NAME.in" and then against
+# a random selection of the binaries from the rest of pure_executables.list
+# with the expectation of empty output in the latter case.
 #
 # Usage: source this file after init.sh and call:
 #   test_trace_expr subtrahend_regexp strace_args
@@ -443,6 +467,9 @@ test_pure_prog_set()
 #   $NAME:	test name, used for "$NAME.in" file containing list of tests
 #		for positive trace expression match;
 #   $srcdir:	used to find pure_executables.list and "$NAME.in" files.
+#   $TRACE_TESTS_SAMPLE:
+#               number of binaries to pick from the remainder
+#               of pure_executables.list to check for the absence of output.
 # Files created:
 #   negative.list: File containing list of tests for negative match.
 test_trace_expr()
@@ -451,7 +478,7 @@ test_trace_expr()
 	subtrahend_regexp="$1"; shift
 	test_pure_prog_set "$@" < "$srcdir/$NAME.in"
 	prog_set_subtract "$srcdir/pure_executables.list" "$srcdir/$NAME.in" \
-		"$subtrahend_regexp" > negative.list
+		"$subtrahend_regexp" | shuf -n "${TRACE_TESTS_SAMPLE}"  > negative.list
 	test_pure_prog_set --expfile /dev/null -qq -esignal=none "$@" \
 		< negative.list
 }
@@ -607,6 +634,7 @@ export STRACE_EXE
 
 : "${TIMEOUT_DURATION:=1500}"
 : "${SLEEP_A_BIT:=sleep 1}"
+: "${TRACE_TESTS_SAMPLE:=100}"
 
 [ -z "${VERBOSE-}" ] ||
 	set -x

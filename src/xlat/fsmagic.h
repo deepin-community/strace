@@ -1805,6 +1805,23 @@ static_assert((unsigned long long) (LOGFS_MAGIC)
 #undef XLAT_PREV_VAL
 #define XLAT_PREV_VAL (LOGFS_MAGIC)
 #endif
+#if defined(BCACHEFS_SUPER_MAGIC) || (defined(HAVE_DECL_BCACHEFS_SUPER_MAGIC) && HAVE_DECL_BCACHEFS_SUPER_MAGIC)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((BCACHEFS_SUPER_MAGIC) == (0xca451a4e), "BCACHEFS_SUPER_MAGIC != 0xca451a4e");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define BCACHEFS_SUPER_MAGIC 0xca451a4e
+#endif
+#if defined(BCACHEFS_SUPER_MAGIC) || (defined(HAVE_DECL_BCACHEFS_SUPER_MAGIC) && HAVE_DECL_BCACHEFS_SUPER_MAGIC)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (BCACHEFS_SUPER_MAGIC)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: BCACHEFS_SUPER_MAGIC"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (BCACHEFS_SUPER_MAGIC)
+#endif
 #if defined(BPF_FS_MAGIC) || (defined(HAVE_DECL_BPF_FS_MAGIC) && HAVE_DECL_BPF_FS_MAGIC)
 DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
 static_assert((BPF_FS_MAGIC) == (0xcafe4a11), "BPF_FS_MAGIC != 0xcafe4a11");
@@ -2267,30 +2284,33 @@ static const struct xlat_data fsmagic_xdata[] = {
  XLAT(LOGFS_MAGIC),
  #define XLAT_VAL_105 ((unsigned) (LOGFS_MAGIC))
  #define XLAT_STR_105 STRINGIFY(LOGFS_MAGIC)
+ XLAT(BCACHEFS_SUPER_MAGIC),
+ #define XLAT_VAL_106 ((unsigned) (BCACHEFS_SUPER_MAGIC))
+ #define XLAT_STR_106 STRINGIFY(BCACHEFS_SUPER_MAGIC)
  XLAT(BPF_FS_MAGIC),
- #define XLAT_VAL_106 ((unsigned) (BPF_FS_MAGIC))
- #define XLAT_STR_106 STRINGIFY(BPF_FS_MAGIC)
+ #define XLAT_VAL_107 ((unsigned) (BPF_FS_MAGIC))
+ #define XLAT_STR_107 STRINGIFY(BPF_FS_MAGIC)
  XLAT(EFIVARFS_MAGIC),
- #define XLAT_VAL_107 ((unsigned) (EFIVARFS_MAGIC))
- #define XLAT_STR_107 STRINGIFY(EFIVARFS_MAGIC)
+ #define XLAT_VAL_108 ((unsigned) (EFIVARFS_MAGIC))
+ #define XLAT_STR_108 STRINGIFY(EFIVARFS_MAGIC)
  XLAT(EROFS_SUPER_MAGIC_V1),
- #define XLAT_VAL_108 ((unsigned) (EROFS_SUPER_MAGIC_V1))
- #define XLAT_STR_108 STRINGIFY(EROFS_SUPER_MAGIC_V1)
+ #define XLAT_VAL_109 ((unsigned) (EROFS_SUPER_MAGIC_V1))
+ #define XLAT_STR_109 STRINGIFY(EROFS_SUPER_MAGIC_V1)
  XLAT(F2FS_SUPER_MAGIC),
- #define XLAT_VAL_109 ((unsigned) (F2FS_SUPER_MAGIC))
- #define XLAT_STR_109 STRINGIFY(F2FS_SUPER_MAGIC)
+ #define XLAT_VAL_110 ((unsigned) (F2FS_SUPER_MAGIC))
+ #define XLAT_STR_110 STRINGIFY(F2FS_SUPER_MAGIC)
  XLAT(SELINUX_MAGIC),
- #define XLAT_VAL_110 ((unsigned) (SELINUX_MAGIC))
- #define XLAT_STR_110 STRINGIFY(SELINUX_MAGIC)
+ #define XLAT_VAL_111 ((unsigned) (SELINUX_MAGIC))
+ #define XLAT_STR_111 STRINGIFY(SELINUX_MAGIC)
  XLAT(HPFS_SUPER_MAGIC),
- #define XLAT_VAL_111 ((unsigned) (HPFS_SUPER_MAGIC))
- #define XLAT_STR_111 STRINGIFY(HPFS_SUPER_MAGIC)
+ #define XLAT_VAL_112 ((unsigned) (HPFS_SUPER_MAGIC))
+ #define XLAT_STR_112 STRINGIFY(HPFS_SUPER_MAGIC)
  XLAT(SMB2_SUPER_MAGIC),
- #define XLAT_VAL_112 ((unsigned) (SMB2_SUPER_MAGIC))
- #define XLAT_STR_112 STRINGIFY(SMB2_SUPER_MAGIC)
+ #define XLAT_VAL_113 ((unsigned) (SMB2_SUPER_MAGIC))
+ #define XLAT_STR_113 STRINGIFY(SMB2_SUPER_MAGIC)
  XLAT(CIFS_SUPER_MAGIC),
- #define XLAT_VAL_113 ((unsigned) (CIFS_SUPER_MAGIC))
- #define XLAT_STR_113 STRINGIFY(CIFS_SUPER_MAGIC)
+ #define XLAT_VAL_114 ((unsigned) (CIFS_SUPER_MAGIC))
+ #define XLAT_STR_114 STRINGIFY(CIFS_SUPER_MAGIC)
 };
 const struct xlat fsmagic[1] = { {
  .data = fsmagic_xdata,
@@ -2639,6 +2659,9 @@ const struct xlat fsmagic[1] = { {
 #  ifdef XLAT_VAL_113
   | XLAT_VAL_113
 #  endif
+#  ifdef XLAT_VAL_114
+  | XLAT_VAL_114
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -2983,6 +3006,9 @@ const struct xlat fsmagic[1] = { {
 #  ifdef XLAT_STR_113
   + sizeof(XLAT_STR_113)
 #  endif
+#  ifdef XLAT_STR_114
+  + sizeof(XLAT_STR_114)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -3215,6 +3241,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_112
 #  undef XLAT_STR_113
 #  undef XLAT_VAL_113
+#  undef XLAT_STR_114
+#  undef XLAT_VAL_114
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

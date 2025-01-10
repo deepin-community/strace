@@ -81,6 +81,51 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 # define SCM_TIMESTAMPING_PKTINFO 0x3a
 #endif
 #endif
+#if defined __sparc__
+#if defined(SCM_DEVMEM_LINEAR) || (defined(HAVE_DECL_SCM_DEVMEM_LINEAR) && HAVE_DECL_SCM_DEVMEM_LINEAR)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((SCM_DEVMEM_LINEAR) == (0x57), "SCM_DEVMEM_LINEAR != 0x57");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define SCM_DEVMEM_LINEAR 0x57
+#endif
+#if defined(SCM_DEVMEM_DMABUF) || (defined(HAVE_DECL_SCM_DEVMEM_DMABUF) && HAVE_DECL_SCM_DEVMEM_DMABUF)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((SCM_DEVMEM_DMABUF) == (0x58), "SCM_DEVMEM_DMABUF != 0x58");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define SCM_DEVMEM_DMABUF 0x58
+#endif
+#if defined(SO_DEVMEM_DONTNEED) || (defined(HAVE_DECL_SO_DEVMEM_DONTNEED) && HAVE_DECL_SO_DEVMEM_DONTNEED)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((SO_DEVMEM_DONTNEED) == (0x59), "SO_DEVMEM_DONTNEED != 0x59");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define SO_DEVMEM_DONTNEED 0x59
+#endif
+#else
+#if defined(SCM_DEVMEM_LINEAR) || (defined(HAVE_DECL_SCM_DEVMEM_LINEAR) && HAVE_DECL_SCM_DEVMEM_LINEAR)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((SCM_DEVMEM_LINEAR) == (0x4e), "SCM_DEVMEM_LINEAR != 0x4e");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define SCM_DEVMEM_LINEAR 0x4e
+#endif
+#if defined(SCM_DEVMEM_DMABUF) || (defined(HAVE_DECL_SCM_DEVMEM_DMABUF) && HAVE_DECL_SCM_DEVMEM_DMABUF)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((SCM_DEVMEM_DMABUF) == (0x4f), "SCM_DEVMEM_DMABUF != 0x4f");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define SCM_DEVMEM_DMABUF 0x4f
+#endif
+#if defined(SO_DEVMEM_DONTNEED) || (defined(HAVE_DECL_SO_DEVMEM_DONTNEED) && HAVE_DECL_SO_DEVMEM_DONTNEED)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((SO_DEVMEM_DONTNEED) == (0x50), "SO_DEVMEM_DONTNEED != 0x50");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define SO_DEVMEM_DONTNEED 0x50
+#endif
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -174,6 +219,28 @@ static const struct xlat_data scmvals_xdata[] = {
  #define XLAT_VAL_17 ((unsigned) (SCM_TIMESTAMPING_PKTINFO))
  #define XLAT_STR_17 STRINGIFY(SCM_TIMESTAMPING_PKTINFO)
 #endif
+
+#if defined __sparc__
+ XLAT(SCM_DEVMEM_LINEAR),
+ #define XLAT_VAL_18 ((unsigned) (SCM_DEVMEM_LINEAR))
+ #define XLAT_STR_18 STRINGIFY(SCM_DEVMEM_LINEAR)
+ XLAT(SCM_DEVMEM_DMABUF),
+ #define XLAT_VAL_19 ((unsigned) (SCM_DEVMEM_DMABUF))
+ #define XLAT_STR_19 STRINGIFY(SCM_DEVMEM_DMABUF)
+ XLAT(SO_DEVMEM_DONTNEED),
+ #define XLAT_VAL_20 ((unsigned) (SO_DEVMEM_DONTNEED))
+ #define XLAT_STR_20 STRINGIFY(SO_DEVMEM_DONTNEED)
+#else
+ XLAT(SCM_DEVMEM_LINEAR),
+ #define XLAT_VAL_21 ((unsigned) (SCM_DEVMEM_LINEAR))
+ #define XLAT_STR_21 STRINGIFY(SCM_DEVMEM_LINEAR)
+ XLAT(SCM_DEVMEM_DMABUF),
+ #define XLAT_VAL_22 ((unsigned) (SCM_DEVMEM_DMABUF))
+ #define XLAT_STR_22 STRINGIFY(SCM_DEVMEM_DMABUF)
+ XLAT(SO_DEVMEM_DONTNEED),
+ #define XLAT_VAL_23 ((unsigned) (SO_DEVMEM_DONTNEED))
+ #define XLAT_STR_23 STRINGIFY(SO_DEVMEM_DONTNEED)
+#endif
 };
 static
 const struct xlat scmvals[1] = { {
@@ -235,6 +302,24 @@ const struct xlat scmvals[1] = { {
 #  ifdef XLAT_VAL_17
   | XLAT_VAL_17
 #  endif
+#  ifdef XLAT_VAL_18
+  | XLAT_VAL_18
+#  endif
+#  ifdef XLAT_VAL_19
+  | XLAT_VAL_19
+#  endif
+#  ifdef XLAT_VAL_20
+  | XLAT_VAL_20
+#  endif
+#  ifdef XLAT_VAL_21
+  | XLAT_VAL_21
+#  endif
+#  ifdef XLAT_VAL_22
+  | XLAT_VAL_22
+#  endif
+#  ifdef XLAT_VAL_23
+  | XLAT_VAL_23
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -291,6 +376,24 @@ const struct xlat scmvals[1] = { {
 #  ifdef XLAT_STR_17
   + sizeof(XLAT_STR_17)
 #  endif
+#  ifdef XLAT_STR_18
+  + sizeof(XLAT_STR_18)
+#  endif
+#  ifdef XLAT_STR_19
+  + sizeof(XLAT_STR_19)
+#  endif
+#  ifdef XLAT_STR_20
+  + sizeof(XLAT_STR_20)
+#  endif
+#  ifdef XLAT_STR_21
+  + sizeof(XLAT_STR_21)
+#  endif
+#  ifdef XLAT_STR_22
+  + sizeof(XLAT_STR_22)
+#  endif
+#  ifdef XLAT_STR_23
+  + sizeof(XLAT_STR_23)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -331,6 +434,18 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_16
 #  undef XLAT_STR_17
 #  undef XLAT_VAL_17
+#  undef XLAT_STR_18
+#  undef XLAT_VAL_18
+#  undef XLAT_STR_19
+#  undef XLAT_VAL_19
+#  undef XLAT_STR_20
+#  undef XLAT_VAL_20
+#  undef XLAT_STR_21
+#  undef XLAT_VAL_21
+#  undef XLAT_STR_22
+#  undef XLAT_VAL_22
+#  undef XLAT_STR_23
+#  undef XLAT_VAL_23
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

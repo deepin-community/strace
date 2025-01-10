@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 1993, 1994, 1995, 1996 Rick Sladkey <jrs@world.std.com>
  * Copyright (c) 1996-1999 Wichert Akkerman <wichert@cistron.nl>
- * Copyright (c) 1999-2021 The strace developers.
+ * Copyright (c) 1999-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: LGPL-2.1-or-later
@@ -55,8 +55,6 @@ decode_poll_exiting(struct tcb *const tcp, const sprint_obj_by_addr_fn sprint_ts
 	const unsigned long size = sizeof(fds) * nfds;
 	const kernel_ulong_t start = tcp->u_arg[0];
 	const kernel_ulong_t end = start + size;
-	const unsigned int max_printed =
-		abbrev(tcp) ? max_strlen : -1U;
 	unsigned int printed = 0;
 
 	static char outstr[1024];
@@ -91,7 +89,8 @@ decode_poll_exiting(struct tcb *const tcp, const sprint_obj_by_addr_fn sprint_ts
 			*outptr++ = '[';
 		else
 			outptr = stpcpy(outptr, ", ");
-		if (printed >= max_printed) {
+		/* printed starts with 0, hence printed + 1 */
+		if (sequence_truncation_needed(tcp, printed + 1)) {
 			outptr = stpcpy(outptr, "...");
 			break;
 		}

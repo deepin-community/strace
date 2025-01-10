@@ -5,7 +5,7 @@
  * Copyright (c) 2016 Masatake Yamato <yamato@redhat.com>
  * Copyright (c) 2016 Dmitry V. Levin <ldv@strace.io>
  * Copyright (c) 2016 Eugene Syromyatnikov <evgsyr@gmail.com>
- * Copyright (c) 2016-2022 The strace developers.
+ * Copyright (c) 2016-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: LGPL-2.1-or-later
@@ -190,7 +190,8 @@ dm_decode_dm_target_spec(struct tcb *const tcp, const kernel_ulong_t addr,
 		if (offset_end <= offset || offset_end > ioc->data_size)
 			goto misplaced;
 
-		if (i >= max_strlen) {
+		/* i starts with 0, hence i + 1 */
+		if (sequence_truncation_needed(tcp, i + 1)) {
 			tprint_more_data_follows();
 			break;
 		}
@@ -323,7 +324,8 @@ dm_decode_dm_name_list(struct tcb *const tcp, const kernel_ulong_t addr,
 		if (offset_end <= offset || offset_end > ioc->data_size)
 			goto misplaced;
 
-		if (count >= max_strlen) {
+		/* count starts with 0, hence count + 1 */
+		if (sequence_truncation_needed(tcp, count + 1)) {
 			tprint_more_data_follows();
 			break;
 		}
@@ -413,7 +415,8 @@ dm_decode_dm_target_versions(struct tcb *const tcp, const kernel_ulong_t addr,
 		if (offset_end <= offset || offset_end > ioc->data_size)
 			goto misplaced;
 
-		if (count >= max_strlen) {
+		/* count starts with 0, hence count + 1 */
+		if (sequence_truncation_needed(tcp, count + 1)) {
 			tprint_more_data_follows();
 			break;
 		}

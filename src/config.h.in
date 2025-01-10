@@ -775,6 +775,15 @@
 /* Define to 1 if `hci_channel' is a member of `struct sockaddr_hci'. */
 #undef HAVE_STRUCT_SOCKADDR_HCI_HCI_CHANNEL
 
+/* Define to 1 if the system has the type `struct sockaddr_ipx'. */
+#undef HAVE_STRUCT_SOCKADDR_IPX
+
+/* Define to 1 if <linux/ipx.h> header file provides struct sockaddr_ipx. */
+#undef HAVE_STRUCT_SOCKADDR_IPX_IN_LINUX_IPX_H
+
+/* Define to 1 if <netipx/ipx.h> header file provides struct sockaddr_ipx. */
+#undef HAVE_STRUCT_SOCKADDR_IPX_IN_NETIPX_IPX_H
+
 /* Define to 1 if `l2_bdaddr_type' is a member of `struct sockaddr_l2'. */
 #undef HAVE_STRUCT_SOCKADDR_L2_L2_BDADDR_TYPE
 
@@ -1204,6 +1213,12 @@
 
 /* Define to 1 if `query.target_fd' is a member of `union bpf_attr'. */
 #undef HAVE_UNION_BPF_ATTR_QUERY_TARGET_FD
+
+/* Define to 1 if `raw_tracepoint.cookie' is a member of `union bpf_attr'. */
+#undef HAVE_UNION_BPF_ATTR_RAW_TRACEPOINT_COOKIE
+
+/* Define to 1 if `raw_tracepoint.dummy' is a member of `union bpf_attr'. */
+#undef HAVE_UNION_BPF_ATTR_RAW_TRACEPOINT_DUMMY
 
 /* Define to 1 if `raw_tracepoint.name' is a member of `union bpf_attr'. */
 #undef HAVE_UNION_BPF_ATTR_RAW_TRACEPOINT_NAME

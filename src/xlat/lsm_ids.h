@@ -57,6 +57,9 @@ static const struct xlat_data lsm_ids_xdata[] = {
  XLAT_TYPE(uint64_t, LSM_ID_EVM),
  #define XLAT_VAL_13 ((uint64_t) (LSM_ID_EVM))
  #define XLAT_STR_13 STRINGIFY(LSM_ID_EVM)
+ XLAT_TYPE(uint64_t, LSM_ID_IPE),
+ #define XLAT_VAL_14 ((uint64_t) (LSM_ID_IPE))
+ #define XLAT_STR_14 STRINGIFY(LSM_ID_IPE)
 };
 static
 const struct xlat lsm_ids[1] = { {
@@ -106,6 +109,9 @@ const struct xlat lsm_ids[1] = { {
 #  ifdef XLAT_VAL_13
   | XLAT_VAL_13
 #  endif
+#  ifdef XLAT_VAL_14
+  | XLAT_VAL_14
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -150,6 +156,9 @@ const struct xlat lsm_ids[1] = { {
 #  ifdef XLAT_STR_13
   + sizeof(XLAT_STR_13)
 #  endif
+#  ifdef XLAT_STR_14
+  + sizeof(XLAT_STR_14)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -182,6 +191,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_12
 #  undef XLAT_STR_13
 #  undef XLAT_VAL_13
+#  undef XLAT_STR_14
+#  undef XLAT_VAL_14
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

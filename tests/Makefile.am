@@ -21,8 +21,8 @@ ARCH_MFLAGS =
 AM_CFLAGS = $(WARN_CFLAGS)
 bundled_CPPFLAGS =
 if USE_BUNDLED_HEADERS
-bundled_CPPFLAGS += -I$(top_srcdir)/bundled/$(OS)/arch/$(KARCH)/include/uapi \
-		    -I$(top_srcdir)/bundled/$(OS)/include/uapi
+bundled_CPPFLAGS += -isystem $(top_srcdir)/bundled/$(OS)/arch/$(KARCH)/include/uapi \
+		    -isystem $(top_srcdir)/bundled/$(OS)/include/uapi
 endif
 AM_CPPFLAGS = $(ARCH_MFLAGS) \
 	      -I$(builddir) \
@@ -61,6 +61,8 @@ libtests_a_SOURCES = \
 	hexquote_strndup.c \
 	ifindex.c \
 	inode_of_sockfd.c \
+	k_sockopt.c \
+	k_sockopt.h \
 	libmmsg.c \
 	libsocketcall.c \
 	lock_file.c \
@@ -166,6 +168,10 @@ check_PROGRAMS = $(PURE_EXECUTABLES) \
 	io_uring_register-success-Xverbose \
 	ioctl_block--pidns-translation \
 	ioctl_dm-v \
+	ioctl_epoll-success \
+	ioctl_epoll-success-Xabbrev \
+	ioctl_epoll-success-Xraw \
+	ioctl_epoll-success-Xverbose \
 	ioctl_evdev-success \
 	ioctl_evdev-success-Xabbrev \
 	ioctl_evdev-success-Xraw \
@@ -215,6 +221,8 @@ check_PROGRAMS = $(PURE_EXECUTABLES) \
 	ioctl_loop-v \
 	ioctl_mtd-success \
 	ioctl_nsfs \
+	ioctl_nsfs-ns_get_pid \
+	ioctl_nsfs-ns_get_pid--pidns-translation \
 	ioctl_perf-success \
 	ioctl_ptp-success \
 	ioctl_ptp-success-Xabbrev \
@@ -243,6 +251,8 @@ check_PROGRAMS = $(PURE_EXECUTABLES) \
 	ioctl_v4l2-success-v-Xabbrev \
 	ioctl_v4l2-success-v-Xraw \
 	ioctl_v4l2-success-v-Xverbose \
+	ioctl_watchdog-success \
+	ioctl_watchdog-success-v \
 	ioprio--pidns-translation \
 	ip_local_port_range-success \
 	ip_local_port_range-success-Xabbrev \
@@ -293,10 +303,22 @@ check_PROGRAMS = $(PURE_EXECUTABLES) \
 	ppoll-v \
 	prctl-fp-mode \
 	prctl-mdwe \
+	prctl-no-args-success \
+	prctl-no-args-success-Xabbrev \
+	prctl-no-args-success-Xraw \
+	prctl-no-args-success-Xverbose \
 	prctl-pac-enabled-keys-success \
 	prctl-pac-enabled-keys-success-Xabbrev \
 	prctl-pac-enabled-keys-success-Xraw \
 	prctl-pac-enabled-keys-success-Xverbose \
+	prctl-ppc-dexcr-success \
+	prctl-ppc-dexcr-success-Xabbrev \
+	prctl-ppc-dexcr-success-Xraw \
+	prctl-ppc-dexcr-success-Xverbose \
+	prctl-riscv-v-ctrl-success \
+	prctl-riscv-v-ctrl-success-Xabbrev \
+	prctl-riscv-v-ctrl-success-Xraw \
+	prctl-riscv-v-ctrl-success-Xverbose \
 	prctl-sched-core--pidns-translation \
 	prctl-sched-core--pidns-translation-Xabbrev \
 	prctl-sched-core--pidns-translation-Xraw \
@@ -565,6 +587,7 @@ DECODER_TESTS = \
 	prctl-seccomp-strict.test \
 	qual_fault-exit_group.test \
 	readv.test \
+	restart_syscall-p.test \
 	rt_sigaction.test \
 	scm_rights-fd.test \
 	seccomp-strict.test \
@@ -737,6 +760,7 @@ check_DATA = \
 	qual_inject-signal.expected \
 	qualify_personality_empty.in \
 	regex.in \
+	restart_syscall-p.expected \
 	rt_sigaction.awk \
 	sched.in \
 	sigaltstack.expected \

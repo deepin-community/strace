@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017-2022 The strace developers.
+ * Copyright (c) 2017-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: LGPL-2.1-or-later
@@ -151,6 +151,18 @@ SYS_FUNC(statx)
 				PRINT_FIELD_U(stx, stx_dio_mem_align);
 				tprint_struct_next();
 				PRINT_FIELD_U(stx, stx_dio_offset_align);
+			}
+			if (stx.stx_mask & STATX_SUBVOL) {
+				tprint_struct_next();
+				PRINT_FIELD_X(stx, stx_subvol);
+			}
+			if (stx.stx_attributes & STATX_ATTR_WRITE_ATOMIC) {
+				tprint_struct_next();
+				PRINT_FIELD_U(stx, stx_atomic_write_unit_min);
+				tprint_struct_next();
+				PRINT_FIELD_U(stx, stx_atomic_write_unit_max);
+				tprint_struct_next();
+				PRINT_FIELD_U(stx, stx_atomic_write_segments_max);
 			}
 		} else {
 			tprint_struct_next();
