@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2002-2023 The strace developers.
+ * Copyright (c) 2002-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: LGPL-2.1-or-later
@@ -340,5 +340,6 @@
 [332] = { 5,	TD|TF|TFST|TSTA,SEN(statx),			"statx"			},
 [333] = { 6,	0,		SEN(io_pgetevents_time64),	"io_pgetevents"		},
 [334] = { 4,	0,		SEN(rseq),			"rseq"			},
-/* [335 ... 423] - reserved to sync up with other architectures */
+[335] = { 0,	0,		SEN(uretprobe),			"uretprobe"		},
+/* [336 ... 423] - reserved to sync up with other architectures */
 #include "syscallent-common.h"

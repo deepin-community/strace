@@ -564,6 +564,23 @@ static_assert((unsigned long long) (IPPROTO_RAW)
 #undef XLAT_PREV_VAL
 #define XLAT_PREV_VAL (IPPROTO_RAW)
 #endif
+#if defined(IPPROTO_SMC) || (defined(HAVE_DECL_IPPROTO_SMC) && HAVE_DECL_IPPROTO_SMC)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((IPPROTO_SMC) == (256), "IPPROTO_SMC != 256");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define IPPROTO_SMC 256
+#endif
+#if defined(IPPROTO_SMC) || (defined(HAVE_DECL_IPPROTO_SMC) && HAVE_DECL_IPPROTO_SMC)
+#if defined XLAT_PREV_VAL
+static_assert((unsigned long long) (IPPROTO_SMC)
+      > (unsigned long long) (XLAT_PREV_VAL),
+      "Incorrect order in #sorted xlat: IPPROTO_SMC"
+      " is not larger than the previous value");
+#endif
+#undef XLAT_PREV_VAL
+#define XLAT_PREV_VAL (IPPROTO_SMC)
+#endif
 #if defined(IPPROTO_MPTCP) || (defined(HAVE_DECL_IPPROTO_MPTCP) && HAVE_DECL_IPPROTO_MPTCP)
 DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
 static_assert((IPPROTO_MPTCP) == (262), "IPPROTO_MPTCP != 262");
@@ -688,9 +705,12 @@ static const struct xlat_data inet_protocols_xdata[] = {
  XLAT(IPPROTO_RAW),
  #define XLAT_VAL_32 ((unsigned) (IPPROTO_RAW))
  #define XLAT_STR_32 STRINGIFY(IPPROTO_RAW)
+ XLAT(IPPROTO_SMC),
+ #define XLAT_VAL_33 ((unsigned) (IPPROTO_SMC))
+ #define XLAT_STR_33 STRINGIFY(IPPROTO_SMC)
  XLAT(IPPROTO_MPTCP),
- #define XLAT_VAL_33 ((unsigned) (IPPROTO_MPTCP))
- #define XLAT_STR_33 STRINGIFY(IPPROTO_MPTCP)
+ #define XLAT_VAL_34 ((unsigned) (IPPROTO_MPTCP))
+ #define XLAT_STR_34 STRINGIFY(IPPROTO_MPTCP)
 };
 const struct xlat inet_protocols[1] = { {
  .data = inet_protocols_xdata,
@@ -799,6 +819,9 @@ const struct xlat inet_protocols[1] = { {
 #  ifdef XLAT_VAL_33
   | XLAT_VAL_33
 #  endif
+#  ifdef XLAT_VAL_34
+  | XLAT_VAL_34
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -903,6 +926,9 @@ const struct xlat inet_protocols[1] = { {
 #  ifdef XLAT_STR_33
   + sizeof(XLAT_STR_33)
 #  endif
+#  ifdef XLAT_STR_34
+  + sizeof(XLAT_STR_34)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -975,6 +1001,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_32
 #  undef XLAT_STR_33
 #  undef XLAT_VAL_33
+#  undef XLAT_STR_34
+#  undef XLAT_VAL_34
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

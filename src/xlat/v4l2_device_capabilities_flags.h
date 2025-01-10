@@ -87,9 +87,9 @@ static const struct xlat_data v4l2_device_capabilities_flags_xdata[] = {
  XLAT(V4L2_CAP_READWRITE),
  #define XLAT_VAL_23 ((unsigned) (V4L2_CAP_READWRITE))
  #define XLAT_STR_23 STRINGIFY(V4L2_CAP_READWRITE)
- XLAT(V4L2_CAP_ASYNCIO),
- #define XLAT_VAL_24 ((unsigned) (V4L2_CAP_ASYNCIO))
- #define XLAT_STR_24 STRINGIFY(V4L2_CAP_ASYNCIO)
+ XLAT(V4L2_CAP_EDID),
+ #define XLAT_VAL_24 ((unsigned) (V4L2_CAP_EDID))
+ #define XLAT_STR_24 STRINGIFY(V4L2_CAP_EDID)
  XLAT(V4L2_CAP_STREAMING),
  #define XLAT_VAL_25 ((unsigned) (V4L2_CAP_STREAMING))
  #define XLAT_STR_25 STRINGIFY(V4L2_CAP_STREAMING)

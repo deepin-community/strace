@@ -147,6 +147,16 @@ struct strval32 {
 	const char *str;
 };
 
+struct strival32 {
+	int32_t val;
+	const char *str;
+};
+
+struct strval_klong {
+	kernel_ulong_t val;
+	const char *str;
+};
+
 struct strval64 {
 	uint64_t val;
 	const char *str;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2014-2021 The strace developers.
+ * Copyright (c) 2014-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: LGPL-2.1-or-later
@@ -14,7 +14,7 @@ SYS_FUNC(getcwd)
 		if (syserror(tcp))
 			printaddr(tcp->u_arg[0]);
 		else
-			printpathn(tcp, tcp->u_arg[0], tcp->u_rval - 1);
+			printpathn(tcp, tcp->u_arg[0], tcp->u_rval);
 		tprint_arg_next();
 
 		/* size */

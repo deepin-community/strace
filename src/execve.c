@@ -6,7 +6,7 @@
  * Copyright (c) 2007 Roland McGrath <roland@redhat.com>
  * Copyright (c) 2011-2012 Denys Vlasenko <vda.linux@googlemail.com>
  * Copyright (c) 2010-2015 Dmitry V. Levin <ldv@strace.io>
- * Copyright (c) 2014-2021 The strace developers.
+ * Copyright (c) 2014-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: LGPL-2.1-or-later
@@ -53,7 +53,8 @@ printargv(struct tcb *const tcp, kernel_ulong_t addr)
 		if (n != 0)
 			tprint_array_next();
 
-		if (abbrev(tcp) && n >= max_strlen) {
+		/* n starts with 0, hence n + 1 */
+		if (sequence_truncation_needed(tcp, n + 1)) {
 			tprint_more_data_follows();
 			break;
 		}

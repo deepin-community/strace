@@ -862,6 +862,7 @@ extern enum sock_proto getfdproto(struct tcb *, int);
 
 extern const char *xlookup(const struct xlat *, const uint64_t);
 extern const char *xlookup_le(const struct xlat *, uint64_t *);
+extern uint64_t xrlookup(const struct xlat *, const char *, uint64_t);
 
 struct dyxlat;
 struct dyxlat *dyxlat_alloc(size_t nmemb, enum xlat_type type);
@@ -1166,6 +1167,9 @@ print_local_array_ex(struct tcb *tcp,
 			     sizeof((start_addr_)[0]), (print_func_),        \
 			     NULL, 0, NULL, NULL)
 
+extern bool
+sequence_truncation_needed(const struct tcb *, unsigned int len);
+
 extern kernel_ulong_t *
 fetch_indirect_syscall_args(struct tcb *, kernel_ulong_t addr, unsigned int n_args);
 
@@ -1188,7 +1192,7 @@ extern int get_proc_pid(int pid);
  * @param proc_pid_ptr    If not NULL, writes the proc PID to this location
  * @return                The translated id, or 0 if translation fails.
  */
-extern int translate_pid(struct tcb *, int dest_id, enum pid_type type,
+extern int translate_pid(struct tcb *, int from_id, enum pid_type type,
 		    int *proc_pid_ptr);
 
 extern void
@@ -1445,6 +1449,7 @@ name ## _ioctl(struct tcb *, unsigned int request, kernel_ulong_t arg)	\
 
 DECL_IOCTL(counter);
 DECL_IOCTL(dm);
+DECL_IOCTL(epoll);
 DECL_IOCTL(evdev);
 DECL_IOCTL(fs_0x94);
 DECL_IOCTL(fs_f);
@@ -1482,6 +1487,7 @@ decode_netlink_ ## name(struct tcb *, const struct nlmsghdr *,		\
 /* End of DECL_NETLINK definition. */
 
 DECL_NETLINK(crypto);
+DECL_NETLINK(generic);
 DECL_NETLINK(netfilter);
 DECL_NETLINK(route);
 DECL_NETLINK(selinux);

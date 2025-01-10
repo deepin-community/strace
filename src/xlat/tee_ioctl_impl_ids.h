@@ -21,6 +21,9 @@ static const struct xlat_data tee_ioctl_impl_ids_xdata[] = {
  XLAT(TEE_IMPL_ID_AMDTEE),
  #define XLAT_VAL_1 ((unsigned) (TEE_IMPL_ID_AMDTEE))
  #define XLAT_STR_1 STRINGIFY(TEE_IMPL_ID_AMDTEE)
+ XLAT(TEE_IMPL_ID_TSTEE),
+ #define XLAT_VAL_2 ((unsigned) (TEE_IMPL_ID_TSTEE))
+ #define XLAT_STR_2 STRINGIFY(TEE_IMPL_ID_TSTEE)
 };
 static
 const struct xlat tee_ioctl_impl_ids[1] = { {
@@ -34,6 +37,9 @@ const struct xlat tee_ioctl_impl_ids[1] = { {
 #  ifdef XLAT_VAL_1
   | XLAT_VAL_1
 #  endif
+#  ifdef XLAT_VAL_2
+  | XLAT_VAL_2
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -41,6 +47,9 @@ const struct xlat tee_ioctl_impl_ids[1] = { {
 #  endif
 #  ifdef XLAT_STR_1
   + sizeof(XLAT_STR_1)
+#  endif
+#  ifdef XLAT_STR_2
+  + sizeof(XLAT_STR_2)
 #  endif
   ,
 } };
@@ -50,6 +59,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_0
 #  undef XLAT_STR_1
 #  undef XLAT_VAL_1
+#  undef XLAT_STR_2
+#  undef XLAT_VAL_2
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

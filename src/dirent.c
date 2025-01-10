@@ -4,7 +4,7 @@
  * Copyright (c) 1993, 1994, 1995, 1996 Rick Sladkey <jrs@world.std.com>
  * Copyright (c) 1996-1999 Wichert Akkerman <wichert@cistron.nl>
  * Copyright (c) 2005-2015 Dmitry V. Levin <ldv@strace.io>
- * Copyright (c) 2014-2021 The strace developers.
+ * Copyright (c) 2014-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: LGPL-2.1-or-later
@@ -62,7 +62,7 @@ decode_dentry_tail(struct tcb *const tcp, kernel_ulong_t addr,
 				d_name_len = D_NAME_LEN_MAX;
 			tprint_struct_next();
 			tprints_field_name("d_name");
-			rc = printpathn(tcp, addr, d_name_len - 1);
+			rc = printpathn(tcp, addr, d_name_len);
 		}
 		tprint_struct_next();
 		tprints_field_name("d_type");
@@ -97,7 +97,7 @@ print_old_dirent(struct tcb *const tcp, const kernel_ulong_t addr)
 	tprint_struct_next();
 	tprints_field_name("d_name");
 	printpathn(tcp, addr + header_size,
-		   MIN(dent.d_reclen, D_NAME_LEN_MAX));
+		   MIN(dent.d_reclen, D_NAME_LEN_MAX) + 1);
 	tprint_struct_end();
 }
 

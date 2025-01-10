@@ -24,6 +24,13 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define MAP_SHARED_VALIDATE 0x3
 #endif
+#if defined(MAP_DROPPABLE) || (defined(HAVE_DECL_MAP_DROPPABLE) && HAVE_DECL_MAP_DROPPABLE)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((MAP_DROPPABLE) == (0x8), "MAP_DROPPABLE != 0x8");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define MAP_DROPPABLE 0x8
+#endif
 #if defined __hppa__
 #if defined(MAP_FIXED) || (defined(HAVE_DECL_MAP_FIXED) && HAVE_DECL_MAP_FIXED)
 DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
@@ -503,55 +510,59 @@ static const struct xlat_data mmap_flags_xdata[] = {
  #define XLAT_VAL_2 ((unsigned) (MAP_SHARED_VALIDATE))
  #define XLAT_STR_2 STRINGIFY(MAP_SHARED_VALIDATE)
 
+ XLAT(MAP_DROPPABLE),
+ #define XLAT_VAL_3 ((unsigned) (MAP_DROPPABLE))
+ #define XLAT_STR_3 STRINGIFY(MAP_DROPPABLE)
+
 #if defined __hppa__
- XLAT(MAP_FIXED),
- #define XLAT_VAL_3 ((unsigned) (MAP_FIXED))
- #define XLAT_STR_3 STRINGIFY(MAP_FIXED)
-#elif defined __alpha__
  XLAT(MAP_FIXED),
  #define XLAT_VAL_4 ((unsigned) (MAP_FIXED))
  #define XLAT_STR_4 STRINGIFY(MAP_FIXED)
-#else
+#elif defined __alpha__
  XLAT(MAP_FIXED),
  #define XLAT_VAL_5 ((unsigned) (MAP_FIXED))
  #define XLAT_STR_5 STRINGIFY(MAP_FIXED)
+#else
+ XLAT(MAP_FIXED),
+ #define XLAT_VAL_6 ((unsigned) (MAP_FIXED))
+ #define XLAT_STR_6 STRINGIFY(MAP_FIXED)
 #endif
 
 #if defined __alpha__ || defined __hppa__
  XLAT(MAP_ANONYMOUS),
- #define XLAT_VAL_6 ((unsigned) (MAP_ANONYMOUS))
- #define XLAT_STR_6 STRINGIFY(MAP_ANONYMOUS)
-#elif defined __mips__ || defined __xtensa__
- XLAT(MAP_ANONYMOUS),
  #define XLAT_VAL_7 ((unsigned) (MAP_ANONYMOUS))
  #define XLAT_STR_7 STRINGIFY(MAP_ANONYMOUS)
-#else
+#elif defined __mips__ || defined __xtensa__
  XLAT(MAP_ANONYMOUS),
  #define XLAT_VAL_8 ((unsigned) (MAP_ANONYMOUS))
  #define XLAT_STR_8 STRINGIFY(MAP_ANONYMOUS)
+#else
+ XLAT(MAP_ANONYMOUS),
+ #define XLAT_VAL_9 ((unsigned) (MAP_ANONYMOUS))
+ #define XLAT_STR_9 STRINGIFY(MAP_ANONYMOUS)
 #endif
 
 #if defined __x86_64__ || defined __i386__
  XLAT(MAP_32BIT),
- #define XLAT_VAL_9 ((unsigned) (MAP_32BIT))
- #define XLAT_STR_9 STRINGIFY(MAP_32BIT)
+ #define XLAT_VAL_10 ((unsigned) (MAP_32BIT))
+ #define XLAT_STR_10 STRINGIFY(MAP_32BIT)
 #else
 #if defined(MAP_32BIT) || (defined(HAVE_DECL_MAP_32BIT) && HAVE_DECL_MAP_32BIT)
   XLAT(MAP_32BIT),
- #define XLAT_VAL_10 ((unsigned) (MAP_32BIT))
- #define XLAT_STR_10 STRINGIFY(MAP_32BIT)
+ #define XLAT_VAL_11 ((unsigned) (MAP_32BIT))
+ #define XLAT_STR_11 STRINGIFY(MAP_32BIT)
 #endif
 #endif
 
 #if defined __x86_64__ || defined __i386__
  XLAT(MAP_ABOVE4G),
- #define XLAT_VAL_11 ((unsigned) (MAP_ABOVE4G))
- #define XLAT_STR_11 STRINGIFY(MAP_ABOVE4G)
+ #define XLAT_VAL_12 ((unsigned) (MAP_ABOVE4G))
+ #define XLAT_STR_12 STRINGIFY(MAP_ABOVE4G)
 #else
 #if defined(MAP_ABOVE4G) || (defined(HAVE_DECL_MAP_ABOVE4G) && HAVE_DECL_MAP_ABOVE4G)
   XLAT(MAP_ABOVE4G),
- #define XLAT_VAL_12 ((unsigned) (MAP_ABOVE4G))
- #define XLAT_STR_12 STRINGIFY(MAP_ABOVE4G)
+ #define XLAT_VAL_13 ((unsigned) (MAP_ABOVE4G))
+ #define XLAT_STR_13 STRINGIFY(MAP_ABOVE4G)
 #endif
 #endif
 
@@ -566,213 +577,213 @@ static const struct xlat_data mmap_flags_xdata[] = {
 
 #if defined __mips__ || defined __xtensa__
  XLAT(MAP_RENAME),
- #define XLAT_VAL_13 ((unsigned) (MAP_RENAME))
- #define XLAT_STR_13 STRINGIFY(MAP_RENAME)
+ #define XLAT_VAL_14 ((unsigned) (MAP_RENAME))
+ #define XLAT_STR_14 STRINGIFY(MAP_RENAME)
 #else
 #if defined(MAP_RENAME) || (defined(HAVE_DECL_MAP_RENAME) && HAVE_DECL_MAP_RENAME)
   XLAT(MAP_RENAME),
- #define XLAT_VAL_14 ((unsigned) (MAP_RENAME))
- #define XLAT_STR_14 STRINGIFY(MAP_RENAME)
+ #define XLAT_VAL_15 ((unsigned) (MAP_RENAME))
+ #define XLAT_STR_15 STRINGIFY(MAP_RENAME)
 #endif
 #endif
 
 #if defined __powerpc__ || defined __sparc__
  XLAT(MAP_NORESERVE),
- #define XLAT_VAL_15 ((unsigned) (MAP_NORESERVE))
- #define XLAT_STR_15 STRINGIFY(MAP_NORESERVE)
-#elif defined __mips__ || defined __xtensa__
- XLAT(MAP_NORESERVE),
  #define XLAT_VAL_16 ((unsigned) (MAP_NORESERVE))
  #define XLAT_STR_16 STRINGIFY(MAP_NORESERVE)
-#elif defined __alpha__
+#elif defined __mips__ || defined __xtensa__
  XLAT(MAP_NORESERVE),
  #define XLAT_VAL_17 ((unsigned) (MAP_NORESERVE))
  #define XLAT_STR_17 STRINGIFY(MAP_NORESERVE)
-#else
+#elif defined __alpha__
  XLAT(MAP_NORESERVE),
  #define XLAT_VAL_18 ((unsigned) (MAP_NORESERVE))
  #define XLAT_STR_18 STRINGIFY(MAP_NORESERVE)
+#else
+ XLAT(MAP_NORESERVE),
+ #define XLAT_VAL_19 ((unsigned) (MAP_NORESERVE))
+ #define XLAT_STR_19 STRINGIFY(MAP_NORESERVE)
 #endif
 
 #if defined __hppa__ || defined __mips__ || defined __xtensa__
- XLAT(MAP_POPULATE),
- #define XLAT_VAL_19 ((unsigned) (MAP_POPULATE))
- #define XLAT_STR_19 STRINGIFY(MAP_POPULATE)
-#elif defined __alpha__
  XLAT(MAP_POPULATE),
  #define XLAT_VAL_20 ((unsigned) (MAP_POPULATE))
  #define XLAT_STR_20 STRINGIFY(MAP_POPULATE)
-#else
+#elif defined __alpha__
  XLAT(MAP_POPULATE),
  #define XLAT_VAL_21 ((unsigned) (MAP_POPULATE))
  #define XLAT_STR_21 STRINGIFY(MAP_POPULATE)
+#else
+ XLAT(MAP_POPULATE),
+ #define XLAT_VAL_22 ((unsigned) (MAP_POPULATE))
+ #define XLAT_STR_22 STRINGIFY(MAP_POPULATE)
 #endif
 
 #if defined __hppa__ || defined __mips__ || defined __xtensa__
  XLAT(MAP_NONBLOCK),
- #define XLAT_VAL_22 ((unsigned) (MAP_NONBLOCK))
- #define XLAT_STR_22 STRINGIFY(MAP_NONBLOCK)
-#elif defined __alpha__
- XLAT(MAP_NONBLOCK),
  #define XLAT_VAL_23 ((unsigned) (MAP_NONBLOCK))
  #define XLAT_STR_23 STRINGIFY(MAP_NONBLOCK)
-#else
+#elif defined __alpha__
  XLAT(MAP_NONBLOCK),
  #define XLAT_VAL_24 ((unsigned) (MAP_NONBLOCK))
  #define XLAT_STR_24 STRINGIFY(MAP_NONBLOCK)
+#else
+ XLAT(MAP_NONBLOCK),
+ #define XLAT_VAL_25 ((unsigned) (MAP_NONBLOCK))
+ #define XLAT_STR_25 STRINGIFY(MAP_NONBLOCK)
 #endif
 
 #if defined __sparc__
  XLAT(_MAP_NEW),
- #define XLAT_VAL_25 ((unsigned) (_MAP_NEW))
- #define XLAT_STR_25 STRINGIFY(_MAP_NEW)
+ #define XLAT_VAL_26 ((unsigned) (_MAP_NEW))
+ #define XLAT_STR_26 STRINGIFY(_MAP_NEW)
 #else
 #if defined(_MAP_NEW) || (defined(HAVE_DECL__MAP_NEW) && HAVE_DECL__MAP_NEW)
   XLAT(_MAP_NEW),
- #define XLAT_VAL_26 ((unsigned) (_MAP_NEW))
- #define XLAT_STR_26 STRINGIFY(_MAP_NEW)
+ #define XLAT_VAL_27 ((unsigned) (_MAP_NEW))
+ #define XLAT_STR_27 STRINGIFY(_MAP_NEW)
 #endif
 #endif
 
 #if defined __sparc__
  XLAT(MAP_GROWSDOWN),
- #define XLAT_VAL_27 ((unsigned) (MAP_GROWSDOWN))
- #define XLAT_STR_27 STRINGIFY(MAP_GROWSDOWN)
-#elif defined __alpha__ || defined __mips__ || defined __xtensa__
- XLAT(MAP_GROWSDOWN),
  #define XLAT_VAL_28 ((unsigned) (MAP_GROWSDOWN))
  #define XLAT_STR_28 STRINGIFY(MAP_GROWSDOWN)
-#elif defined __hppa__
+#elif defined __alpha__ || defined __mips__ || defined __xtensa__
  XLAT(MAP_GROWSDOWN),
  #define XLAT_VAL_29 ((unsigned) (MAP_GROWSDOWN))
  #define XLAT_STR_29 STRINGIFY(MAP_GROWSDOWN)
-#else
+#elif defined __hppa__
  XLAT(MAP_GROWSDOWN),
  #define XLAT_VAL_30 ((unsigned) (MAP_GROWSDOWN))
  #define XLAT_STR_30 STRINGIFY(MAP_GROWSDOWN)
+#else
+ XLAT(MAP_GROWSDOWN),
+ #define XLAT_VAL_31 ((unsigned) (MAP_GROWSDOWN))
+ #define XLAT_STR_31 STRINGIFY(MAP_GROWSDOWN)
 #endif
 
 #if defined __ia64__
  XLAT(MAP_GROWSUP),
- #define XLAT_VAL_31 ((unsigned) (MAP_GROWSUP))
- #define XLAT_STR_31 STRINGIFY(MAP_GROWSUP)
+ #define XLAT_VAL_32 ((unsigned) (MAP_GROWSUP))
+ #define XLAT_STR_32 STRINGIFY(MAP_GROWSUP)
 #else
 #if defined(MAP_GROWSUP) || (defined(HAVE_DECL_MAP_GROWSUP) && HAVE_DECL_MAP_GROWSUP)
   XLAT(MAP_GROWSUP),
- #define XLAT_VAL_32 ((unsigned) (MAP_GROWSUP))
- #define XLAT_STR_32 STRINGIFY(MAP_GROWSUP)
+ #define XLAT_VAL_33 ((unsigned) (MAP_GROWSUP))
+ #define XLAT_STR_33 STRINGIFY(MAP_GROWSUP)
 #endif
 #endif
 
 #if defined __alpha__ || defined __mips__ || defined __xtensa__
- XLAT(MAP_DENYWRITE),
- #define XLAT_VAL_33 ((unsigned) (MAP_DENYWRITE))
- #define XLAT_STR_33 STRINGIFY(MAP_DENYWRITE)
-#else
  XLAT(MAP_DENYWRITE),
  #define XLAT_VAL_34 ((unsigned) (MAP_DENYWRITE))
  #define XLAT_STR_34 STRINGIFY(MAP_DENYWRITE)
+#else
+ XLAT(MAP_DENYWRITE),
+ #define XLAT_VAL_35 ((unsigned) (MAP_DENYWRITE))
+ #define XLAT_STR_35 STRINGIFY(MAP_DENYWRITE)
 #endif
 
 #if defined __alpha__ || defined __mips__ || defined __xtensa__
  XLAT(MAP_EXECUTABLE),
- #define XLAT_VAL_35 ((unsigned) (MAP_EXECUTABLE))
- #define XLAT_STR_35 STRINGIFY(MAP_EXECUTABLE)
-#else
- XLAT(MAP_EXECUTABLE),
  #define XLAT_VAL_36 ((unsigned) (MAP_EXECUTABLE))
  #define XLAT_STR_36 STRINGIFY(MAP_EXECUTABLE)
+#else
+ XLAT(MAP_EXECUTABLE),
+ #define XLAT_VAL_37 ((unsigned) (MAP_EXECUTABLE))
+ #define XLAT_STR_37 STRINGIFY(MAP_EXECUTABLE)
 #endif
 
 #if defined __sparc__
  XLAT(MAP_INHERIT),
- #define XLAT_VAL_37 ((unsigned) (MAP_INHERIT))
- #define XLAT_STR_37 STRINGIFY(MAP_INHERIT)
+ #define XLAT_VAL_38 ((unsigned) (MAP_INHERIT))
+ #define XLAT_STR_38 STRINGIFY(MAP_INHERIT)
 #else
 #if defined(MAP_INHERIT) || (defined(HAVE_DECL_MAP_INHERIT) && HAVE_DECL_MAP_INHERIT)
   XLAT(MAP_INHERIT),
- #define XLAT_VAL_38 ((unsigned) (MAP_INHERIT))
- #define XLAT_STR_38 STRINGIFY(MAP_INHERIT)
+ #define XLAT_VAL_39 ((unsigned) (MAP_INHERIT))
+ #define XLAT_STR_39 STRINGIFY(MAP_INHERIT)
 #endif
 #endif
 
 #if defined __alpha__
  XLAT(_MAP_INHERIT),
- #define XLAT_VAL_39 ((unsigned) (_MAP_INHERIT))
- #define XLAT_STR_39 STRINGIFY(_MAP_INHERIT)
+ #define XLAT_VAL_40 ((unsigned) (_MAP_INHERIT))
+ #define XLAT_STR_40 STRINGIFY(_MAP_INHERIT)
 #else
 #if defined(_MAP_INHERIT) || (defined(HAVE_DECL__MAP_INHERIT) && HAVE_DECL__MAP_INHERIT)
   XLAT(_MAP_INHERIT),
- #define XLAT_VAL_40 ((unsigned) (_MAP_INHERIT))
- #define XLAT_STR_40 STRINGIFY(_MAP_INHERIT)
+ #define XLAT_VAL_41 ((unsigned) (_MAP_INHERIT))
+ #define XLAT_STR_41 STRINGIFY(_MAP_INHERIT)
 #endif
 #endif
 
  XLAT(MAP_FILE),
- #define XLAT_VAL_41 ((unsigned) (MAP_FILE))
- #define XLAT_STR_41 STRINGIFY(MAP_FILE)
+ #define XLAT_VAL_42 ((unsigned) (MAP_FILE))
+ #define XLAT_STR_42 STRINGIFY(MAP_FILE)
 
 #if defined __powerpc__
  XLAT(MAP_LOCKED),
- #define XLAT_VAL_42 ((unsigned) (MAP_LOCKED))
- #define XLAT_STR_42 STRINGIFY(MAP_LOCKED)
-#elif defined __sparc__
- XLAT(MAP_LOCKED),
  #define XLAT_VAL_43 ((unsigned) (MAP_LOCKED))
  #define XLAT_STR_43 STRINGIFY(MAP_LOCKED)
-#elif defined __alpha__ || defined __mips__ || defined __xtensa__
+#elif defined __sparc__
  XLAT(MAP_LOCKED),
  #define XLAT_VAL_44 ((unsigned) (MAP_LOCKED))
  #define XLAT_STR_44 STRINGIFY(MAP_LOCKED)
-#else
+#elif defined __alpha__ || defined __mips__ || defined __xtensa__
  XLAT(MAP_LOCKED),
  #define XLAT_VAL_45 ((unsigned) (MAP_LOCKED))
  #define XLAT_STR_45 STRINGIFY(MAP_LOCKED)
+#else
+ XLAT(MAP_LOCKED),
+ #define XLAT_VAL_46 ((unsigned) (MAP_LOCKED))
+ #define XLAT_STR_46 STRINGIFY(MAP_LOCKED)
 #endif
 
 #if defined __alpha__
  XLAT(_MAP_HASSEMAPHORE),
- #define XLAT_VAL_46 ((unsigned) (_MAP_HASSEMAPHORE))
- #define XLAT_STR_46 STRINGIFY(_MAP_HASSEMAPHORE)
+ #define XLAT_VAL_47 ((unsigned) (_MAP_HASSEMAPHORE))
+ #define XLAT_STR_47 STRINGIFY(_MAP_HASSEMAPHORE)
 #else
 #if defined(_MAP_HASSEMAPHORE) || (defined(HAVE_DECL__MAP_HASSEMAPHORE) && HAVE_DECL__MAP_HASSEMAPHORE)
   XLAT(_MAP_HASSEMAPHORE),
- #define XLAT_VAL_47 ((unsigned) (_MAP_HASSEMAPHORE))
- #define XLAT_STR_47 STRINGIFY(_MAP_HASSEMAPHORE)
+ #define XLAT_VAL_48 ((unsigned) (_MAP_HASSEMAPHORE))
+ #define XLAT_STR_48 STRINGIFY(_MAP_HASSEMAPHORE)
 #endif
 #endif
 
 #if defined __hppa__ || defined __mips__ || defined __xtensa__
- XLAT(MAP_STACK),
- #define XLAT_VAL_48 ((unsigned) (MAP_STACK))
- #define XLAT_STR_48 STRINGIFY(MAP_STACK)
-#elif defined __alpha__
  XLAT(MAP_STACK),
  #define XLAT_VAL_49 ((unsigned) (MAP_STACK))
  #define XLAT_STR_49 STRINGIFY(MAP_STACK)
-#else
+#elif defined __alpha__
  XLAT(MAP_STACK),
  #define XLAT_VAL_50 ((unsigned) (MAP_STACK))
  #define XLAT_STR_50 STRINGIFY(MAP_STACK)
+#else
+ XLAT(MAP_STACK),
+ #define XLAT_VAL_51 ((unsigned) (MAP_STACK))
+ #define XLAT_STR_51 STRINGIFY(MAP_STACK)
 #endif
 
 #if defined __hppa__ || defined __mips__ || defined __xtensa__
  XLAT(MAP_HUGETLB),
- #define XLAT_VAL_51 ((unsigned) (MAP_HUGETLB))
- #define XLAT_STR_51 STRINGIFY(MAP_HUGETLB)
-#elif defined __alpha__
- XLAT(MAP_HUGETLB),
  #define XLAT_VAL_52 ((unsigned) (MAP_HUGETLB))
  #define XLAT_STR_52 STRINGIFY(MAP_HUGETLB)
-#else
+#elif defined __alpha__
  XLAT(MAP_HUGETLB),
  #define XLAT_VAL_53 ((unsigned) (MAP_HUGETLB))
  #define XLAT_STR_53 STRINGIFY(MAP_HUGETLB)
+#else
+ XLAT(MAP_HUGETLB),
+ #define XLAT_VAL_54 ((unsigned) (MAP_HUGETLB))
+ #define XLAT_STR_54 STRINGIFY(MAP_HUGETLB)
 #endif
 
  XLAT(MAP_SYNC),
- #define XLAT_VAL_54 ((unsigned) (MAP_SYNC))
- #define XLAT_STR_54 STRINGIFY(MAP_SYNC)
+ #define XLAT_VAL_55 ((unsigned) (MAP_SYNC))
+ #define XLAT_STR_55 STRINGIFY(MAP_SYNC)
 
 #if defined MAP_UNINITIALIZED && MAP_UNINITIALIZED == 0
 
@@ -783,64 +794,64 @@ static const struct xlat_data mmap_flags_xdata[] = {
 # endif
 #endif
  XLAT(MAP_UNINITIALIZED),
- #define XLAT_VAL_55 ((unsigned) (MAP_UNINITIALIZED))
- #define XLAT_STR_55 STRINGIFY(MAP_UNINITIALIZED)
+ #define XLAT_VAL_56 ((unsigned) (MAP_UNINITIALIZED))
+ #define XLAT_STR_56 STRINGIFY(MAP_UNINITIALIZED)
 
 #if defined __alpha__
  XLAT(MAP_FIXED_NOREPLACE),
- #define XLAT_VAL_56 ((unsigned) (MAP_FIXED_NOREPLACE))
- #define XLAT_STR_56 STRINGIFY(MAP_FIXED_NOREPLACE)
-#else
- XLAT(MAP_FIXED_NOREPLACE),
  #define XLAT_VAL_57 ((unsigned) (MAP_FIXED_NOREPLACE))
  #define XLAT_STR_57 STRINGIFY(MAP_FIXED_NOREPLACE)
+#else
+ XLAT(MAP_FIXED_NOREPLACE),
+ #define XLAT_VAL_58 ((unsigned) (MAP_FIXED_NOREPLACE))
+ #define XLAT_STR_58 STRINGIFY(MAP_FIXED_NOREPLACE)
 #endif
 
 #if defined __mips__ || defined __xtensa__
  XLAT(MAP_AUTOGROW),
- #define XLAT_VAL_58 ((unsigned) (MAP_AUTOGROW))
- #define XLAT_STR_58 STRINGIFY(MAP_AUTOGROW)
+ #define XLAT_VAL_59 ((unsigned) (MAP_AUTOGROW))
+ #define XLAT_STR_59 STRINGIFY(MAP_AUTOGROW)
 #else
 #if defined(MAP_AUTOGROW) || (defined(HAVE_DECL_MAP_AUTOGROW) && HAVE_DECL_MAP_AUTOGROW)
   XLAT(MAP_AUTOGROW),
- #define XLAT_VAL_59 ((unsigned) (MAP_AUTOGROW))
- #define XLAT_STR_59 STRINGIFY(MAP_AUTOGROW)
+ #define XLAT_VAL_60 ((unsigned) (MAP_AUTOGROW))
+ #define XLAT_STR_60 STRINGIFY(MAP_AUTOGROW)
 #endif
 #endif
 
 #if defined __mips__ || defined __xtensa__
  XLAT(MAP_AUTORSRV),
- #define XLAT_VAL_60 ((unsigned) (MAP_AUTORSRV))
- #define XLAT_STR_60 STRINGIFY(MAP_AUTORSRV)
+ #define XLAT_VAL_61 ((unsigned) (MAP_AUTORSRV))
+ #define XLAT_STR_61 STRINGIFY(MAP_AUTORSRV)
 #else
 #if defined(MAP_AUTORSRV) || (defined(HAVE_DECL_MAP_AUTORSRV) && HAVE_DECL_MAP_AUTORSRV)
   XLAT(MAP_AUTORSRV),
- #define XLAT_VAL_61 ((unsigned) (MAP_AUTORSRV))
- #define XLAT_STR_61 STRINGIFY(MAP_AUTORSRV)
+ #define XLAT_VAL_62 ((unsigned) (MAP_AUTORSRV))
+ #define XLAT_STR_62 STRINGIFY(MAP_AUTORSRV)
 #endif
 #endif
 
 #if defined __mips__ || defined __xtensa__
  XLAT(MAP_LOCAL),
- #define XLAT_VAL_62 ((unsigned) (MAP_LOCAL))
- #define XLAT_STR_62 STRINGIFY(MAP_LOCAL)
+ #define XLAT_VAL_63 ((unsigned) (MAP_LOCAL))
+ #define XLAT_STR_63 STRINGIFY(MAP_LOCAL)
 #else
 #if defined(MAP_LOCAL) || (defined(HAVE_DECL_MAP_LOCAL) && HAVE_DECL_MAP_LOCAL)
   XLAT(MAP_LOCAL),
- #define XLAT_VAL_63 ((unsigned) (MAP_LOCAL))
- #define XLAT_STR_63 STRINGIFY(MAP_LOCAL)
+ #define XLAT_VAL_64 ((unsigned) (MAP_LOCAL))
+ #define XLAT_STR_64 STRINGIFY(MAP_LOCAL)
 #endif
 #endif
 
 #if defined __alpha__
  XLAT(_MAP_UNALIGNED),
- #define XLAT_VAL_64 ((unsigned) (_MAP_UNALIGNED))
- #define XLAT_STR_64 STRINGIFY(_MAP_UNALIGNED)
+ #define XLAT_VAL_65 ((unsigned) (_MAP_UNALIGNED))
+ #define XLAT_STR_65 STRINGIFY(_MAP_UNALIGNED)
 #else
 #if defined(_MAP_UNALIGNED) || (defined(HAVE_DECL__MAP_UNALIGNED) && HAVE_DECL__MAP_UNALIGNED)
   XLAT(_MAP_UNALIGNED),
- #define XLAT_VAL_65 ((unsigned) (_MAP_UNALIGNED))
- #define XLAT_STR_65 STRINGIFY(_MAP_UNALIGNED)
+ #define XLAT_VAL_66 ((unsigned) (_MAP_UNALIGNED))
+ #define XLAT_STR_66 STRINGIFY(_MAP_UNALIGNED)
 #endif
 #endif
 };
@@ -1048,6 +1059,9 @@ const struct xlat mmap_flags[1] = { {
 #  ifdef XLAT_VAL_65
   | XLAT_VAL_65
 #  endif
+#  ifdef XLAT_VAL_66
+  | XLAT_VAL_66
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -1248,6 +1262,9 @@ const struct xlat mmap_flags[1] = { {
 #  ifdef XLAT_STR_65
   + sizeof(XLAT_STR_65)
 #  endif
+#  ifdef XLAT_STR_66
+  + sizeof(XLAT_STR_66)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -1384,6 +1401,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_64
 #  undef XLAT_STR_65
 #  undef XLAT_VAL_65
+#  undef XLAT_STR_66
+#  undef XLAT_VAL_66
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

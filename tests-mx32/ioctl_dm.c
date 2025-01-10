@@ -3,7 +3,7 @@
  *
  * Copyright (c) 2016 Mikulas Patocka <mpatocka@redhat.com>
  * Copyright (c) 2016 Eugene Syromyatnikov <evgsyr@gmail.com>
- * Copyright (c) 2016-2023 The strace developers.
+ * Copyright (c) 2016-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -521,8 +521,11 @@ main(void)
 	PRINT_DM_TARGET(6);
 	PRINT_DM_TARGET(7);
 	PRINT_DM_TARGET(8);
+	printf("%p", &dm_arg_open3->target9);
+#else
+	printf("...");
 #endif /* VERBOSE */
-	printf("...]) = %s\n", errstr);
+	printf("]) = %s\n", errstr);
 
 
 	/* DM_TARGET_MSG */

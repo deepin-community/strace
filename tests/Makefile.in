@@ -107,8 +107,8 @@ PRE_UNINSTALL = :
 POST_UNINSTALL = :
 build_triplet = @build@
 host_triplet = @host@
-@USE_BUNDLED_HEADERS_TRUE@am__append_1 = -I$(top_srcdir)/bundled/$(OS)/arch/$(KARCH)/include/uapi \
-@USE_BUNDLED_HEADERS_TRUE@		    -I$(top_srcdir)/bundled/$(OS)/include/uapi
+@USE_BUNDLED_HEADERS_TRUE@am__append_1 = -isystem $(top_srcdir)/bundled/$(OS)/arch/$(KARCH)/include/uapi \
+@USE_BUNDLED_HEADERS_TRUE@		    -isystem $(top_srcdir)/bundled/$(OS)/include/uapi
 
 check_PROGRAMS = $(am__EXEEXT_1) $(am__EXEEXT_2) _newselect-P$(EXEEXT) \
 	answer$(EXEEXT) arch_prctl-success$(EXEEXT) \
@@ -146,6 +146,10 @@ check_PROGRAMS = $(am__EXEEXT_1) $(am__EXEEXT_2) _newselect-P$(EXEEXT) \
 	io_uring_register-success-Xraw$(EXEEXT) \
 	io_uring_register-success-Xverbose$(EXEEXT) \
 	ioctl_block--pidns-translation$(EXEEXT) ioctl_dm-v$(EXEEXT) \
+	ioctl_epoll-success$(EXEEXT) \
+	ioctl_epoll-success-Xabbrev$(EXEEXT) \
+	ioctl_epoll-success-Xraw$(EXEEXT) \
+	ioctl_epoll-success-Xverbose$(EXEEXT) \
 	ioctl_evdev-success$(EXEEXT) \
 	ioctl_evdev-success-Xabbrev$(EXEEXT) \
 	ioctl_evdev-success-Xraw$(EXEEXT) \
@@ -191,8 +195,10 @@ check_PROGRAMS = $(am__EXEEXT_1) $(am__EXEEXT_2) _newselect-P$(EXEEXT) \
 	ioctl_kd-success-s1024-Xverbose$(EXEEXT) \
 	ioctl_lirc-success$(EXEEXT) ioctl_loop-nv$(EXEEXT) \
 	ioctl_loop-v$(EXEEXT) ioctl_mtd-success$(EXEEXT) \
-	ioctl_nsfs$(EXEEXT) ioctl_perf-success$(EXEEXT) \
-	ioctl_ptp-success$(EXEEXT) ioctl_ptp-success-Xabbrev$(EXEEXT) \
+	ioctl_nsfs$(EXEEXT) ioctl_nsfs-ns_get_pid$(EXEEXT) \
+	ioctl_nsfs-ns_get_pid--pidns-translation$(EXEEXT) \
+	ioctl_perf-success$(EXEEXT) ioctl_ptp-success$(EXEEXT) \
+	ioctl_ptp-success-Xabbrev$(EXEEXT) \
 	ioctl_ptp-success-Xraw$(EXEEXT) \
 	ioctl_ptp-success-Xverbose$(EXEEXT) ioctl_rtc-success$(EXEEXT) \
 	ioctl_rtc-v$(EXEEXT) ioctl_seccomp$(EXEEXT) \
@@ -214,6 +220,8 @@ check_PROGRAMS = $(am__EXEEXT_1) $(am__EXEEXT_2) _newselect-P$(EXEEXT) \
 	ioctl_v4l2-success-v-Xabbrev$(EXEEXT) \
 	ioctl_v4l2-success-v-Xraw$(EXEEXT) \
 	ioctl_v4l2-success-v-Xverbose$(EXEEXT) \
+	ioctl_watchdog-success$(EXEEXT) \
+	ioctl_watchdog-success-v$(EXEEXT) \
 	ioprio--pidns-translation$(EXEEXT) \
 	ip_local_port_range-success$(EXEEXT) \
 	ip_local_port_range-success-Xabbrev$(EXEEXT) \
@@ -244,10 +252,22 @@ check_PROGRAMS = $(am__EXEEXT_1) $(am__EXEEXT_2) _newselect-P$(EXEEXT) \
 	ppoll-e-trace-fds-23$(EXEEXT) ppoll-e-trace-fds-23-42$(EXEEXT) \
 	ppoll-e-trace-fds-not-9-42-P$(EXEEXT) ppoll-v$(EXEEXT) \
 	prctl-fp-mode$(EXEEXT) prctl-mdwe$(EXEEXT) \
+	prctl-no-args-success$(EXEEXT) \
+	prctl-no-args-success-Xabbrev$(EXEEXT) \
+	prctl-no-args-success-Xraw$(EXEEXT) \
+	prctl-no-args-success-Xverbose$(EXEEXT) \
 	prctl-pac-enabled-keys-success$(EXEEXT) \
 	prctl-pac-enabled-keys-success-Xabbrev$(EXEEXT) \
 	prctl-pac-enabled-keys-success-Xraw$(EXEEXT) \
 	prctl-pac-enabled-keys-success-Xverbose$(EXEEXT) \
+	prctl-ppc-dexcr-success$(EXEEXT) \
+	prctl-ppc-dexcr-success-Xabbrev$(EXEEXT) \
+	prctl-ppc-dexcr-success-Xraw$(EXEEXT) \
+	prctl-ppc-dexcr-success-Xverbose$(EXEEXT) \
+	prctl-riscv-v-ctrl-success$(EXEEXT) \
+	prctl-riscv-v-ctrl-success-Xabbrev$(EXEEXT) \
+	prctl-riscv-v-ctrl-success-Xraw$(EXEEXT) \
+	prctl-riscv-v-ctrl-success-Xverbose$(EXEEXT) \
 	prctl-sched-core--pidns-translation$(EXEEXT) \
 	prctl-sched-core--pidns-translation-Xabbrev$(EXEEXT) \
 	prctl-sched-core--pidns-translation-Xraw$(EXEEXT) \
@@ -407,9 +427,11 @@ am__EXEEXT_1 = _newselect$(EXEEXT) accept$(EXEEXT) accept4$(EXEEXT) \
 	epoll_create1$(EXEEXT) epoll_ctl$(EXEEXT) epoll_pwait$(EXEEXT) \
 	epoll_pwait2$(EXEEXT) epoll_pwait2-P$(EXEEXT) \
 	epoll_pwait2-y$(EXEEXT) epoll_wait$(EXEEXT) \
-	erestartsys$(EXEEXT) eventfd$(EXEEXT) execve$(EXEEXT) \
-	execveat$(EXEEXT) faccessat$(EXEEXT) faccessat-P$(EXEEXT) \
-	faccessat-y$(EXEEXT) faccessat-yy$(EXEEXT) faccessat2$(EXEEXT) \
+	erestartsys$(EXEEXT) eventfd$(EXEEXT) \
+	eventfd--decode-fd-eventfd$(EXEEXT) eventfd-yy$(EXEEXT) \
+	execve$(EXEEXT) execveat$(EXEEXT) faccessat$(EXEEXT) \
+	faccessat-P$(EXEEXT) faccessat-y$(EXEEXT) \
+	faccessat-yy$(EXEEXT) faccessat2$(EXEEXT) \
 	faccessat2-P$(EXEEXT) faccessat2-y$(EXEEXT) \
 	faccessat2-yy$(EXEEXT) fadvise64$(EXEEXT) \
 	fadvise64_64$(EXEEXT) fallocate$(EXEEXT) \
@@ -453,48 +475,51 @@ am__EXEEXT_1 = _newselect$(EXEEXT) accept$(EXEEXT) accept4$(EXEEXT) \
 	io_uring_register$(EXEEXT) io_uring_register-Xabbrev$(EXEEXT) \
 	io_uring_register-Xraw$(EXEEXT) \
 	io_uring_register-Xverbose$(EXEEXT) io_uring_setup$(EXEEXT) \
-	ioctl$(EXEEXT) ioctl_block$(EXEEXT) ioctl_counter$(EXEEXT) \
-	ioctl_counter-Xabbrev$(EXEEXT) ioctl_counter-Xraw$(EXEEXT) \
-	ioctl_counter-Xverbose$(EXEEXT) ioctl_dm$(EXEEXT) \
-	ioctl_evdev$(EXEEXT) ioctl_evdev-Xabbrev$(EXEEXT) \
-	ioctl_evdev-Xraw$(EXEEXT) ioctl_evdev-Xverbose$(EXEEXT) \
-	ioctl_evdev-v$(EXEEXT) ioctl_evdev-v-Xabbrev$(EXEEXT) \
-	ioctl_evdev-v-Xraw$(EXEEXT) ioctl_evdev-v-Xverbose$(EXEEXT) \
-	ioctl_fiemap$(EXEEXT) ioctl_fiemap-Xabbrev$(EXEEXT) \
-	ioctl_fiemap-Xraw$(EXEEXT) ioctl_fiemap-Xverbose$(EXEEXT) \
-	ioctl_fs_f$(EXEEXT) ioctl_fs_f-Xabbrev$(EXEEXT) \
-	ioctl_fs_f-Xraw$(EXEEXT) ioctl_fs_f-Xverbose$(EXEEXT) \
-	ioctl_fs_x$(EXEEXT) ioctl_fs_x-Xabbrev$(EXEEXT) \
-	ioctl_fs_x-Xraw$(EXEEXT) ioctl_fs_x-Xverbose$(EXEEXT) \
-	ioctl_gpio$(EXEEXT) ioctl_gpio-Xabbrev$(EXEEXT) \
-	ioctl_gpio-Xraw$(EXEEXT) ioctl_gpio-Xverbose$(EXEEXT) \
-	ioctl_gpio-v$(EXEEXT) ioctl_gpio-v-Xabbrev$(EXEEXT) \
-	ioctl_gpio-v-Xraw$(EXEEXT) ioctl_gpio-v-Xverbose$(EXEEXT) \
-	ioctl_hdio$(EXEEXT) ioctl_hdio-Xabbrev$(EXEEXT) \
-	ioctl_hdio-Xraw$(EXEEXT) ioctl_hdio-Xverbose$(EXEEXT) \
-	ioctl_hdio-v$(EXEEXT) ioctl_hdio-v-Xabbrev$(EXEEXT) \
-	ioctl_hdio-v-Xraw$(EXEEXT) ioctl_hdio-v-Xverbose$(EXEEXT) \
-	ioctl_inotify$(EXEEXT) ioctl_kd$(EXEEXT) \
-	ioctl_kd-Xabbrev$(EXEEXT) ioctl_kd-Xraw$(EXEEXT) \
-	ioctl_kd-Xverbose$(EXEEXT) ioctl_kvm_run$(EXEEXT) \
-	ioctl_kvm_run-v$(EXEEXT) ioctl_kvm_run_auxstr_vcpu$(EXEEXT) \
-	ioctl_lirc$(EXEEXT) ioctl_loop$(EXEEXT) ioctl_mtd$(EXEEXT) \
-	ioctl_nbd$(EXEEXT) ioctl_perf$(EXEEXT) ioctl_ptp$(EXEEXT) \
-	ioctl_ptp-Xabbrev$(EXEEXT) ioctl_ptp-Xraw$(EXEEXT) \
-	ioctl_ptp-Xverbose$(EXEEXT) ioctl_random$(EXEEXT) \
-	ioctl_rtc$(EXEEXT) ioctl_scsi$(EXEEXT) ioctl_sg_io_v3$(EXEEXT) \
-	ioctl_sg_io_v4$(EXEEXT) ioctl_sock$(EXEEXT) \
-	ioctl_sock_gifconf$(EXEEXT) ioctl_tee$(EXEEXT) \
-	ioctl_termios$(EXEEXT) ioctl_termios-v$(EXEEXT) \
-	ioctl_tiocm$(EXEEXT) ioctl_ubi$(EXEEXT) ioctl_uffdio$(EXEEXT) \
-	ioctl_v4l2$(EXEEXT) ioctl_v4l2-Xabbrev$(EXEEXT) \
-	ioctl_v4l2-Xraw$(EXEEXT) ioctl_v4l2-Xverbose$(EXEEXT) \
-	ioctl_v4l2-v$(EXEEXT) ioctl_v4l2-v-Xabbrev$(EXEEXT) \
-	ioctl_v4l2-v-Xraw$(EXEEXT) ioctl_v4l2-v-Xverbose$(EXEEXT) \
-	ioctl_watchdog$(EXEEXT) ioctl_winsize$(EXEEXT) ioperm$(EXEEXT) \
-	iopl$(EXEEXT) ioprio$(EXEEXT) ioprio-Xabbrev$(EXEEXT) \
-	ioprio-Xraw$(EXEEXT) ioprio-Xverbose$(EXEEXT) \
-	ip_local_port_range$(EXEEXT) \
+	ioctl$(EXEEXT) ioctl-v$(EXEEXT) ioctl_block$(EXEEXT) \
+	ioctl_counter$(EXEEXT) ioctl_counter-Xabbrev$(EXEEXT) \
+	ioctl_counter-Xraw$(EXEEXT) ioctl_counter-Xverbose$(EXEEXT) \
+	ioctl_dm$(EXEEXT) ioctl_epoll$(EXEEXT) \
+	ioctl_epoll-Xabbrev$(EXEEXT) ioctl_epoll-Xraw$(EXEEXT) \
+	ioctl_epoll-Xverbose$(EXEEXT) ioctl_evdev$(EXEEXT) \
+	ioctl_evdev-Xabbrev$(EXEEXT) ioctl_evdev-Xraw$(EXEEXT) \
+	ioctl_evdev-Xverbose$(EXEEXT) ioctl_evdev-v$(EXEEXT) \
+	ioctl_evdev-v-Xabbrev$(EXEEXT) ioctl_evdev-v-Xraw$(EXEEXT) \
+	ioctl_evdev-v-Xverbose$(EXEEXT) ioctl_fiemap$(EXEEXT) \
+	ioctl_fiemap-Xabbrev$(EXEEXT) ioctl_fiemap-Xraw$(EXEEXT) \
+	ioctl_fiemap-Xverbose$(EXEEXT) ioctl_fs_f$(EXEEXT) \
+	ioctl_fs_f-Xabbrev$(EXEEXT) ioctl_fs_f-Xraw$(EXEEXT) \
+	ioctl_fs_f-Xverbose$(EXEEXT) ioctl_fs_x$(EXEEXT) \
+	ioctl_fs_x-Xabbrev$(EXEEXT) ioctl_fs_x-Xraw$(EXEEXT) \
+	ioctl_fs_x-Xverbose$(EXEEXT) ioctl_gpio$(EXEEXT) \
+	ioctl_gpio-Xabbrev$(EXEEXT) ioctl_gpio-Xraw$(EXEEXT) \
+	ioctl_gpio-Xverbose$(EXEEXT) ioctl_gpio-v$(EXEEXT) \
+	ioctl_gpio-v-Xabbrev$(EXEEXT) ioctl_gpio-v-Xraw$(EXEEXT) \
+	ioctl_gpio-v-Xverbose$(EXEEXT) ioctl_hdio$(EXEEXT) \
+	ioctl_hdio-Xabbrev$(EXEEXT) ioctl_hdio-Xraw$(EXEEXT) \
+	ioctl_hdio-Xverbose$(EXEEXT) ioctl_hdio-v$(EXEEXT) \
+	ioctl_hdio-v-Xabbrev$(EXEEXT) ioctl_hdio-v-Xraw$(EXEEXT) \
+	ioctl_hdio-v-Xverbose$(EXEEXT) ioctl_inotify$(EXEEXT) \
+	ioctl_kd$(EXEEXT) ioctl_kd-Xabbrev$(EXEEXT) \
+	ioctl_kd-Xraw$(EXEEXT) ioctl_kd-Xverbose$(EXEEXT) \
+	ioctl_kvm_run$(EXEEXT) ioctl_kvm_run-v$(EXEEXT) \
+	ioctl_kvm_run_auxstr_vcpu$(EXEEXT) ioctl_lirc$(EXEEXT) \
+	ioctl_loop$(EXEEXT) ioctl_mtd$(EXEEXT) ioctl_nbd$(EXEEXT) \
+	ioctl_nsfs-ns_mnt_get$(EXEEXT) ioctl_perf$(EXEEXT) \
+	ioctl_ptp$(EXEEXT) ioctl_ptp-Xabbrev$(EXEEXT) \
+	ioctl_ptp-Xraw$(EXEEXT) ioctl_ptp-Xverbose$(EXEEXT) \
+	ioctl_random$(EXEEXT) ioctl_rtc$(EXEEXT) ioctl_scsi$(EXEEXT) \
+	ioctl_sg_io_v3$(EXEEXT) ioctl_sg_io_v4$(EXEEXT) \
+	ioctl_sock$(EXEEXT) ioctl_sock_gifconf$(EXEEXT) \
+	ioctl_tee$(EXEEXT) ioctl_termios$(EXEEXT) \
+	ioctl_termios-v$(EXEEXT) ioctl_tiocm$(EXEEXT) \
+	ioctl_ubi$(EXEEXT) ioctl_uffdio$(EXEEXT) ioctl_v4l2$(EXEEXT) \
+	ioctl_v4l2-Xabbrev$(EXEEXT) ioctl_v4l2-Xraw$(EXEEXT) \
+	ioctl_v4l2-Xverbose$(EXEEXT) ioctl_v4l2-v$(EXEEXT) \
+	ioctl_v4l2-v-Xabbrev$(EXEEXT) ioctl_v4l2-v-Xraw$(EXEEXT) \
+	ioctl_v4l2-v-Xverbose$(EXEEXT) ioctl_watchdog$(EXEEXT) \
+	ioctl_winsize$(EXEEXT) ioperm$(EXEEXT) iopl$(EXEEXT) \
+	ioprio$(EXEEXT) ioprio-Xabbrev$(EXEEXT) ioprio-Xraw$(EXEEXT) \
+	ioprio-Xverbose$(EXEEXT) ip_local_port_range$(EXEEXT) \
 	ip_local_port_range-Xabbrev$(EXEEXT) \
 	ip_local_port_range-Xraw$(EXEEXT) \
 	ip_local_port_range-Xverbose$(EXEEXT) ip_mreq$(EXEEXT) \
@@ -549,8 +574,9 @@ am__EXEEXT_1 = _newselect$(EXEEXT) accept$(EXEEXT) accept4$(EXEEXT) \
 	move_pages-Xabbrev$(EXEEXT) move_pages-Xraw$(EXEEXT) \
 	move_pages-Xverbose$(EXEEXT) mq$(EXEEXT) mq_sendrecv$(EXEEXT) \
 	mq_sendrecv-read$(EXEEXT) mq_sendrecv-write$(EXEEXT) \
-	msg_control$(EXEEXT) msg_name$(EXEEXT) munlockall$(EXEEXT) \
-	nanosleep$(EXEEXT) net--decode-fds-all-netlink$(EXEEXT) \
+	mseal$(EXEEXT) msg_control$(EXEEXT) msg_name$(EXEEXT) \
+	munlockall$(EXEEXT) nanosleep$(EXEEXT) \
+	net--decode-fds-all-netlink$(EXEEXT) \
 	net--decode-fds-dev-netlink$(EXEEXT) \
 	net--decode-fds-none-netlink$(EXEEXT) \
 	net--decode-fds-path-netlink$(EXEEXT) \
@@ -563,17 +589,17 @@ am__EXEEXT_1 = _newselect$(EXEEXT) accept$(EXEEXT) accept4$(EXEEXT) \
 	net-yy-netlink$(EXEEXT) net-yy-unix$(EXEEXT) \
 	netlink_audit$(EXEEXT) netlink_crypto$(EXEEXT) \
 	netlink_generic$(EXEEXT) netlink_kobject_uevent$(EXEEXT) \
-	netlink_netfilter$(EXEEXT) netlink_protocol$(EXEEXT) \
-	netlink_route$(EXEEXT) netlink_selinux$(EXEEXT) \
-	netlink_sock_diag$(EXEEXT) netlink_xfrm$(EXEEXT) \
-	newfstatat$(EXEEXT) nfnetlink_acct$(EXEEXT) \
-	nfnetlink_cthelper$(EXEEXT) nfnetlink_ctnetlink$(EXEEXT) \
-	nfnetlink_ctnetlink_exp$(EXEEXT) nfnetlink_cttimeout$(EXEEXT) \
-	nfnetlink_ipset$(EXEEXT) nfnetlink_nft_compat$(EXEEXT) \
-	nfnetlink_nftables$(EXEEXT) nfnetlink_osf$(EXEEXT) \
-	nfnetlink_queue$(EXEEXT) nfnetlink_ulog$(EXEEXT) \
-	nlattr$(EXEEXT) nlattr_br_port_msg$(EXEEXT) \
-	nlattr_cachereport$(EXEEXT) \
+	netlink_netfilter$(EXEEXT) netlink_nlctrl$(EXEEXT) \
+	netlink_protocol$(EXEEXT) netlink_route$(EXEEXT) \
+	netlink_selinux$(EXEEXT) netlink_sock_diag$(EXEEXT) \
+	netlink_xfrm$(EXEEXT) newfstatat$(EXEEXT) \
+	nfnetlink_acct$(EXEEXT) nfnetlink_cthelper$(EXEEXT) \
+	nfnetlink_ctnetlink$(EXEEXT) nfnetlink_ctnetlink_exp$(EXEEXT) \
+	nfnetlink_cttimeout$(EXEEXT) nfnetlink_ipset$(EXEEXT) \
+	nfnetlink_nft_compat$(EXEEXT) nfnetlink_nftables$(EXEEXT) \
+	nfnetlink_osf$(EXEEXT) nfnetlink_queue$(EXEEXT) \
+	nfnetlink_ulog$(EXEEXT) nlattr$(EXEEXT) \
+	nlattr_br_port_msg$(EXEEXT) nlattr_cachereport$(EXEEXT) \
 	nlattr_cachereport-Xabbrev$(EXEEXT) \
 	nlattr_cachereport-Xraw$(EXEEXT) \
 	nlattr_cachereport-Xverbose$(EXEEXT) \
@@ -640,12 +666,25 @@ am__EXEEXT_1 = _newselect$(EXEEXT) accept$(EXEEXT) accept4$(EXEEXT) \
 	prctl-cap-ambient$(EXEEXT) prctl-capbset$(EXEEXT) \
 	prctl-dumpable$(EXEEXT) prctl-mce-kill$(EXEEXT) \
 	prctl-name$(EXEEXT) prctl-no-args$(EXEEXT) \
+	prctl-no-args-Xabbrev$(EXEEXT) prctl-no-args-Xraw$(EXEEXT) \
+	prctl-no-args-Xverbose$(EXEEXT) \
 	prctl-pac-enabled-keys$(EXEEXT) \
 	prctl-pac-enabled-keys-Xabbrev$(EXEEXT) \
 	prctl-pac-enabled-keys-Xraw$(EXEEXT) \
 	prctl-pac-enabled-keys-Xverbose$(EXEEXT) \
 	prctl-pac-reset-keys$(EXEEXT) prctl-pdeathsig$(EXEEXT) \
-	prctl-sched-core$(EXEEXT) prctl-sched-core-Xabbrev$(EXEEXT) \
+	prctl-ppc-dexcr$(EXEEXT) prctl-ppc-dexcr-Xabbrev$(EXEEXT) \
+	prctl-ppc-dexcr-Xraw$(EXEEXT) \
+	prctl-ppc-dexcr-Xverbose$(EXEEXT) \
+	prctl-riscv-icache-flush-ctx$(EXEEXT) \
+	prctl-riscv-icache-flush-ctx-Xabbrev$(EXEEXT) \
+	prctl-riscv-icache-flush-ctx-Xraw$(EXEEXT) \
+	prctl-riscv-icache-flush-ctx-Xverbose$(EXEEXT) \
+	prctl-riscv-v-ctrl$(EXEEXT) \
+	prctl-riscv-v-ctrl-Xabbrev$(EXEEXT) \
+	prctl-riscv-v-ctrl-Xraw$(EXEEXT) \
+	prctl-riscv-v-ctrl-Xverbose$(EXEEXT) prctl-sched-core$(EXEEXT) \
+	prctl-sched-core-Xabbrev$(EXEEXT) \
 	prctl-sched-core-Xraw$(EXEEXT) \
 	prctl-sched-core-Xverbose$(EXEEXT) prctl-securebits$(EXEEXT) \
 	prctl-set_vma$(EXEEXT) prctl-sme$(EXEEXT) \
@@ -856,7 +895,7 @@ am_libtests_a_OBJECTS = libtests_a-clock_t_str.$(OBJEXT) \
 	libtests_a-hexquote_strndup.$(OBJEXT) \
 	libtests_a-ifindex.$(OBJEXT) \
 	libtests_a-inode_of_sockfd.$(OBJEXT) \
-	libtests_a-libmmsg.$(OBJEXT) \
+	libtests_a-k_sockopt.$(OBJEXT) libtests_a-libmmsg.$(OBJEXT) \
 	libtests_a-libsocketcall.$(OBJEXT) \
 	libtests_a-lock_file.$(OBJEXT) \
 	libtests_a-overflowuid.$(OBJEXT) libtests_a-pidns.$(OBJEXT) \
@@ -1401,6 +1440,16 @@ eventfd_SOURCES = eventfd.c
 eventfd_OBJECTS = eventfd.$(OBJEXT)
 eventfd_LDADD = $(LDADD)
 eventfd_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+eventfd__decode_fd_eventfd_SOURCES = eventfd--decode-fd-eventfd.c
+eventfd__decode_fd_eventfd_OBJECTS =  \
+	eventfd--decode-fd-eventfd.$(OBJEXT)
+eventfd__decode_fd_eventfd_LDADD = $(LDADD)
+eventfd__decode_fd_eventfd_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+eventfd_yy_SOURCES = eventfd-yy.c
+eventfd_yy_OBJECTS = eventfd-yy.$(OBJEXT)
+eventfd_yy_LDADD = $(LDADD)
+eventfd_yy_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
 execve_SOURCES = execve.c
 execve_OBJECTS = execve.$(OBJEXT)
 execve_LDADD = $(LDADD)
@@ -2220,6 +2269,10 @@ ioctl_SOURCES = ioctl.c
 ioctl_OBJECTS = ioctl.$(OBJEXT)
 ioctl_LDADD = $(LDADD)
 ioctl_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+ioctl_v_SOURCES = ioctl-v.c
+ioctl_v_OBJECTS = ioctl-v.$(OBJEXT)
+ioctl_v_LDADD = $(LDADD)
+ioctl_v_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
 ioctl_block_SOURCES = ioctl_block.c
 ioctl_block_OBJECTS = ioctl_block.$(OBJEXT)
 ioctl_block_LDADD = $(LDADD)
@@ -2255,6 +2308,43 @@ ioctl_dm_v_SOURCES = ioctl_dm-v.c
 ioctl_dm_v_OBJECTS = ioctl_dm-v.$(OBJEXT)
 ioctl_dm_v_LDADD = $(LDADD)
 ioctl_dm_v_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+ioctl_epoll_SOURCES = ioctl_epoll.c
+ioctl_epoll_OBJECTS = ioctl_epoll.$(OBJEXT)
+ioctl_epoll_LDADD = $(LDADD)
+ioctl_epoll_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+ioctl_epoll_Xabbrev_SOURCES = ioctl_epoll-Xabbrev.c
+ioctl_epoll_Xabbrev_OBJECTS = ioctl_epoll-Xabbrev.$(OBJEXT)
+ioctl_epoll_Xabbrev_LDADD = $(LDADD)
+ioctl_epoll_Xabbrev_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+ioctl_epoll_Xraw_SOURCES = ioctl_epoll-Xraw.c
+ioctl_epoll_Xraw_OBJECTS = ioctl_epoll-Xraw.$(OBJEXT)
+ioctl_epoll_Xraw_LDADD = $(LDADD)
+ioctl_epoll_Xraw_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+ioctl_epoll_Xverbose_SOURCES = ioctl_epoll-Xverbose.c
+ioctl_epoll_Xverbose_OBJECTS = ioctl_epoll-Xverbose.$(OBJEXT)
+ioctl_epoll_Xverbose_LDADD = $(LDADD)
+ioctl_epoll_Xverbose_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+ioctl_epoll_success_SOURCES = ioctl_epoll-success.c
+ioctl_epoll_success_OBJECTS = ioctl_epoll-success.$(OBJEXT)
+ioctl_epoll_success_LDADD = $(LDADD)
+ioctl_epoll_success_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+ioctl_epoll_success_Xabbrev_SOURCES = ioctl_epoll-success-Xabbrev.c
+ioctl_epoll_success_Xabbrev_OBJECTS =  \
+	ioctl_epoll-success-Xabbrev.$(OBJEXT)
+ioctl_epoll_success_Xabbrev_LDADD = $(LDADD)
+ioctl_epoll_success_Xabbrev_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+ioctl_epoll_success_Xraw_SOURCES = ioctl_epoll-success-Xraw.c
+ioctl_epoll_success_Xraw_OBJECTS = ioctl_epoll-success-Xraw.$(OBJEXT)
+ioctl_epoll_success_Xraw_LDADD = $(LDADD)
+ioctl_epoll_success_Xraw_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+ioctl_epoll_success_Xverbose_SOURCES = ioctl_epoll-success-Xverbose.c
+ioctl_epoll_success_Xverbose_OBJECTS =  \
+	ioctl_epoll-success-Xverbose.$(OBJEXT)
+ioctl_epoll_success_Xverbose_LDADD = $(LDADD)
+ioctl_epoll_success_Xverbose_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
 ioctl_evdev_SOURCES = ioctl_evdev.c
 ioctl_evdev_OBJECTS = ioctl_evdev.$(OBJEXT)
 ioctl_evdev_LDADD = $(LDADD)
@@ -2713,6 +2803,21 @@ ioctl_nsfs_SOURCES = ioctl_nsfs.c
 ioctl_nsfs_OBJECTS = ioctl_nsfs.$(OBJEXT)
 ioctl_nsfs_LDADD = $(LDADD)
 ioctl_nsfs_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+ioctl_nsfs_ns_get_pid_SOURCES = ioctl_nsfs-ns_get_pid.c
+ioctl_nsfs_ns_get_pid_OBJECTS = ioctl_nsfs-ns_get_pid.$(OBJEXT)
+ioctl_nsfs_ns_get_pid_LDADD = $(LDADD)
+ioctl_nsfs_ns_get_pid_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+ioctl_nsfs_ns_get_pid__pidns_translation_SOURCES =  \
+	ioctl_nsfs-ns_get_pid--pidns-translation.c
+ioctl_nsfs_ns_get_pid__pidns_translation_OBJECTS =  \
+	ioctl_nsfs-ns_get_pid--pidns-translation.$(OBJEXT)
+ioctl_nsfs_ns_get_pid__pidns_translation_LDADD = $(LDADD)
+ioctl_nsfs_ns_get_pid__pidns_translation_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+ioctl_nsfs_ns_mnt_get_SOURCES = ioctl_nsfs-ns_mnt_get.c
+ioctl_nsfs_ns_mnt_get_OBJECTS = ioctl_nsfs-ns_mnt_get.$(OBJEXT)
+ioctl_nsfs_ns_mnt_get_LDADD = $(LDADD)
+ioctl_nsfs_ns_mnt_get_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
 ioctl_perf_SOURCES = ioctl_perf.c
 ioctl_perf_OBJECTS = ioctl_perf.$(OBJEXT)
 ioctl_perf_LDADD = $(LDADD)
@@ -2973,6 +3078,15 @@ ioctl_watchdog_SOURCES = ioctl_watchdog.c
 ioctl_watchdog_OBJECTS = ioctl_watchdog.$(OBJEXT)
 ioctl_watchdog_LDADD = $(LDADD)
 ioctl_watchdog_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+ioctl_watchdog_success_SOURCES = ioctl_watchdog-success.c
+ioctl_watchdog_success_OBJECTS = ioctl_watchdog-success.$(OBJEXT)
+ioctl_watchdog_success_LDADD = $(LDADD)
+ioctl_watchdog_success_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+ioctl_watchdog_success_v_SOURCES = ioctl_watchdog-success-v.c
+ioctl_watchdog_success_v_OBJECTS = ioctl_watchdog-success-v.$(OBJEXT)
+ioctl_watchdog_success_v_LDADD = $(LDADD)
+ioctl_watchdog_success_v_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
 ioctl_winsize_SOURCES = ioctl_winsize.c
 ioctl_winsize_OBJECTS = ioctl_winsize.$(OBJEXT)
 ioctl_winsize_LDADD = $(LDADD)
@@ -3622,6 +3736,10 @@ mq_sendrecv_write_SOURCES = mq_sendrecv-write.c
 mq_sendrecv_write_OBJECTS = mq_sendrecv-write.$(OBJEXT)
 mq_sendrecv_write_LDADD = $(LDADD)
 mq_sendrecv_write_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+mseal_SOURCES = mseal.c
+mseal_OBJECTS = mseal.$(OBJEXT)
+mseal_LDADD = $(LDADD)
+mseal_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
 msg_control_SOURCES = msg_control.c
 msg_control_OBJECTS = msg_control.$(OBJEXT)
 msg_control_LDADD = $(LDADD)
@@ -3779,6 +3897,10 @@ netlink_netlink_diag_SOURCES = netlink_netlink_diag.c
 netlink_netlink_diag_OBJECTS = netlink_netlink_diag.$(OBJEXT)
 netlink_netlink_diag_LDADD = $(LDADD)
 netlink_netlink_diag_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+netlink_nlctrl_SOURCES = netlink_nlctrl.c
+netlink_nlctrl_OBJECTS = netlink_nlctrl.$(OBJEXT)
+netlink_nlctrl_LDADD = $(LDADD)
+netlink_nlctrl_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
 netlink_protocol_SOURCES = netlink_protocol.c
 netlink_protocol_OBJECTS = netlink_protocol.$(OBJEXT)
 netlink_protocol_LDADD = $(LDADD)
@@ -4500,6 +4622,42 @@ prctl_no_args_SOURCES = prctl-no-args.c
 prctl_no_args_OBJECTS = prctl-no-args.$(OBJEXT)
 prctl_no_args_LDADD = $(LDADD)
 prctl_no_args_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+prctl_no_args_Xabbrev_SOURCES = prctl-no-args-Xabbrev.c
+prctl_no_args_Xabbrev_OBJECTS = prctl-no-args-Xabbrev.$(OBJEXT)
+prctl_no_args_Xabbrev_LDADD = $(LDADD)
+prctl_no_args_Xabbrev_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+prctl_no_args_Xraw_SOURCES = prctl-no-args-Xraw.c
+prctl_no_args_Xraw_OBJECTS = prctl-no-args-Xraw.$(OBJEXT)
+prctl_no_args_Xraw_LDADD = $(LDADD)
+prctl_no_args_Xraw_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+prctl_no_args_Xverbose_SOURCES = prctl-no-args-Xverbose.c
+prctl_no_args_Xverbose_OBJECTS = prctl-no-args-Xverbose.$(OBJEXT)
+prctl_no_args_Xverbose_LDADD = $(LDADD)
+prctl_no_args_Xverbose_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+prctl_no_args_success_SOURCES = prctl-no-args-success.c
+prctl_no_args_success_OBJECTS = prctl-no-args-success.$(OBJEXT)
+prctl_no_args_success_LDADD = $(LDADD)
+prctl_no_args_success_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+prctl_no_args_success_Xabbrev_SOURCES =  \
+	prctl-no-args-success-Xabbrev.c
+prctl_no_args_success_Xabbrev_OBJECTS =  \
+	prctl-no-args-success-Xabbrev.$(OBJEXT)
+prctl_no_args_success_Xabbrev_LDADD = $(LDADD)
+prctl_no_args_success_Xabbrev_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+prctl_no_args_success_Xraw_SOURCES = prctl-no-args-success-Xraw.c
+prctl_no_args_success_Xraw_OBJECTS =  \
+	prctl-no-args-success-Xraw.$(OBJEXT)
+prctl_no_args_success_Xraw_LDADD = $(LDADD)
+prctl_no_args_success_Xraw_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+prctl_no_args_success_Xverbose_SOURCES =  \
+	prctl-no-args-success-Xverbose.c
+prctl_no_args_success_Xverbose_OBJECTS =  \
+	prctl-no-args-success-Xverbose.$(OBJEXT)
+prctl_no_args_success_Xverbose_LDADD = $(LDADD)
+prctl_no_args_success_Xverbose_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
 prctl_pac_enabled_keys_SOURCES = prctl-pac-enabled-keys.c
 prctl_pac_enabled_keys_OBJECTS = prctl-pac-enabled-keys.$(OBJEXT)
 prctl_pac_enabled_keys_LDADD = $(LDADD)
@@ -4560,6 +4718,124 @@ prctl_pdeathsig_SOURCES = prctl-pdeathsig.c
 prctl_pdeathsig_OBJECTS = prctl-pdeathsig.$(OBJEXT)
 prctl_pdeathsig_LDADD = $(LDADD)
 prctl_pdeathsig_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+prctl_ppc_dexcr_SOURCES = prctl-ppc-dexcr.c
+prctl_ppc_dexcr_OBJECTS = prctl-ppc-dexcr.$(OBJEXT)
+prctl_ppc_dexcr_LDADD = $(LDADD)
+prctl_ppc_dexcr_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+prctl_ppc_dexcr_Xabbrev_SOURCES = prctl-ppc-dexcr-Xabbrev.c
+prctl_ppc_dexcr_Xabbrev_OBJECTS = prctl-ppc-dexcr-Xabbrev.$(OBJEXT)
+prctl_ppc_dexcr_Xabbrev_LDADD = $(LDADD)
+prctl_ppc_dexcr_Xabbrev_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+prctl_ppc_dexcr_Xraw_SOURCES = prctl-ppc-dexcr-Xraw.c
+prctl_ppc_dexcr_Xraw_OBJECTS = prctl-ppc-dexcr-Xraw.$(OBJEXT)
+prctl_ppc_dexcr_Xraw_LDADD = $(LDADD)
+prctl_ppc_dexcr_Xraw_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+prctl_ppc_dexcr_Xverbose_SOURCES = prctl-ppc-dexcr-Xverbose.c
+prctl_ppc_dexcr_Xverbose_OBJECTS = prctl-ppc-dexcr-Xverbose.$(OBJEXT)
+prctl_ppc_dexcr_Xverbose_LDADD = $(LDADD)
+prctl_ppc_dexcr_Xverbose_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+prctl_ppc_dexcr_success_SOURCES = prctl-ppc-dexcr-success.c
+prctl_ppc_dexcr_success_OBJECTS = prctl-ppc-dexcr-success.$(OBJEXT)
+prctl_ppc_dexcr_success_LDADD = $(LDADD)
+prctl_ppc_dexcr_success_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+prctl_ppc_dexcr_success_Xabbrev_SOURCES =  \
+	prctl-ppc-dexcr-success-Xabbrev.c
+prctl_ppc_dexcr_success_Xabbrev_OBJECTS =  \
+	prctl-ppc-dexcr-success-Xabbrev.$(OBJEXT)
+prctl_ppc_dexcr_success_Xabbrev_LDADD = $(LDADD)
+prctl_ppc_dexcr_success_Xabbrev_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+prctl_ppc_dexcr_success_Xraw_SOURCES = prctl-ppc-dexcr-success-Xraw.c
+prctl_ppc_dexcr_success_Xraw_OBJECTS =  \
+	prctl-ppc-dexcr-success-Xraw.$(OBJEXT)
+prctl_ppc_dexcr_success_Xraw_LDADD = $(LDADD)
+prctl_ppc_dexcr_success_Xraw_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+prctl_ppc_dexcr_success_Xverbose_SOURCES =  \
+	prctl-ppc-dexcr-success-Xverbose.c
+prctl_ppc_dexcr_success_Xverbose_OBJECTS =  \
+	prctl-ppc-dexcr-success-Xverbose.$(OBJEXT)
+prctl_ppc_dexcr_success_Xverbose_LDADD = $(LDADD)
+prctl_ppc_dexcr_success_Xverbose_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+prctl_riscv_icache_flush_ctx_SOURCES = prctl-riscv-icache-flush-ctx.c
+prctl_riscv_icache_flush_ctx_OBJECTS =  \
+	prctl-riscv-icache-flush-ctx.$(OBJEXT)
+prctl_riscv_icache_flush_ctx_LDADD = $(LDADD)
+prctl_riscv_icache_flush_ctx_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+prctl_riscv_icache_flush_ctx_Xabbrev_SOURCES =  \
+	prctl-riscv-icache-flush-ctx-Xabbrev.c
+prctl_riscv_icache_flush_ctx_Xabbrev_OBJECTS =  \
+	prctl-riscv-icache-flush-ctx-Xabbrev.$(OBJEXT)
+prctl_riscv_icache_flush_ctx_Xabbrev_LDADD = $(LDADD)
+prctl_riscv_icache_flush_ctx_Xabbrev_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+prctl_riscv_icache_flush_ctx_Xraw_SOURCES =  \
+	prctl-riscv-icache-flush-ctx-Xraw.c
+prctl_riscv_icache_flush_ctx_Xraw_OBJECTS =  \
+	prctl-riscv-icache-flush-ctx-Xraw.$(OBJEXT)
+prctl_riscv_icache_flush_ctx_Xraw_LDADD = $(LDADD)
+prctl_riscv_icache_flush_ctx_Xraw_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+prctl_riscv_icache_flush_ctx_Xverbose_SOURCES =  \
+	prctl-riscv-icache-flush-ctx-Xverbose.c
+prctl_riscv_icache_flush_ctx_Xverbose_OBJECTS =  \
+	prctl-riscv-icache-flush-ctx-Xverbose.$(OBJEXT)
+prctl_riscv_icache_flush_ctx_Xverbose_LDADD = $(LDADD)
+prctl_riscv_icache_flush_ctx_Xverbose_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+prctl_riscv_v_ctrl_SOURCES = prctl-riscv-v-ctrl.c
+prctl_riscv_v_ctrl_OBJECTS = prctl-riscv-v-ctrl.$(OBJEXT)
+prctl_riscv_v_ctrl_LDADD = $(LDADD)
+prctl_riscv_v_ctrl_DEPENDENCIES = libtests.a $(am__DEPENDENCIES_1)
+prctl_riscv_v_ctrl_Xabbrev_SOURCES = prctl-riscv-v-ctrl-Xabbrev.c
+prctl_riscv_v_ctrl_Xabbrev_OBJECTS =  \
+	prctl-riscv-v-ctrl-Xabbrev.$(OBJEXT)
+prctl_riscv_v_ctrl_Xabbrev_LDADD = $(LDADD)
+prctl_riscv_v_ctrl_Xabbrev_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+prctl_riscv_v_ctrl_Xraw_SOURCES = prctl-riscv-v-ctrl-Xraw.c
+prctl_riscv_v_ctrl_Xraw_OBJECTS = prctl-riscv-v-ctrl-Xraw.$(OBJEXT)
+prctl_riscv_v_ctrl_Xraw_LDADD = $(LDADD)
+prctl_riscv_v_ctrl_Xraw_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+prctl_riscv_v_ctrl_Xverbose_SOURCES = prctl-riscv-v-ctrl-Xverbose.c
+prctl_riscv_v_ctrl_Xverbose_OBJECTS =  \
+	prctl-riscv-v-ctrl-Xverbose.$(OBJEXT)
+prctl_riscv_v_ctrl_Xverbose_LDADD = $(LDADD)
+prctl_riscv_v_ctrl_Xverbose_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+prctl_riscv_v_ctrl_success_SOURCES = prctl-riscv-v-ctrl-success.c
+prctl_riscv_v_ctrl_success_OBJECTS =  \
+	prctl-riscv-v-ctrl-success.$(OBJEXT)
+prctl_riscv_v_ctrl_success_LDADD = $(LDADD)
+prctl_riscv_v_ctrl_success_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+prctl_riscv_v_ctrl_success_Xabbrev_SOURCES =  \
+	prctl-riscv-v-ctrl-success-Xabbrev.c
+prctl_riscv_v_ctrl_success_Xabbrev_OBJECTS =  \
+	prctl-riscv-v-ctrl-success-Xabbrev.$(OBJEXT)
+prctl_riscv_v_ctrl_success_Xabbrev_LDADD = $(LDADD)
+prctl_riscv_v_ctrl_success_Xabbrev_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+prctl_riscv_v_ctrl_success_Xraw_SOURCES =  \
+	prctl-riscv-v-ctrl-success-Xraw.c
+prctl_riscv_v_ctrl_success_Xraw_OBJECTS =  \
+	prctl-riscv-v-ctrl-success-Xraw.$(OBJEXT)
+prctl_riscv_v_ctrl_success_Xraw_LDADD = $(LDADD)
+prctl_riscv_v_ctrl_success_Xraw_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
+prctl_riscv_v_ctrl_success_Xverbose_SOURCES =  \
+	prctl-riscv-v-ctrl-success-Xverbose.c
+prctl_riscv_v_ctrl_success_Xverbose_OBJECTS =  \
+	prctl-riscv-v-ctrl-success-Xverbose.$(OBJEXT)
+prctl_riscv_v_ctrl_success_Xverbose_LDADD = $(LDADD)
+prctl_riscv_v_ctrl_success_Xverbose_DEPENDENCIES = libtests.a \
+	$(am__DEPENDENCIES_1)
 prctl_sched_core_SOURCES = prctl-sched-core.c
 prctl_sched_core_OBJECTS = prctl-sched-core.$(OBJEXT)
 prctl_sched_core_LDADD = $(LDADD)
@@ -6547,7 +6823,9 @@ am__depfiles_remade = ./$(DEPDIR)/_newselect-P.Po \
 	./$(DEPDIR)/epoll_pwait.Po ./$(DEPDIR)/epoll_pwait2-P.Po \
 	./$(DEPDIR)/epoll_pwait2-y.Po ./$(DEPDIR)/epoll_pwait2.Po \
 	./$(DEPDIR)/epoll_wait.Po ./$(DEPDIR)/erestartsys.Po \
-	./$(DEPDIR)/eventfd.Po ./$(DEPDIR)/execve--secontext.Po \
+	./$(DEPDIR)/eventfd--decode-fd-eventfd.Po \
+	./$(DEPDIR)/eventfd-yy.Po ./$(DEPDIR)/eventfd.Po \
+	./$(DEPDIR)/execve--secontext.Po \
 	./$(DEPDIR)/execve--secontext_full.Po \
 	./$(DEPDIR)/execve--secontext_full_mismatch.Po \
 	./$(DEPDIR)/execve--secontext_mismatch.Po \
@@ -6674,14 +6952,21 @@ am__depfiles_remade = ./$(DEPDIR)/_newselect-P.Po \
 	./$(DEPDIR)/io_uring_register-success-Xverbose.Po \
 	./$(DEPDIR)/io_uring_register-success.Po \
 	./$(DEPDIR)/io_uring_register.Po ./$(DEPDIR)/io_uring_setup.Po \
-	./$(DEPDIR)/ioctl.Po \
+	./$(DEPDIR)/ioctl-v.Po ./$(DEPDIR)/ioctl.Po \
 	./$(DEPDIR)/ioctl_block--pidns-translation.Po \
 	./$(DEPDIR)/ioctl_block.Po \
 	./$(DEPDIR)/ioctl_counter-Xabbrev.Po \
 	./$(DEPDIR)/ioctl_counter-Xraw.Po \
 	./$(DEPDIR)/ioctl_counter-Xverbose.Po \
 	./$(DEPDIR)/ioctl_counter.Po ./$(DEPDIR)/ioctl_dm-v.Po \
-	./$(DEPDIR)/ioctl_dm.Po ./$(DEPDIR)/ioctl_evdev-Xabbrev.Po \
+	./$(DEPDIR)/ioctl_dm.Po ./$(DEPDIR)/ioctl_epoll-Xabbrev.Po \
+	./$(DEPDIR)/ioctl_epoll-Xraw.Po \
+	./$(DEPDIR)/ioctl_epoll-Xverbose.Po \
+	./$(DEPDIR)/ioctl_epoll-success-Xabbrev.Po \
+	./$(DEPDIR)/ioctl_epoll-success-Xraw.Po \
+	./$(DEPDIR)/ioctl_epoll-success-Xverbose.Po \
+	./$(DEPDIR)/ioctl_epoll-success.Po ./$(DEPDIR)/ioctl_epoll.Po \
+	./$(DEPDIR)/ioctl_evdev-Xabbrev.Po \
 	./$(DEPDIR)/ioctl_evdev-Xraw.Po \
 	./$(DEPDIR)/ioctl_evdev-Xverbose.Po \
 	./$(DEPDIR)/ioctl_evdev-success-Xabbrev.Po \
@@ -6763,9 +7048,11 @@ am__depfiles_remade = ./$(DEPDIR)/_newselect-P.Po \
 	./$(DEPDIR)/ioctl_loop-nv.Po ./$(DEPDIR)/ioctl_loop-v.Po \
 	./$(DEPDIR)/ioctl_loop.Po ./$(DEPDIR)/ioctl_mtd-success.Po \
 	./$(DEPDIR)/ioctl_mtd.Po ./$(DEPDIR)/ioctl_nbd.Po \
-	./$(DEPDIR)/ioctl_nsfs.Po ./$(DEPDIR)/ioctl_perf-success.Po \
-	./$(DEPDIR)/ioctl_perf.Po ./$(DEPDIR)/ioctl_ptp-Xabbrev.Po \
-	./$(DEPDIR)/ioctl_ptp-Xraw.Po \
+	./$(DEPDIR)/ioctl_nsfs-ns_get_pid--pidns-translation.Po \
+	./$(DEPDIR)/ioctl_nsfs-ns_get_pid.Po \
+	./$(DEPDIR)/ioctl_nsfs-ns_mnt_get.Po ./$(DEPDIR)/ioctl_nsfs.Po \
+	./$(DEPDIR)/ioctl_perf-success.Po ./$(DEPDIR)/ioctl_perf.Po \
+	./$(DEPDIR)/ioctl_ptp-Xabbrev.Po ./$(DEPDIR)/ioctl_ptp-Xraw.Po \
 	./$(DEPDIR)/ioctl_ptp-Xverbose.Po \
 	./$(DEPDIR)/ioctl_ptp-success-Xabbrev.Po \
 	./$(DEPDIR)/ioctl_ptp-success-Xraw.Po \
@@ -6805,6 +7092,8 @@ am__depfiles_remade = ./$(DEPDIR)/_newselect-P.Po \
 	./$(DEPDIR)/ioctl_v4l2-v-Xraw.Po \
 	./$(DEPDIR)/ioctl_v4l2-v-Xverbose.Po \
 	./$(DEPDIR)/ioctl_v4l2-v.Po ./$(DEPDIR)/ioctl_v4l2.Po \
+	./$(DEPDIR)/ioctl_watchdog-success-v.Po \
+	./$(DEPDIR)/ioctl_watchdog-success.Po \
 	./$(DEPDIR)/ioctl_watchdog.Po ./$(DEPDIR)/ioctl_winsize.Po \
 	./$(DEPDIR)/ioperm.Po ./$(DEPDIR)/iopl.Po \
 	./$(DEPDIR)/ioprio--pidns-translation.Po \
@@ -6862,6 +7151,7 @@ am__depfiles_remade = ./$(DEPDIR)/_newselect-P.Po \
 	./$(DEPDIR)/libtests_a-hexquote_strndup.Po \
 	./$(DEPDIR)/libtests_a-ifindex.Po \
 	./$(DEPDIR)/libtests_a-inode_of_sockfd.Po \
+	./$(DEPDIR)/libtests_a-k_sockopt.Po \
 	./$(DEPDIR)/libtests_a-libmmsg.Po \
 	./$(DEPDIR)/libtests_a-libsocketcall.Po \
 	./$(DEPDIR)/libtests_a-lock_file.Po \
@@ -6942,9 +7232,9 @@ am__depfiles_remade = ./$(DEPDIR)/_newselect-P.Po \
 	./$(DEPDIR)/move_pages-Xverbose.Po ./$(DEPDIR)/move_pages.Po \
 	./$(DEPDIR)/mq.Po ./$(DEPDIR)/mq_sendrecv-read.Po \
 	./$(DEPDIR)/mq_sendrecv-write.Po ./$(DEPDIR)/mq_sendrecv.Po \
-	./$(DEPDIR)/msg_control-v.Po ./$(DEPDIR)/msg_control.Po \
-	./$(DEPDIR)/msg_name.Po ./$(DEPDIR)/munlockall.Po \
-	./$(DEPDIR)/nanosleep.Po \
+	./$(DEPDIR)/mseal.Po ./$(DEPDIR)/msg_control-v.Po \
+	./$(DEPDIR)/msg_control.Po ./$(DEPDIR)/msg_name.Po \
+	./$(DEPDIR)/munlockall.Po ./$(DEPDIR)/nanosleep.Po \
 	./$(DEPDIR)/net--decode-fds-all-netlink.Po \
 	./$(DEPDIR)/net--decode-fds-dev-netlink.Po \
 	./$(DEPDIR)/net--decode-fds-none-netlink.Po \
@@ -6969,8 +7259,8 @@ am__depfiles_remade = ./$(DEPDIR)/_newselect-P.Po \
 	./$(DEPDIR)/netlink_kobject_uevent.Po \
 	./$(DEPDIR)/netlink_netfilter.Po \
 	./$(DEPDIR)/netlink_netlink_diag.Po \
-	./$(DEPDIR)/netlink_protocol.Po ./$(DEPDIR)/netlink_route.Po \
-	./$(DEPDIR)/netlink_selinux.Po \
+	./$(DEPDIR)/netlink_nlctrl.Po ./$(DEPDIR)/netlink_protocol.Po \
+	./$(DEPDIR)/netlink_route.Po ./$(DEPDIR)/netlink_selinux.Po \
 	./$(DEPDIR)/netlink_sock_diag.Po \
 	./$(DEPDIR)/netlink_unix_diag.Po ./$(DEPDIR)/netlink_xfrm.Po \
 	./$(DEPDIR)/newfstatat-newfstatat.Po \
@@ -7091,7 +7381,14 @@ am__depfiles_remade = ./$(DEPDIR)/_newselect-P.Po \
 	./$(DEPDIR)/prctl-cap-ambient.Po ./$(DEPDIR)/prctl-capbset.Po \
 	./$(DEPDIR)/prctl-dumpable.Po ./$(DEPDIR)/prctl-fp-mode.Po \
 	./$(DEPDIR)/prctl-mce-kill.Po ./$(DEPDIR)/prctl-mdwe.Po \
-	./$(DEPDIR)/prctl-name.Po ./$(DEPDIR)/prctl-no-args.Po \
+	./$(DEPDIR)/prctl-name.Po ./$(DEPDIR)/prctl-no-args-Xabbrev.Po \
+	./$(DEPDIR)/prctl-no-args-Xraw.Po \
+	./$(DEPDIR)/prctl-no-args-Xverbose.Po \
+	./$(DEPDIR)/prctl-no-args-success-Xabbrev.Po \
+	./$(DEPDIR)/prctl-no-args-success-Xraw.Po \
+	./$(DEPDIR)/prctl-no-args-success-Xverbose.Po \
+	./$(DEPDIR)/prctl-no-args-success.Po \
+	./$(DEPDIR)/prctl-no-args.Po \
 	./$(DEPDIR)/prctl-pac-enabled-keys-Xabbrev.Po \
 	./$(DEPDIR)/prctl-pac-enabled-keys-Xraw.Po \
 	./$(DEPDIR)/prctl-pac-enabled-keys-Xverbose.Po \
@@ -7102,6 +7399,26 @@ am__depfiles_remade = ./$(DEPDIR)/_newselect-P.Po \
 	./$(DEPDIR)/prctl-pac-enabled-keys.Po \
 	./$(DEPDIR)/prctl-pac-reset-keys.Po \
 	./$(DEPDIR)/prctl-pdeathsig.Po \
+	./$(DEPDIR)/prctl-ppc-dexcr-Xabbrev.Po \
+	./$(DEPDIR)/prctl-ppc-dexcr-Xraw.Po \
+	./$(DEPDIR)/prctl-ppc-dexcr-Xverbose.Po \
+	./$(DEPDIR)/prctl-ppc-dexcr-success-Xabbrev.Po \
+	./$(DEPDIR)/prctl-ppc-dexcr-success-Xraw.Po \
+	./$(DEPDIR)/prctl-ppc-dexcr-success-Xverbose.Po \
+	./$(DEPDIR)/prctl-ppc-dexcr-success.Po \
+	./$(DEPDIR)/prctl-ppc-dexcr.Po \
+	./$(DEPDIR)/prctl-riscv-icache-flush-ctx-Xabbrev.Po \
+	./$(DEPDIR)/prctl-riscv-icache-flush-ctx-Xraw.Po \
+	./$(DEPDIR)/prctl-riscv-icache-flush-ctx-Xverbose.Po \
+	./$(DEPDIR)/prctl-riscv-icache-flush-ctx.Po \
+	./$(DEPDIR)/prctl-riscv-v-ctrl-Xabbrev.Po \
+	./$(DEPDIR)/prctl-riscv-v-ctrl-Xraw.Po \
+	./$(DEPDIR)/prctl-riscv-v-ctrl-Xverbose.Po \
+	./$(DEPDIR)/prctl-riscv-v-ctrl-success-Xabbrev.Po \
+	./$(DEPDIR)/prctl-riscv-v-ctrl-success-Xraw.Po \
+	./$(DEPDIR)/prctl-riscv-v-ctrl-success-Xverbose.Po \
+	./$(DEPDIR)/prctl-riscv-v-ctrl-success.Po \
+	./$(DEPDIR)/prctl-riscv-v-ctrl.Po \
 	./$(DEPDIR)/prctl-sched-core--pidns-translation-Xabbrev.Po \
 	./$(DEPDIR)/prctl-sched-core--pidns-translation-Xraw.Po \
 	./$(DEPDIR)/prctl-sched-core--pidns-translation-Xverbose.Po \
@@ -7461,7 +7778,8 @@ SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c accept.c \
 	dup2-e-fd-not-9.c dup2-y.c dup2-yy.c dup3.c dup3-P.c dup3-y.c \
 	dup3-yy.c epoll_create.c epoll_create1.c epoll_ctl.c \
 	epoll_pwait.c epoll_pwait2.c epoll_pwait2-P.c epoll_pwait2-y.c \
-	epoll_wait.c erestartsys.c eventfd.c execve.c \
+	epoll_wait.c erestartsys.c eventfd.c \
+	eventfd--decode-fd-eventfd.c eventfd-yy.c execve.c \
 	execve--secontext.c execve--secontext_full.c \
 	execve--secontext_full_mismatch.c execve--secontext_mismatch.c \
 	execve-v.c execveat.c execveat--secontext.c \
@@ -7531,9 +7849,13 @@ SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c accept.c \
 	io_uring_register-success-Xabbrev.c \
 	io_uring_register-success-Xraw.c \
 	io_uring_register-success-Xverbose.c io_uring_setup.c ioctl.c \
-	ioctl_block.c ioctl_block--pidns-translation.c ioctl_counter.c \
-	ioctl_counter-Xabbrev.c ioctl_counter-Xraw.c \
-	ioctl_counter-Xverbose.c ioctl_dm.c ioctl_dm-v.c ioctl_evdev.c \
+	ioctl-v.c ioctl_block.c ioctl_block--pidns-translation.c \
+	ioctl_counter.c ioctl_counter-Xabbrev.c ioctl_counter-Xraw.c \
+	ioctl_counter-Xverbose.c ioctl_dm.c ioctl_dm-v.c ioctl_epoll.c \
+	ioctl_epoll-Xabbrev.c ioctl_epoll-Xraw.c \
+	ioctl_epoll-Xverbose.c ioctl_epoll-success.c \
+	ioctl_epoll-success-Xabbrev.c ioctl_epoll-success-Xraw.c \
+	ioctl_epoll-success-Xverbose.c ioctl_evdev.c \
 	ioctl_evdev-Xabbrev.c ioctl_evdev-Xraw.c \
 	ioctl_evdev-Xverbose.c ioctl_evdev-success.c \
 	ioctl_evdev-success-Xabbrev.c ioctl_evdev-success-Xraw.c \
@@ -7576,12 +7898,14 @@ SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c accept.c \
 	ioctl_kvm_run-v.c ioctl_kvm_run_auxstr_vcpu.c ioctl_lirc.c \
 	ioctl_lirc-success.c ioctl_loop.c ioctl_loop-nv.c \
 	ioctl_loop-v.c ioctl_mtd.c ioctl_mtd-success.c ioctl_nbd.c \
-	ioctl_nsfs.c ioctl_perf.c ioctl_perf-success.c ioctl_ptp.c \
-	ioctl_ptp-Xabbrev.c ioctl_ptp-Xraw.c ioctl_ptp-Xverbose.c \
-	ioctl_ptp-success.c ioctl_ptp-success-Xabbrev.c \
-	ioctl_ptp-success-Xraw.c ioctl_ptp-success-Xverbose.c \
-	ioctl_random.c ioctl_rtc.c ioctl_rtc-success.c ioctl_rtc-v.c \
-	ioctl_scsi.c ioctl_seccomp.c \
+	ioctl_nsfs.c ioctl_nsfs-ns_get_pid.c \
+	ioctl_nsfs-ns_get_pid--pidns-translation.c \
+	ioctl_nsfs-ns_mnt_get.c ioctl_perf.c ioctl_perf-success.c \
+	ioctl_ptp.c ioctl_ptp-Xabbrev.c ioctl_ptp-Xraw.c \
+	ioctl_ptp-Xverbose.c ioctl_ptp-success.c \
+	ioctl_ptp-success-Xabbrev.c ioctl_ptp-success-Xraw.c \
+	ioctl_ptp-success-Xverbose.c ioctl_random.c ioctl_rtc.c \
+	ioctl_rtc-success.c ioctl_rtc-v.c ioctl_scsi.c ioctl_seccomp.c \
 	ioctl_seccomp--pidns-translation.c ioctl_seccomp-success.c \
 	ioctl_seccomp-y.c ioctl_seccomp-y-success.c \
 	ioctl_seccomp-y-success--pidns-translation.c \
@@ -7600,12 +7924,13 @@ SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c accept.c \
 	ioctl_v4l2-success-v.c ioctl_v4l2-success-v-Xabbrev.c \
 	ioctl_v4l2-success-v-Xraw.c ioctl_v4l2-success-v-Xverbose.c \
 	ioctl_v4l2-v.c ioctl_v4l2-v-Xabbrev.c ioctl_v4l2-v-Xraw.c \
-	ioctl_v4l2-v-Xverbose.c ioctl_watchdog.c ioctl_winsize.c \
-	ioperm.c iopl.c ioprio.c ioprio--pidns-translation.c \
-	ioprio-Xabbrev.c ioprio-Xraw.c ioprio-Xverbose.c \
-	ip_local_port_range.c ip_local_port_range-Xabbrev.c \
-	ip_local_port_range-Xraw.c ip_local_port_range-Xverbose.c \
-	ip_local_port_range-success.c \
+	ioctl_v4l2-v-Xverbose.c ioctl_watchdog.c \
+	ioctl_watchdog-success.c ioctl_watchdog-success-v.c \
+	ioctl_winsize.c ioperm.c iopl.c ioprio.c \
+	ioprio--pidns-translation.c ioprio-Xabbrev.c ioprio-Xraw.c \
+	ioprio-Xverbose.c ip_local_port_range.c \
+	ip_local_port_range-Xabbrev.c ip_local_port_range-Xraw.c \
+	ip_local_port_range-Xverbose.c ip_local_port_range-success.c \
 	ip_local_port_range-success-Xabbrev.c \
 	ip_local_port_range-success-Xraw.c \
 	ip_local_port_range-success-Xverbose.c ip_mreq.c ip_protocol.c \
@@ -7651,7 +7976,7 @@ SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c accept.c \
 	mount_setattr-P.c move_mount.c move_mount-P.c move_pages.c \
 	move_pages--pidns-translation.c move_pages-Xabbrev.c \
 	move_pages-Xraw.c move_pages-Xverbose.c mq.c mq_sendrecv.c \
-	mq_sendrecv-read.c mq_sendrecv-write.c msg_control.c \
+	mq_sendrecv-read.c mq_sendrecv-write.c mseal.c msg_control.c \
 	msg_control-v.c msg_name.c munlockall.c nanosleep.c \
 	net--decode-fds-all-netlink.c net--decode-fds-dev-netlink.c \
 	net--decode-fds-none-netlink.c net--decode-fds-path-netlink.c \
@@ -7664,23 +7989,24 @@ SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c accept.c \
 	net-yy-inet6.c net-yy-netlink.c net-yy-unix.c netlink_audit.c \
 	netlink_audit--pidns-translation.c netlink_crypto.c \
 	netlink_generic.c netlink_inet_diag.c netlink_kobject_uevent.c \
-	netlink_netfilter.c netlink_netlink_diag.c netlink_protocol.c \
-	netlink_route.c netlink_selinux.c netlink_sock_diag.c \
-	netlink_unix_diag.c netlink_xfrm.c newfstatat.c \
-	nfnetlink_acct.c nfnetlink_cthelper.c nfnetlink_ctnetlink.c \
-	nfnetlink_ctnetlink_exp.c nfnetlink_cttimeout.c \
-	nfnetlink_ipset.c nfnetlink_nft_compat.c nfnetlink_nftables.c \
-	nfnetlink_osf.c nfnetlink_queue.c nfnetlink_ulog.c nlattr.c \
-	nlattr_br_port_msg.c nlattr_cachereport.c \
-	nlattr_cachereport-Xabbrev.c nlattr_cachereport-Xraw.c \
-	nlattr_cachereport-Xverbose.c nlattr_crypto_user_alg.c \
-	nlattr_dcbmsg.c nlattr_fib_rule_hdr.c nlattr_ifaddrlblmsg.c \
-	nlattr_ifaddrmsg.c nlattr_ifinfomsg.c nlattr_ifla_af_spec.c \
-	nlattr_ifla_brport.c nlattr_ifla_brport-Xabbrev.c \
-	nlattr_ifla_brport-Xraw.c nlattr_ifla_brport-Xverbose.c \
-	nlattr_ifla_linkinfo.c nlattr_ifla_port.c \
-	nlattr_ifla_protinfo.c nlattr_ifla_protinfo-Xabbrev.c \
-	nlattr_ifla_protinfo-Xraw.c nlattr_ifla_protinfo-Xverbose.c \
+	netlink_netfilter.c netlink_netlink_diag.c netlink_nlctrl.c \
+	netlink_protocol.c netlink_route.c netlink_selinux.c \
+	netlink_sock_diag.c netlink_unix_diag.c netlink_xfrm.c \
+	newfstatat.c nfnetlink_acct.c nfnetlink_cthelper.c \
+	nfnetlink_ctnetlink.c nfnetlink_ctnetlink_exp.c \
+	nfnetlink_cttimeout.c nfnetlink_ipset.c nfnetlink_nft_compat.c \
+	nfnetlink_nftables.c nfnetlink_osf.c nfnetlink_queue.c \
+	nfnetlink_ulog.c nlattr.c nlattr_br_port_msg.c \
+	nlattr_cachereport.c nlattr_cachereport-Xabbrev.c \
+	nlattr_cachereport-Xraw.c nlattr_cachereport-Xverbose.c \
+	nlattr_crypto_user_alg.c nlattr_dcbmsg.c nlattr_fib_rule_hdr.c \
+	nlattr_ifaddrlblmsg.c nlattr_ifaddrmsg.c nlattr_ifinfomsg.c \
+	nlattr_ifla_af_spec.c nlattr_ifla_brport.c \
+	nlattr_ifla_brport-Xabbrev.c nlattr_ifla_brport-Xraw.c \
+	nlattr_ifla_brport-Xverbose.c nlattr_ifla_linkinfo.c \
+	nlattr_ifla_port.c nlattr_ifla_protinfo.c \
+	nlattr_ifla_protinfo-Xabbrev.c nlattr_ifla_protinfo-Xraw.c \
+	nlattr_ifla_protinfo-Xverbose.c \
 	nlattr_ifla_proto_down_reason.c nlattr_ifla_vfinfo.c \
 	nlattr_ifla_vfinfo-Xabbrev.c nlattr_ifla_vfinfo-Xraw.c \
 	nlattr_ifla_vfinfo-Xverbose.c nlattr_ifla_xdp.c \
@@ -7724,14 +8050,31 @@ SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c accept.c \
 	ppoll-e-trace-fds-not-9-42-P.c ppoll-v.c prctl-arg2-intptr.c \
 	prctl-cap-ambient.c prctl-capbset.c prctl-dumpable.c \
 	prctl-fp-mode.c prctl-mce-kill.c prctl-mdwe.c prctl-name.c \
-	prctl-no-args.c prctl-pac-enabled-keys.c \
+	prctl-no-args.c prctl-no-args-Xabbrev.c prctl-no-args-Xraw.c \
+	prctl-no-args-Xverbose.c prctl-no-args-success.c \
+	prctl-no-args-success-Xabbrev.c prctl-no-args-success-Xraw.c \
+	prctl-no-args-success-Xverbose.c prctl-pac-enabled-keys.c \
 	prctl-pac-enabled-keys-Xabbrev.c prctl-pac-enabled-keys-Xraw.c \
 	prctl-pac-enabled-keys-Xverbose.c \
 	prctl-pac-enabled-keys-success.c \
 	prctl-pac-enabled-keys-success-Xabbrev.c \
 	prctl-pac-enabled-keys-success-Xraw.c \
 	prctl-pac-enabled-keys-success-Xverbose.c \
-	prctl-pac-reset-keys.c prctl-pdeathsig.c prctl-sched-core.c \
+	prctl-pac-reset-keys.c prctl-pdeathsig.c prctl-ppc-dexcr.c \
+	prctl-ppc-dexcr-Xabbrev.c prctl-ppc-dexcr-Xraw.c \
+	prctl-ppc-dexcr-Xverbose.c prctl-ppc-dexcr-success.c \
+	prctl-ppc-dexcr-success-Xabbrev.c \
+	prctl-ppc-dexcr-success-Xraw.c \
+	prctl-ppc-dexcr-success-Xverbose.c \
+	prctl-riscv-icache-flush-ctx.c \
+	prctl-riscv-icache-flush-ctx-Xabbrev.c \
+	prctl-riscv-icache-flush-ctx-Xraw.c \
+	prctl-riscv-icache-flush-ctx-Xverbose.c prctl-riscv-v-ctrl.c \
+	prctl-riscv-v-ctrl-Xabbrev.c prctl-riscv-v-ctrl-Xraw.c \
+	prctl-riscv-v-ctrl-Xverbose.c prctl-riscv-v-ctrl-success.c \
+	prctl-riscv-v-ctrl-success-Xabbrev.c \
+	prctl-riscv-v-ctrl-success-Xraw.c \
+	prctl-riscv-v-ctrl-success-Xverbose.c prctl-sched-core.c \
 	prctl-sched-core--pidns-translation.c \
 	prctl-sched-core--pidns-translation-Xabbrev.c \
 	prctl-sched-core--pidns-translation-Xraw.c \
@@ -7925,7 +8268,8 @@ DIST_SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c \
 	dup2-e-fd-not-9.c dup2-y.c dup2-yy.c dup3.c dup3-P.c dup3-y.c \
 	dup3-yy.c epoll_create.c epoll_create1.c epoll_ctl.c \
 	epoll_pwait.c epoll_pwait2.c epoll_pwait2-P.c epoll_pwait2-y.c \
-	epoll_wait.c erestartsys.c eventfd.c execve.c \
+	epoll_wait.c erestartsys.c eventfd.c \
+	eventfd--decode-fd-eventfd.c eventfd-yy.c execve.c \
 	execve--secontext.c execve--secontext_full.c \
 	execve--secontext_full_mismatch.c execve--secontext_mismatch.c \
 	execve-v.c execveat.c execveat--secontext.c \
@@ -7995,9 +8339,13 @@ DIST_SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c \
 	io_uring_register-success-Xabbrev.c \
 	io_uring_register-success-Xraw.c \
 	io_uring_register-success-Xverbose.c io_uring_setup.c ioctl.c \
-	ioctl_block.c ioctl_block--pidns-translation.c ioctl_counter.c \
-	ioctl_counter-Xabbrev.c ioctl_counter-Xraw.c \
-	ioctl_counter-Xverbose.c ioctl_dm.c ioctl_dm-v.c ioctl_evdev.c \
+	ioctl-v.c ioctl_block.c ioctl_block--pidns-translation.c \
+	ioctl_counter.c ioctl_counter-Xabbrev.c ioctl_counter-Xraw.c \
+	ioctl_counter-Xverbose.c ioctl_dm.c ioctl_dm-v.c ioctl_epoll.c \
+	ioctl_epoll-Xabbrev.c ioctl_epoll-Xraw.c \
+	ioctl_epoll-Xverbose.c ioctl_epoll-success.c \
+	ioctl_epoll-success-Xabbrev.c ioctl_epoll-success-Xraw.c \
+	ioctl_epoll-success-Xverbose.c ioctl_evdev.c \
 	ioctl_evdev-Xabbrev.c ioctl_evdev-Xraw.c \
 	ioctl_evdev-Xverbose.c ioctl_evdev-success.c \
 	ioctl_evdev-success-Xabbrev.c ioctl_evdev-success-Xraw.c \
@@ -8040,12 +8388,14 @@ DIST_SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c \
 	ioctl_kvm_run-v.c ioctl_kvm_run_auxstr_vcpu.c ioctl_lirc.c \
 	ioctl_lirc-success.c ioctl_loop.c ioctl_loop-nv.c \
 	ioctl_loop-v.c ioctl_mtd.c ioctl_mtd-success.c ioctl_nbd.c \
-	ioctl_nsfs.c ioctl_perf.c ioctl_perf-success.c ioctl_ptp.c \
-	ioctl_ptp-Xabbrev.c ioctl_ptp-Xraw.c ioctl_ptp-Xverbose.c \
-	ioctl_ptp-success.c ioctl_ptp-success-Xabbrev.c \
-	ioctl_ptp-success-Xraw.c ioctl_ptp-success-Xverbose.c \
-	ioctl_random.c ioctl_rtc.c ioctl_rtc-success.c ioctl_rtc-v.c \
-	ioctl_scsi.c ioctl_seccomp.c \
+	ioctl_nsfs.c ioctl_nsfs-ns_get_pid.c \
+	ioctl_nsfs-ns_get_pid--pidns-translation.c \
+	ioctl_nsfs-ns_mnt_get.c ioctl_perf.c ioctl_perf-success.c \
+	ioctl_ptp.c ioctl_ptp-Xabbrev.c ioctl_ptp-Xraw.c \
+	ioctl_ptp-Xverbose.c ioctl_ptp-success.c \
+	ioctl_ptp-success-Xabbrev.c ioctl_ptp-success-Xraw.c \
+	ioctl_ptp-success-Xverbose.c ioctl_random.c ioctl_rtc.c \
+	ioctl_rtc-success.c ioctl_rtc-v.c ioctl_scsi.c ioctl_seccomp.c \
 	ioctl_seccomp--pidns-translation.c ioctl_seccomp-success.c \
 	ioctl_seccomp-y.c ioctl_seccomp-y-success.c \
 	ioctl_seccomp-y-success--pidns-translation.c \
@@ -8064,12 +8414,13 @@ DIST_SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c \
 	ioctl_v4l2-success-v.c ioctl_v4l2-success-v-Xabbrev.c \
 	ioctl_v4l2-success-v-Xraw.c ioctl_v4l2-success-v-Xverbose.c \
 	ioctl_v4l2-v.c ioctl_v4l2-v-Xabbrev.c ioctl_v4l2-v-Xraw.c \
-	ioctl_v4l2-v-Xverbose.c ioctl_watchdog.c ioctl_winsize.c \
-	ioperm.c iopl.c ioprio.c ioprio--pidns-translation.c \
-	ioprio-Xabbrev.c ioprio-Xraw.c ioprio-Xverbose.c \
-	ip_local_port_range.c ip_local_port_range-Xabbrev.c \
-	ip_local_port_range-Xraw.c ip_local_port_range-Xverbose.c \
-	ip_local_port_range-success.c \
+	ioctl_v4l2-v-Xverbose.c ioctl_watchdog.c \
+	ioctl_watchdog-success.c ioctl_watchdog-success-v.c \
+	ioctl_winsize.c ioperm.c iopl.c ioprio.c \
+	ioprio--pidns-translation.c ioprio-Xabbrev.c ioprio-Xraw.c \
+	ioprio-Xverbose.c ip_local_port_range.c \
+	ip_local_port_range-Xabbrev.c ip_local_port_range-Xraw.c \
+	ip_local_port_range-Xverbose.c ip_local_port_range-success.c \
 	ip_local_port_range-success-Xabbrev.c \
 	ip_local_port_range-success-Xraw.c \
 	ip_local_port_range-success-Xverbose.c ip_mreq.c ip_protocol.c \
@@ -8115,7 +8466,7 @@ DIST_SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c \
 	mount_setattr-P.c move_mount.c move_mount-P.c move_pages.c \
 	move_pages--pidns-translation.c move_pages-Xabbrev.c \
 	move_pages-Xraw.c move_pages-Xverbose.c mq.c mq_sendrecv.c \
-	mq_sendrecv-read.c mq_sendrecv-write.c msg_control.c \
+	mq_sendrecv-read.c mq_sendrecv-write.c mseal.c msg_control.c \
 	msg_control-v.c msg_name.c munlockall.c nanosleep.c \
 	net--decode-fds-all-netlink.c net--decode-fds-dev-netlink.c \
 	net--decode-fds-none-netlink.c net--decode-fds-path-netlink.c \
@@ -8128,23 +8479,24 @@ DIST_SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c \
 	net-yy-inet6.c net-yy-netlink.c net-yy-unix.c netlink_audit.c \
 	netlink_audit--pidns-translation.c netlink_crypto.c \
 	netlink_generic.c netlink_inet_diag.c netlink_kobject_uevent.c \
-	netlink_netfilter.c netlink_netlink_diag.c netlink_protocol.c \
-	netlink_route.c netlink_selinux.c netlink_sock_diag.c \
-	netlink_unix_diag.c netlink_xfrm.c newfstatat.c \
-	nfnetlink_acct.c nfnetlink_cthelper.c nfnetlink_ctnetlink.c \
-	nfnetlink_ctnetlink_exp.c nfnetlink_cttimeout.c \
-	nfnetlink_ipset.c nfnetlink_nft_compat.c nfnetlink_nftables.c \
-	nfnetlink_osf.c nfnetlink_queue.c nfnetlink_ulog.c nlattr.c \
-	nlattr_br_port_msg.c nlattr_cachereport.c \
-	nlattr_cachereport-Xabbrev.c nlattr_cachereport-Xraw.c \
-	nlattr_cachereport-Xverbose.c nlattr_crypto_user_alg.c \
-	nlattr_dcbmsg.c nlattr_fib_rule_hdr.c nlattr_ifaddrlblmsg.c \
-	nlattr_ifaddrmsg.c nlattr_ifinfomsg.c nlattr_ifla_af_spec.c \
-	nlattr_ifla_brport.c nlattr_ifla_brport-Xabbrev.c \
-	nlattr_ifla_brport-Xraw.c nlattr_ifla_brport-Xverbose.c \
-	nlattr_ifla_linkinfo.c nlattr_ifla_port.c \
-	nlattr_ifla_protinfo.c nlattr_ifla_protinfo-Xabbrev.c \
-	nlattr_ifla_protinfo-Xraw.c nlattr_ifla_protinfo-Xverbose.c \
+	netlink_netfilter.c netlink_netlink_diag.c netlink_nlctrl.c \
+	netlink_protocol.c netlink_route.c netlink_selinux.c \
+	netlink_sock_diag.c netlink_unix_diag.c netlink_xfrm.c \
+	newfstatat.c nfnetlink_acct.c nfnetlink_cthelper.c \
+	nfnetlink_ctnetlink.c nfnetlink_ctnetlink_exp.c \
+	nfnetlink_cttimeout.c nfnetlink_ipset.c nfnetlink_nft_compat.c \
+	nfnetlink_nftables.c nfnetlink_osf.c nfnetlink_queue.c \
+	nfnetlink_ulog.c nlattr.c nlattr_br_port_msg.c \
+	nlattr_cachereport.c nlattr_cachereport-Xabbrev.c \
+	nlattr_cachereport-Xraw.c nlattr_cachereport-Xverbose.c \
+	nlattr_crypto_user_alg.c nlattr_dcbmsg.c nlattr_fib_rule_hdr.c \
+	nlattr_ifaddrlblmsg.c nlattr_ifaddrmsg.c nlattr_ifinfomsg.c \
+	nlattr_ifla_af_spec.c nlattr_ifla_brport.c \
+	nlattr_ifla_brport-Xabbrev.c nlattr_ifla_brport-Xraw.c \
+	nlattr_ifla_brport-Xverbose.c nlattr_ifla_linkinfo.c \
+	nlattr_ifla_port.c nlattr_ifla_protinfo.c \
+	nlattr_ifla_protinfo-Xabbrev.c nlattr_ifla_protinfo-Xraw.c \
+	nlattr_ifla_protinfo-Xverbose.c \
 	nlattr_ifla_proto_down_reason.c nlattr_ifla_vfinfo.c \
 	nlattr_ifla_vfinfo-Xabbrev.c nlattr_ifla_vfinfo-Xraw.c \
 	nlattr_ifla_vfinfo-Xverbose.c nlattr_ifla_xdp.c \
@@ -8188,14 +8540,31 @@ DIST_SOURCES = $(libtests_a_SOURCES) _newselect.c _newselect-P.c \
 	ppoll-e-trace-fds-not-9-42-P.c ppoll-v.c prctl-arg2-intptr.c \
 	prctl-cap-ambient.c prctl-capbset.c prctl-dumpable.c \
 	prctl-fp-mode.c prctl-mce-kill.c prctl-mdwe.c prctl-name.c \
-	prctl-no-args.c prctl-pac-enabled-keys.c \
+	prctl-no-args.c prctl-no-args-Xabbrev.c prctl-no-args-Xraw.c \
+	prctl-no-args-Xverbose.c prctl-no-args-success.c \
+	prctl-no-args-success-Xabbrev.c prctl-no-args-success-Xraw.c \
+	prctl-no-args-success-Xverbose.c prctl-pac-enabled-keys.c \
 	prctl-pac-enabled-keys-Xabbrev.c prctl-pac-enabled-keys-Xraw.c \
 	prctl-pac-enabled-keys-Xverbose.c \
 	prctl-pac-enabled-keys-success.c \
 	prctl-pac-enabled-keys-success-Xabbrev.c \
 	prctl-pac-enabled-keys-success-Xraw.c \
 	prctl-pac-enabled-keys-success-Xverbose.c \
-	prctl-pac-reset-keys.c prctl-pdeathsig.c prctl-sched-core.c \
+	prctl-pac-reset-keys.c prctl-pdeathsig.c prctl-ppc-dexcr.c \
+	prctl-ppc-dexcr-Xabbrev.c prctl-ppc-dexcr-Xraw.c \
+	prctl-ppc-dexcr-Xverbose.c prctl-ppc-dexcr-success.c \
+	prctl-ppc-dexcr-success-Xabbrev.c \
+	prctl-ppc-dexcr-success-Xraw.c \
+	prctl-ppc-dexcr-success-Xverbose.c \
+	prctl-riscv-icache-flush-ctx.c \
+	prctl-riscv-icache-flush-ctx-Xabbrev.c \
+	prctl-riscv-icache-flush-ctx-Xraw.c \
+	prctl-riscv-icache-flush-ctx-Xverbose.c prctl-riscv-v-ctrl.c \
+	prctl-riscv-v-ctrl-Xabbrev.c prctl-riscv-v-ctrl-Xraw.c \
+	prctl-riscv-v-ctrl-Xverbose.c prctl-riscv-v-ctrl-success.c \
+	prctl-riscv-v-ctrl-success-Xabbrev.c \
+	prctl-riscv-v-ctrl-success-Xraw.c \
+	prctl-riscv-v-ctrl-success-Xverbose.c prctl-sched-core.c \
 	prctl-sched-core--pidns-translation.c \
 	prctl-sched-core--pidns-translation-Xabbrev.c \
 	prctl-sched-core--pidns-translation-Xraw.c \
@@ -8784,6 +9153,8 @@ libtests_a_SOURCES = \
 	hexquote_strndup.c \
 	ifindex.c \
 	inode_of_sockfd.c \
+	k_sockopt.c \
+	k_sockopt.h \
 	libmmsg.c \
 	libsocketcall.c \
 	lock_file.c \
@@ -8902,6 +9273,8 @@ PURE_EXECUTABLES = \
   epoll_wait \
   erestartsys \
   eventfd \
+  eventfd--decode-fd-eventfd \
+  eventfd-yy \
   execve \
   execveat \
   faccessat \
@@ -9018,12 +9391,17 @@ PURE_EXECUTABLES = \
   io_uring_register-Xverbose \
   io_uring_setup \
   ioctl \
+  ioctl-v \
   ioctl_block \
   ioctl_counter \
   ioctl_counter-Xabbrev \
   ioctl_counter-Xraw \
   ioctl_counter-Xverbose \
   ioctl_dm \
+  ioctl_epoll \
+  ioctl_epoll-Xabbrev \
+  ioctl_epoll-Xraw \
+  ioctl_epoll-Xverbose \
   ioctl_evdev \
   ioctl_evdev-Xabbrev \
   ioctl_evdev-Xraw \
@@ -9072,6 +9450,7 @@ PURE_EXECUTABLES = \
   ioctl_loop \
   ioctl_mtd \
   ioctl_nbd \
+  ioctl_nsfs-ns_mnt_get \
   ioctl_perf \
   ioctl_ptp \
   ioctl_ptp-Xabbrev \
@@ -9224,6 +9603,7 @@ PURE_EXECUTABLES = \
   mq_sendrecv \
   mq_sendrecv-read \
   mq_sendrecv-write \
+  mseal \
   msg_control \
   msg_name \
   munlockall \
@@ -9251,6 +9631,7 @@ PURE_EXECUTABLES = \
   netlink_generic \
   netlink_kobject_uevent \
   netlink_netfilter \
+  netlink_nlctrl \
   netlink_protocol \
   netlink_route \
   netlink_selinux \
@@ -9388,12 +9769,27 @@ PURE_EXECUTABLES = \
   prctl-mce-kill \
   prctl-name \
   prctl-no-args \
+  prctl-no-args-Xabbrev \
+  prctl-no-args-Xraw \
+  prctl-no-args-Xverbose \
   prctl-pac-enabled-keys \
   prctl-pac-enabled-keys-Xabbrev \
   prctl-pac-enabled-keys-Xraw \
   prctl-pac-enabled-keys-Xverbose \
   prctl-pac-reset-keys \
   prctl-pdeathsig \
+  prctl-ppc-dexcr \
+  prctl-ppc-dexcr-Xabbrev \
+  prctl-ppc-dexcr-Xraw \
+  prctl-ppc-dexcr-Xverbose \
+  prctl-riscv-icache-flush-ctx \
+  prctl-riscv-icache-flush-ctx-Xabbrev \
+  prctl-riscv-icache-flush-ctx-Xraw \
+  prctl-riscv-icache-flush-ctx-Xverbose \
+  prctl-riscv-v-ctrl \
+  prctl-riscv-v-ctrl-Xabbrev \
+  prctl-riscv-v-ctrl-Xraw \
+  prctl-riscv-v-ctrl-Xverbose \
   prctl-sched-core \
   prctl-sched-core-Xabbrev \
   prctl-sched-core-Xraw \
@@ -9928,7 +10324,8 @@ GEN_TESTS = _newselect.gen.test _newselect-P.gen.test accept.gen.test \
 	epoll_create1.gen.test epoll_ctl.gen.test epoll_pwait.gen.test \
 	epoll_pwait2.gen.test epoll_pwait2-P.gen.test \
 	epoll_pwait2-y.gen.test epoll_wait.gen.test \
-	erestartsys.gen.test execve--secontext.gen.test \
+	erestartsys.gen.test eventfd-yy.gen.test \
+	eventfd--decode-fd-eventfd.gen.test execve--secontext.gen.test \
 	execve--secontext_full.gen.test \
 	execve--secontext_full_mismatch.gen.test \
 	execve--secontext_mismatch.gen.test execveat.gen.test \
@@ -10024,10 +10421,15 @@ GEN_TESTS = _newselect.gen.test _newselect-P.gen.test accept.gen.test \
 	io_uring_register-success-Xabbrev.gen.test \
 	io_uring_register-success-Xraw.gen.test \
 	io_uring_register-success-Xverbose.gen.test \
-	io_uring_setup.gen.test ioctl_block.gen.test \
+	io_uring_setup.gen.test ioctl-v.gen.test ioctl_block.gen.test \
 	ioctl_counter.gen.test ioctl_counter-Xabbrev.gen.test \
 	ioctl_counter-Xraw.gen.test ioctl_counter-Xverbose.gen.test \
-	ioctl_dm.gen.test ioctl_dm-v.gen.test ioctl_evdev.gen.test \
+	ioctl_dm.gen.test ioctl_dm-v.gen.test ioctl_epoll.gen.test \
+	ioctl_epoll-Xabbrev.gen.test ioctl_epoll-Xraw.gen.test \
+	ioctl_epoll-Xverbose.gen.test ioctl_epoll-success.gen.test \
+	ioctl_epoll-success-Xabbrev.gen.test \
+	ioctl_epoll-success-Xraw.gen.test \
+	ioctl_epoll-success-Xverbose.gen.test ioctl_evdev.gen.test \
 	ioctl_evdev-Xabbrev.gen.test ioctl_evdev-Xraw.gen.test \
 	ioctl_evdev-Xverbose.gen.test \
 	ioctl_evdev-success-Xabbrev.gen.test \
@@ -10091,7 +10493,10 @@ GEN_TESTS = _newselect.gen.test _newselect-P.gen.test accept.gen.test \
 	ioctl_lirc-success.gen.test ioctl_loop.gen.test \
 	ioctl_loop-nv.gen.test ioctl_loop-v.gen.test \
 	ioctl_mtd.gen.test ioctl_mtd-success.gen.test \
-	ioctl_nbd.gen.test ioctl_nsfs.gen.test ioctl_perf.gen.test \
+	ioctl_nbd.gen.test ioctl_nsfs.gen.test \
+	ioctl_nsfs-ns_get_pid.gen.test \
+	ioctl_nsfs-ns_get_pid--pidns-translation.gen.test \
+	ioctl_nsfs-ns_mnt_get.gen.test ioctl_perf.gen.test \
 	ioctl_perf-success.gen.test ioctl_ptp.gen.test \
 	ioctl_ptp-Xabbrev.gen.test ioctl_ptp-Xraw.gen.test \
 	ioctl_ptp-Xverbose.gen.test ioctl_ptp-success.gen.test \
@@ -10128,10 +10533,12 @@ GEN_TESTS = _newselect.gen.test _newselect-P.gen.test accept.gen.test \
 	ioctl_v4l2-success-v-Xverbose.gen.test ioctl_v4l2-v.gen.test \
 	ioctl_v4l2-v-Xabbrev.gen.test ioctl_v4l2-v-Xraw.gen.test \
 	ioctl_v4l2-v-Xverbose.gen.test ioctl_watchdog.gen.test \
-	ioctl_winsize.gen.test ioperm.gen.test iopl.gen.test \
-	ioprio.gen.test ioprio--pidns-translation.gen.test \
-	ioprio-Xabbrev.gen.test ioprio-Xraw.gen.test \
-	ioprio-Xverbose.gen.test ip_local_port_range.gen.test \
+	ioctl_watchdog-success.gen.test \
+	ioctl_watchdog-success-v.gen.test ioctl_winsize.gen.test \
+	ioperm.gen.test iopl.gen.test ioprio.gen.test \
+	ioprio--pidns-translation.gen.test ioprio-Xabbrev.gen.test \
+	ioprio-Xraw.gen.test ioprio-Xverbose.gen.test \
+	ip_local_port_range.gen.test \
 	ip_local_port_range-Xabbrev.gen.test \
 	ip_local_port_range-Xraw.gen.test \
 	ip_local_port_range-Xverbose.gen.test \
@@ -10200,8 +10607,8 @@ GEN_TESTS = _newselect.gen.test _newselect-P.gen.test accept.gen.test \
 	move_pages-Xabbrev.gen.test move_pages-Xraw.gen.test \
 	move_pages-Xverbose.gen.test mq.gen.test mq_sendrecv.gen.test \
 	mq_sendrecv-read.gen.test mq_sendrecv-write.gen.test \
-	msg_control.gen.test msg_control-v.gen.test msg_name.gen.test \
-	munlockall.gen.test nanosleep.gen.test \
+	mseal.gen.test msg_control.gen.test msg_control-v.gen.test \
+	msg_name.gen.test munlockall.gen.test nanosleep.gen.test \
 	net--decode-fds-all-netlink.gen.test \
 	net--decode-fds-dev-netlink.gen.test \
 	net--decode-fds-none-netlink.gen.test \
@@ -10215,16 +10622,17 @@ GEN_TESTS = _newselect.gen.test _newselect-P.gen.test accept.gen.test \
 	net-tpacket_stats-success.gen.test net-yy-inet6.gen.test \
 	netlink_audit.gen.test netlink_crypto.gen.test \
 	netlink_generic.gen.test netlink_kobject_uevent.gen.test \
-	netlink_netfilter.gen.test netlink_protocol.gen.test \
-	netlink_route.gen.test netlink_selinux.gen.test \
-	netlink_xfrm.gen.test newfstatat.gen.test \
-	nfnetlink_acct.gen.test nfnetlink_cthelper.gen.test \
-	nfnetlink_ctnetlink.gen.test nfnetlink_ctnetlink_exp.gen.test \
-	nfnetlink_cttimeout.gen.test nfnetlink_ipset.gen.test \
-	nfnetlink_nft_compat.gen.test nfnetlink_nftables.gen.test \
-	nfnetlink_osf.gen.test nfnetlink_queue.gen.test \
-	nfnetlink_ulog.gen.test nlattr.gen.test \
-	nlattr_br_port_msg.gen.test nlattr_cachereport.gen.test \
+	netlink_netfilter.gen.test netlink_nlctrl.gen.test \
+	netlink_protocol.gen.test netlink_route.gen.test \
+	netlink_selinux.gen.test netlink_xfrm.gen.test \
+	newfstatat.gen.test nfnetlink_acct.gen.test \
+	nfnetlink_cthelper.gen.test nfnetlink_ctnetlink.gen.test \
+	nfnetlink_ctnetlink_exp.gen.test nfnetlink_cttimeout.gen.test \
+	nfnetlink_ipset.gen.test nfnetlink_nft_compat.gen.test \
+	nfnetlink_nftables.gen.test nfnetlink_osf.gen.test \
+	nfnetlink_queue.gen.test nfnetlink_ulog.gen.test \
+	nlattr.gen.test nlattr_br_port_msg.gen.test \
+	nlattr_cachereport.gen.test \
 	nlattr_cachereport-Xabbrev.gen.test \
 	nlattr_cachereport-Xraw.gen.test \
 	nlattr_cachereport-Xverbose.gen.test \
@@ -10303,6 +10711,11 @@ GEN_TESTS = _newselect.gen.test _newselect-P.gen.test accept.gen.test \
 	prctl-capbset.gen.test prctl-dumpable.gen.test \
 	prctl-fp-mode.gen.test prctl-mce-kill.gen.test \
 	prctl-mdwe.gen.test prctl-name.gen.test prctl-no-args.gen.test \
+	prctl-no-args-Xabbrev.gen.test prctl-no-args-Xraw.gen.test \
+	prctl-no-args-Xverbose.gen.test prctl-no-args-success.gen.test \
+	prctl-no-args-success-Xabbrev.gen.test \
+	prctl-no-args-success-Xraw.gen.test \
+	prctl-no-args-success-Xverbose.gen.test \
 	prctl-pac-enabled-keys.gen.test \
 	prctl-pac-enabled-keys-Xabbrev.gen.test \
 	prctl-pac-enabled-keys-Xraw.gen.test \
@@ -10312,6 +10725,25 @@ GEN_TESTS = _newselect.gen.test _newselect-P.gen.test accept.gen.test \
 	prctl-pac-enabled-keys-success-Xraw.gen.test \
 	prctl-pac-enabled-keys-success-Xverbose.gen.test \
 	prctl-pac-reset-keys.gen.test prctl-pdeathsig.gen.test \
+	prctl-ppc-dexcr.gen.test prctl-ppc-dexcr-Xabbrev.gen.test \
+	prctl-ppc-dexcr-Xraw.gen.test \
+	prctl-ppc-dexcr-Xverbose.gen.test \
+	prctl-ppc-dexcr-success.gen.test \
+	prctl-ppc-dexcr-success-Xabbrev.gen.test \
+	prctl-ppc-dexcr-success-Xraw.gen.test \
+	prctl-ppc-dexcr-success-Xverbose.gen.test \
+	prctl-riscv-icache-flush-ctx.gen.test \
+	prctl-riscv-icache-flush-ctx-Xabbrev.gen.test \
+	prctl-riscv-icache-flush-ctx-Xraw.gen.test \
+	prctl-riscv-icache-flush-ctx-Xverbose.gen.test \
+	prctl-riscv-v-ctrl.gen.test \
+	prctl-riscv-v-ctrl-Xabbrev.gen.test \
+	prctl-riscv-v-ctrl-Xraw.gen.test \
+	prctl-riscv-v-ctrl-Xverbose.gen.test \
+	prctl-riscv-v-ctrl-success.gen.test \
+	prctl-riscv-v-ctrl-success-Xabbrev.gen.test \
+	prctl-riscv-v-ctrl-success-Xraw.gen.test \
+	prctl-riscv-v-ctrl-success-Xverbose.gen.test \
 	prctl-sched-core.gen.test \
 	prctl-sched-core--pidns-translation.gen.test \
 	prctl-sched-core--pidns-translation-Xabbrev.gen.test \
@@ -10625,6 +11057,7 @@ DECODER_TESTS = \
 	prctl-seccomp-strict.test \
 	qual_fault-exit_group.test \
 	readv.test \
+	restart_syscall-p.test \
 	rt_sigaction.test \
 	scm_rights-fd.test \
 	seccomp-strict.test \
@@ -10792,6 +11225,7 @@ check_DATA = \
 	qual_inject-signal.expected \
 	qualify_personality_empty.in \
 	regex.in \
+	restart_syscall-p.expected \
 	rt_sigaction.awk \
 	sched.in \
 	sigaltstack.expected \
@@ -11518,6 +11952,14 @@ erestartsys$(EXEEXT): $(erestartsys_OBJECTS) $(erestartsys_DEPENDENCIES) $(EXTRA
 eventfd$(EXEEXT): $(eventfd_OBJECTS) $(eventfd_DEPENDENCIES) $(EXTRA_eventfd_DEPENDENCIES) 
 	@rm -f eventfd$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(eventfd_OBJECTS) $(eventfd_LDADD) $(LIBS)
+
+eventfd--decode-fd-eventfd$(EXEEXT): $(eventfd__decode_fd_eventfd_OBJECTS) $(eventfd__decode_fd_eventfd_DEPENDENCIES) $(EXTRA_eventfd__decode_fd_eventfd_DEPENDENCIES) 
+	@rm -f eventfd--decode-fd-eventfd$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(eventfd__decode_fd_eventfd_OBJECTS) $(eventfd__decode_fd_eventfd_LDADD) $(LIBS)
+
+eventfd-yy$(EXEEXT): $(eventfd_yy_OBJECTS) $(eventfd_yy_DEPENDENCIES) $(EXTRA_eventfd_yy_DEPENDENCIES) 
+	@rm -f eventfd-yy$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(eventfd_yy_OBJECTS) $(eventfd_yy_LDADD) $(LIBS)
 
 execve$(EXEEXT): $(execve_OBJECTS) $(execve_DEPENDENCIES) $(EXTRA_execve_DEPENDENCIES) 
 	@rm -f execve$(EXEEXT)
@@ -12263,6 +12705,10 @@ ioctl$(EXEEXT): $(ioctl_OBJECTS) $(ioctl_DEPENDENCIES) $(EXTRA_ioctl_DEPENDENCIE
 	@rm -f ioctl$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(ioctl_OBJECTS) $(ioctl_LDADD) $(LIBS)
 
+ioctl-v$(EXEEXT): $(ioctl_v_OBJECTS) $(ioctl_v_DEPENDENCIES) $(EXTRA_ioctl_v_DEPENDENCIES) 
+	@rm -f ioctl-v$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ioctl_v_OBJECTS) $(ioctl_v_LDADD) $(LIBS)
+
 ioctl_block$(EXEEXT): $(ioctl_block_OBJECTS) $(ioctl_block_DEPENDENCIES) $(EXTRA_ioctl_block_DEPENDENCIES) 
 	@rm -f ioctl_block$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(ioctl_block_OBJECTS) $(ioctl_block_LDADD) $(LIBS)
@@ -12294,6 +12740,38 @@ ioctl_dm$(EXEEXT): $(ioctl_dm_OBJECTS) $(ioctl_dm_DEPENDENCIES) $(EXTRA_ioctl_dm
 ioctl_dm-v$(EXEEXT): $(ioctl_dm_v_OBJECTS) $(ioctl_dm_v_DEPENDENCIES) $(EXTRA_ioctl_dm_v_DEPENDENCIES) 
 	@rm -f ioctl_dm-v$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(ioctl_dm_v_OBJECTS) $(ioctl_dm_v_LDADD) $(LIBS)
+
+ioctl_epoll$(EXEEXT): $(ioctl_epoll_OBJECTS) $(ioctl_epoll_DEPENDENCIES) $(EXTRA_ioctl_epoll_DEPENDENCIES) 
+	@rm -f ioctl_epoll$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ioctl_epoll_OBJECTS) $(ioctl_epoll_LDADD) $(LIBS)
+
+ioctl_epoll-Xabbrev$(EXEEXT): $(ioctl_epoll_Xabbrev_OBJECTS) $(ioctl_epoll_Xabbrev_DEPENDENCIES) $(EXTRA_ioctl_epoll_Xabbrev_DEPENDENCIES) 
+	@rm -f ioctl_epoll-Xabbrev$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ioctl_epoll_Xabbrev_OBJECTS) $(ioctl_epoll_Xabbrev_LDADD) $(LIBS)
+
+ioctl_epoll-Xraw$(EXEEXT): $(ioctl_epoll_Xraw_OBJECTS) $(ioctl_epoll_Xraw_DEPENDENCIES) $(EXTRA_ioctl_epoll_Xraw_DEPENDENCIES) 
+	@rm -f ioctl_epoll-Xraw$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ioctl_epoll_Xraw_OBJECTS) $(ioctl_epoll_Xraw_LDADD) $(LIBS)
+
+ioctl_epoll-Xverbose$(EXEEXT): $(ioctl_epoll_Xverbose_OBJECTS) $(ioctl_epoll_Xverbose_DEPENDENCIES) $(EXTRA_ioctl_epoll_Xverbose_DEPENDENCIES) 
+	@rm -f ioctl_epoll-Xverbose$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ioctl_epoll_Xverbose_OBJECTS) $(ioctl_epoll_Xverbose_LDADD) $(LIBS)
+
+ioctl_epoll-success$(EXEEXT): $(ioctl_epoll_success_OBJECTS) $(ioctl_epoll_success_DEPENDENCIES) $(EXTRA_ioctl_epoll_success_DEPENDENCIES) 
+	@rm -f ioctl_epoll-success$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ioctl_epoll_success_OBJECTS) $(ioctl_epoll_success_LDADD) $(LIBS)
+
+ioctl_epoll-success-Xabbrev$(EXEEXT): $(ioctl_epoll_success_Xabbrev_OBJECTS) $(ioctl_epoll_success_Xabbrev_DEPENDENCIES) $(EXTRA_ioctl_epoll_success_Xabbrev_DEPENDENCIES) 
+	@rm -f ioctl_epoll-success-Xabbrev$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ioctl_epoll_success_Xabbrev_OBJECTS) $(ioctl_epoll_success_Xabbrev_LDADD) $(LIBS)
+
+ioctl_epoll-success-Xraw$(EXEEXT): $(ioctl_epoll_success_Xraw_OBJECTS) $(ioctl_epoll_success_Xraw_DEPENDENCIES) $(EXTRA_ioctl_epoll_success_Xraw_DEPENDENCIES) 
+	@rm -f ioctl_epoll-success-Xraw$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ioctl_epoll_success_Xraw_OBJECTS) $(ioctl_epoll_success_Xraw_LDADD) $(LIBS)
+
+ioctl_epoll-success-Xverbose$(EXEEXT): $(ioctl_epoll_success_Xverbose_OBJECTS) $(ioctl_epoll_success_Xverbose_DEPENDENCIES) $(EXTRA_ioctl_epoll_success_Xverbose_DEPENDENCIES) 
+	@rm -f ioctl_epoll-success-Xverbose$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ioctl_epoll_success_Xverbose_OBJECTS) $(ioctl_epoll_success_Xverbose_LDADD) $(LIBS)
 
 ioctl_evdev$(EXEEXT): $(ioctl_evdev_OBJECTS) $(ioctl_evdev_DEPENDENCIES) $(EXTRA_ioctl_evdev_DEPENDENCIES) 
 	@rm -f ioctl_evdev$(EXEEXT)
@@ -12683,6 +13161,18 @@ ioctl_nsfs$(EXEEXT): $(ioctl_nsfs_OBJECTS) $(ioctl_nsfs_DEPENDENCIES) $(EXTRA_io
 	@rm -f ioctl_nsfs$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(ioctl_nsfs_OBJECTS) $(ioctl_nsfs_LDADD) $(LIBS)
 
+ioctl_nsfs-ns_get_pid$(EXEEXT): $(ioctl_nsfs_ns_get_pid_OBJECTS) $(ioctl_nsfs_ns_get_pid_DEPENDENCIES) $(EXTRA_ioctl_nsfs_ns_get_pid_DEPENDENCIES) 
+	@rm -f ioctl_nsfs-ns_get_pid$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ioctl_nsfs_ns_get_pid_OBJECTS) $(ioctl_nsfs_ns_get_pid_LDADD) $(LIBS)
+
+ioctl_nsfs-ns_get_pid--pidns-translation$(EXEEXT): $(ioctl_nsfs_ns_get_pid__pidns_translation_OBJECTS) $(ioctl_nsfs_ns_get_pid__pidns_translation_DEPENDENCIES) $(EXTRA_ioctl_nsfs_ns_get_pid__pidns_translation_DEPENDENCIES) 
+	@rm -f ioctl_nsfs-ns_get_pid--pidns-translation$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ioctl_nsfs_ns_get_pid__pidns_translation_OBJECTS) $(ioctl_nsfs_ns_get_pid__pidns_translation_LDADD) $(LIBS)
+
+ioctl_nsfs-ns_mnt_get$(EXEEXT): $(ioctl_nsfs_ns_mnt_get_OBJECTS) $(ioctl_nsfs_ns_mnt_get_DEPENDENCIES) $(EXTRA_ioctl_nsfs_ns_mnt_get_DEPENDENCIES) 
+	@rm -f ioctl_nsfs-ns_mnt_get$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ioctl_nsfs_ns_mnt_get_OBJECTS) $(ioctl_nsfs_ns_mnt_get_LDADD) $(LIBS)
+
 ioctl_perf$(EXEEXT): $(ioctl_perf_OBJECTS) $(ioctl_perf_DEPENDENCIES) $(EXTRA_ioctl_perf_DEPENDENCIES) 
 	@rm -f ioctl_perf$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(ioctl_perf_OBJECTS) $(ioctl_perf_LDADD) $(LIBS)
@@ -12902,6 +13392,14 @@ ioctl_v4l2-v-Xverbose$(EXEEXT): $(ioctl_v4l2_v_Xverbose_OBJECTS) $(ioctl_v4l2_v_
 ioctl_watchdog$(EXEEXT): $(ioctl_watchdog_OBJECTS) $(ioctl_watchdog_DEPENDENCIES) $(EXTRA_ioctl_watchdog_DEPENDENCIES) 
 	@rm -f ioctl_watchdog$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(ioctl_watchdog_OBJECTS) $(ioctl_watchdog_LDADD) $(LIBS)
+
+ioctl_watchdog-success$(EXEEXT): $(ioctl_watchdog_success_OBJECTS) $(ioctl_watchdog_success_DEPENDENCIES) $(EXTRA_ioctl_watchdog_success_DEPENDENCIES) 
+	@rm -f ioctl_watchdog-success$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ioctl_watchdog_success_OBJECTS) $(ioctl_watchdog_success_LDADD) $(LIBS)
+
+ioctl_watchdog-success-v$(EXEEXT): $(ioctl_watchdog_success_v_OBJECTS) $(ioctl_watchdog_success_v_DEPENDENCIES) $(EXTRA_ioctl_watchdog_success_v_DEPENDENCIES) 
+	@rm -f ioctl_watchdog-success-v$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(ioctl_watchdog_success_v_OBJECTS) $(ioctl_watchdog_success_v_LDADD) $(LIBS)
 
 ioctl_winsize$(EXEEXT): $(ioctl_winsize_OBJECTS) $(ioctl_winsize_DEPENDENCIES) $(EXTRA_ioctl_winsize_DEPENDENCIES) 
 	@rm -f ioctl_winsize$(EXEEXT)
@@ -13507,6 +14005,10 @@ mq_sendrecv-write$(EXEEXT): $(mq_sendrecv_write_OBJECTS) $(mq_sendrecv_write_DEP
 	@rm -f mq_sendrecv-write$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(mq_sendrecv_write_OBJECTS) $(mq_sendrecv_write_LDADD) $(LIBS)
 
+mseal$(EXEEXT): $(mseal_OBJECTS) $(mseal_DEPENDENCIES) $(EXTRA_mseal_DEPENDENCIES) 
+	@rm -f mseal$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(mseal_OBJECTS) $(mseal_LDADD) $(LIBS)
+
 msg_control$(EXEEXT): $(msg_control_OBJECTS) $(msg_control_DEPENDENCIES) $(EXTRA_msg_control_DEPENDENCIES) 
 	@rm -f msg_control$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(msg_control_OBJECTS) $(msg_control_LDADD) $(LIBS)
@@ -13642,6 +14144,10 @@ netlink_netfilter$(EXEEXT): $(netlink_netfilter_OBJECTS) $(netlink_netfilter_DEP
 netlink_netlink_diag$(EXEEXT): $(netlink_netlink_diag_OBJECTS) $(netlink_netlink_diag_DEPENDENCIES) $(EXTRA_netlink_netlink_diag_DEPENDENCIES) 
 	@rm -f netlink_netlink_diag$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(netlink_netlink_diag_OBJECTS) $(netlink_netlink_diag_LDADD) $(LIBS)
+
+netlink_nlctrl$(EXEEXT): $(netlink_nlctrl_OBJECTS) $(netlink_nlctrl_DEPENDENCIES) $(EXTRA_netlink_nlctrl_DEPENDENCIES) 
+	@rm -f netlink_nlctrl$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(netlink_nlctrl_OBJECTS) $(netlink_nlctrl_LDADD) $(LIBS)
 
 netlink_protocol$(EXEEXT): $(netlink_protocol_OBJECTS) $(netlink_protocol_DEPENDENCIES) $(EXTRA_netlink_protocol_DEPENDENCIES) 
 	@rm -f netlink_protocol$(EXEEXT)
@@ -14307,6 +14813,34 @@ prctl-no-args$(EXEEXT): $(prctl_no_args_OBJECTS) $(prctl_no_args_DEPENDENCIES) $
 	@rm -f prctl-no-args$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(prctl_no_args_OBJECTS) $(prctl_no_args_LDADD) $(LIBS)
 
+prctl-no-args-Xabbrev$(EXEEXT): $(prctl_no_args_Xabbrev_OBJECTS) $(prctl_no_args_Xabbrev_DEPENDENCIES) $(EXTRA_prctl_no_args_Xabbrev_DEPENDENCIES) 
+	@rm -f prctl-no-args-Xabbrev$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_no_args_Xabbrev_OBJECTS) $(prctl_no_args_Xabbrev_LDADD) $(LIBS)
+
+prctl-no-args-Xraw$(EXEEXT): $(prctl_no_args_Xraw_OBJECTS) $(prctl_no_args_Xraw_DEPENDENCIES) $(EXTRA_prctl_no_args_Xraw_DEPENDENCIES) 
+	@rm -f prctl-no-args-Xraw$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_no_args_Xraw_OBJECTS) $(prctl_no_args_Xraw_LDADD) $(LIBS)
+
+prctl-no-args-Xverbose$(EXEEXT): $(prctl_no_args_Xverbose_OBJECTS) $(prctl_no_args_Xverbose_DEPENDENCIES) $(EXTRA_prctl_no_args_Xverbose_DEPENDENCIES) 
+	@rm -f prctl-no-args-Xverbose$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_no_args_Xverbose_OBJECTS) $(prctl_no_args_Xverbose_LDADD) $(LIBS)
+
+prctl-no-args-success$(EXEEXT): $(prctl_no_args_success_OBJECTS) $(prctl_no_args_success_DEPENDENCIES) $(EXTRA_prctl_no_args_success_DEPENDENCIES) 
+	@rm -f prctl-no-args-success$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_no_args_success_OBJECTS) $(prctl_no_args_success_LDADD) $(LIBS)
+
+prctl-no-args-success-Xabbrev$(EXEEXT): $(prctl_no_args_success_Xabbrev_OBJECTS) $(prctl_no_args_success_Xabbrev_DEPENDENCIES) $(EXTRA_prctl_no_args_success_Xabbrev_DEPENDENCIES) 
+	@rm -f prctl-no-args-success-Xabbrev$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_no_args_success_Xabbrev_OBJECTS) $(prctl_no_args_success_Xabbrev_LDADD) $(LIBS)
+
+prctl-no-args-success-Xraw$(EXEEXT): $(prctl_no_args_success_Xraw_OBJECTS) $(prctl_no_args_success_Xraw_DEPENDENCIES) $(EXTRA_prctl_no_args_success_Xraw_DEPENDENCIES) 
+	@rm -f prctl-no-args-success-Xraw$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_no_args_success_Xraw_OBJECTS) $(prctl_no_args_success_Xraw_LDADD) $(LIBS)
+
+prctl-no-args-success-Xverbose$(EXEEXT): $(prctl_no_args_success_Xverbose_OBJECTS) $(prctl_no_args_success_Xverbose_DEPENDENCIES) $(EXTRA_prctl_no_args_success_Xverbose_DEPENDENCIES) 
+	@rm -f prctl-no-args-success-Xverbose$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_no_args_success_Xverbose_OBJECTS) $(prctl_no_args_success_Xverbose_LDADD) $(LIBS)
+
 prctl-pac-enabled-keys$(EXEEXT): $(prctl_pac_enabled_keys_OBJECTS) $(prctl_pac_enabled_keys_DEPENDENCIES) $(EXTRA_prctl_pac_enabled_keys_DEPENDENCIES) 
 	@rm -f prctl-pac-enabled-keys$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(prctl_pac_enabled_keys_OBJECTS) $(prctl_pac_enabled_keys_LDADD) $(LIBS)
@@ -14346,6 +14880,86 @@ prctl-pac-reset-keys$(EXEEXT): $(prctl_pac_reset_keys_OBJECTS) $(prctl_pac_reset
 prctl-pdeathsig$(EXEEXT): $(prctl_pdeathsig_OBJECTS) $(prctl_pdeathsig_DEPENDENCIES) $(EXTRA_prctl_pdeathsig_DEPENDENCIES) 
 	@rm -f prctl-pdeathsig$(EXEEXT)
 	$(AM_V_CCLD)$(LINK) $(prctl_pdeathsig_OBJECTS) $(prctl_pdeathsig_LDADD) $(LIBS)
+
+prctl-ppc-dexcr$(EXEEXT): $(prctl_ppc_dexcr_OBJECTS) $(prctl_ppc_dexcr_DEPENDENCIES) $(EXTRA_prctl_ppc_dexcr_DEPENDENCIES) 
+	@rm -f prctl-ppc-dexcr$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_ppc_dexcr_OBJECTS) $(prctl_ppc_dexcr_LDADD) $(LIBS)
+
+prctl-ppc-dexcr-Xabbrev$(EXEEXT): $(prctl_ppc_dexcr_Xabbrev_OBJECTS) $(prctl_ppc_dexcr_Xabbrev_DEPENDENCIES) $(EXTRA_prctl_ppc_dexcr_Xabbrev_DEPENDENCIES) 
+	@rm -f prctl-ppc-dexcr-Xabbrev$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_ppc_dexcr_Xabbrev_OBJECTS) $(prctl_ppc_dexcr_Xabbrev_LDADD) $(LIBS)
+
+prctl-ppc-dexcr-Xraw$(EXEEXT): $(prctl_ppc_dexcr_Xraw_OBJECTS) $(prctl_ppc_dexcr_Xraw_DEPENDENCIES) $(EXTRA_prctl_ppc_dexcr_Xraw_DEPENDENCIES) 
+	@rm -f prctl-ppc-dexcr-Xraw$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_ppc_dexcr_Xraw_OBJECTS) $(prctl_ppc_dexcr_Xraw_LDADD) $(LIBS)
+
+prctl-ppc-dexcr-Xverbose$(EXEEXT): $(prctl_ppc_dexcr_Xverbose_OBJECTS) $(prctl_ppc_dexcr_Xverbose_DEPENDENCIES) $(EXTRA_prctl_ppc_dexcr_Xverbose_DEPENDENCIES) 
+	@rm -f prctl-ppc-dexcr-Xverbose$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_ppc_dexcr_Xverbose_OBJECTS) $(prctl_ppc_dexcr_Xverbose_LDADD) $(LIBS)
+
+prctl-ppc-dexcr-success$(EXEEXT): $(prctl_ppc_dexcr_success_OBJECTS) $(prctl_ppc_dexcr_success_DEPENDENCIES) $(EXTRA_prctl_ppc_dexcr_success_DEPENDENCIES) 
+	@rm -f prctl-ppc-dexcr-success$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_ppc_dexcr_success_OBJECTS) $(prctl_ppc_dexcr_success_LDADD) $(LIBS)
+
+prctl-ppc-dexcr-success-Xabbrev$(EXEEXT): $(prctl_ppc_dexcr_success_Xabbrev_OBJECTS) $(prctl_ppc_dexcr_success_Xabbrev_DEPENDENCIES) $(EXTRA_prctl_ppc_dexcr_success_Xabbrev_DEPENDENCIES) 
+	@rm -f prctl-ppc-dexcr-success-Xabbrev$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_ppc_dexcr_success_Xabbrev_OBJECTS) $(prctl_ppc_dexcr_success_Xabbrev_LDADD) $(LIBS)
+
+prctl-ppc-dexcr-success-Xraw$(EXEEXT): $(prctl_ppc_dexcr_success_Xraw_OBJECTS) $(prctl_ppc_dexcr_success_Xraw_DEPENDENCIES) $(EXTRA_prctl_ppc_dexcr_success_Xraw_DEPENDENCIES) 
+	@rm -f prctl-ppc-dexcr-success-Xraw$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_ppc_dexcr_success_Xraw_OBJECTS) $(prctl_ppc_dexcr_success_Xraw_LDADD) $(LIBS)
+
+prctl-ppc-dexcr-success-Xverbose$(EXEEXT): $(prctl_ppc_dexcr_success_Xverbose_OBJECTS) $(prctl_ppc_dexcr_success_Xverbose_DEPENDENCIES) $(EXTRA_prctl_ppc_dexcr_success_Xverbose_DEPENDENCIES) 
+	@rm -f prctl-ppc-dexcr-success-Xverbose$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_ppc_dexcr_success_Xverbose_OBJECTS) $(prctl_ppc_dexcr_success_Xverbose_LDADD) $(LIBS)
+
+prctl-riscv-icache-flush-ctx$(EXEEXT): $(prctl_riscv_icache_flush_ctx_OBJECTS) $(prctl_riscv_icache_flush_ctx_DEPENDENCIES) $(EXTRA_prctl_riscv_icache_flush_ctx_DEPENDENCIES) 
+	@rm -f prctl-riscv-icache-flush-ctx$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_riscv_icache_flush_ctx_OBJECTS) $(prctl_riscv_icache_flush_ctx_LDADD) $(LIBS)
+
+prctl-riscv-icache-flush-ctx-Xabbrev$(EXEEXT): $(prctl_riscv_icache_flush_ctx_Xabbrev_OBJECTS) $(prctl_riscv_icache_flush_ctx_Xabbrev_DEPENDENCIES) $(EXTRA_prctl_riscv_icache_flush_ctx_Xabbrev_DEPENDENCIES) 
+	@rm -f prctl-riscv-icache-flush-ctx-Xabbrev$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_riscv_icache_flush_ctx_Xabbrev_OBJECTS) $(prctl_riscv_icache_flush_ctx_Xabbrev_LDADD) $(LIBS)
+
+prctl-riscv-icache-flush-ctx-Xraw$(EXEEXT): $(prctl_riscv_icache_flush_ctx_Xraw_OBJECTS) $(prctl_riscv_icache_flush_ctx_Xraw_DEPENDENCIES) $(EXTRA_prctl_riscv_icache_flush_ctx_Xraw_DEPENDENCIES) 
+	@rm -f prctl-riscv-icache-flush-ctx-Xraw$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_riscv_icache_flush_ctx_Xraw_OBJECTS) $(prctl_riscv_icache_flush_ctx_Xraw_LDADD) $(LIBS)
+
+prctl-riscv-icache-flush-ctx-Xverbose$(EXEEXT): $(prctl_riscv_icache_flush_ctx_Xverbose_OBJECTS) $(prctl_riscv_icache_flush_ctx_Xverbose_DEPENDENCIES) $(EXTRA_prctl_riscv_icache_flush_ctx_Xverbose_DEPENDENCIES) 
+	@rm -f prctl-riscv-icache-flush-ctx-Xverbose$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_riscv_icache_flush_ctx_Xverbose_OBJECTS) $(prctl_riscv_icache_flush_ctx_Xverbose_LDADD) $(LIBS)
+
+prctl-riscv-v-ctrl$(EXEEXT): $(prctl_riscv_v_ctrl_OBJECTS) $(prctl_riscv_v_ctrl_DEPENDENCIES) $(EXTRA_prctl_riscv_v_ctrl_DEPENDENCIES) 
+	@rm -f prctl-riscv-v-ctrl$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_riscv_v_ctrl_OBJECTS) $(prctl_riscv_v_ctrl_LDADD) $(LIBS)
+
+prctl-riscv-v-ctrl-Xabbrev$(EXEEXT): $(prctl_riscv_v_ctrl_Xabbrev_OBJECTS) $(prctl_riscv_v_ctrl_Xabbrev_DEPENDENCIES) $(EXTRA_prctl_riscv_v_ctrl_Xabbrev_DEPENDENCIES) 
+	@rm -f prctl-riscv-v-ctrl-Xabbrev$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_riscv_v_ctrl_Xabbrev_OBJECTS) $(prctl_riscv_v_ctrl_Xabbrev_LDADD) $(LIBS)
+
+prctl-riscv-v-ctrl-Xraw$(EXEEXT): $(prctl_riscv_v_ctrl_Xraw_OBJECTS) $(prctl_riscv_v_ctrl_Xraw_DEPENDENCIES) $(EXTRA_prctl_riscv_v_ctrl_Xraw_DEPENDENCIES) 
+	@rm -f prctl-riscv-v-ctrl-Xraw$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_riscv_v_ctrl_Xraw_OBJECTS) $(prctl_riscv_v_ctrl_Xraw_LDADD) $(LIBS)
+
+prctl-riscv-v-ctrl-Xverbose$(EXEEXT): $(prctl_riscv_v_ctrl_Xverbose_OBJECTS) $(prctl_riscv_v_ctrl_Xverbose_DEPENDENCIES) $(EXTRA_prctl_riscv_v_ctrl_Xverbose_DEPENDENCIES) 
+	@rm -f prctl-riscv-v-ctrl-Xverbose$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_riscv_v_ctrl_Xverbose_OBJECTS) $(prctl_riscv_v_ctrl_Xverbose_LDADD) $(LIBS)
+
+prctl-riscv-v-ctrl-success$(EXEEXT): $(prctl_riscv_v_ctrl_success_OBJECTS) $(prctl_riscv_v_ctrl_success_DEPENDENCIES) $(EXTRA_prctl_riscv_v_ctrl_success_DEPENDENCIES) 
+	@rm -f prctl-riscv-v-ctrl-success$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_riscv_v_ctrl_success_OBJECTS) $(prctl_riscv_v_ctrl_success_LDADD) $(LIBS)
+
+prctl-riscv-v-ctrl-success-Xabbrev$(EXEEXT): $(prctl_riscv_v_ctrl_success_Xabbrev_OBJECTS) $(prctl_riscv_v_ctrl_success_Xabbrev_DEPENDENCIES) $(EXTRA_prctl_riscv_v_ctrl_success_Xabbrev_DEPENDENCIES) 
+	@rm -f prctl-riscv-v-ctrl-success-Xabbrev$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_riscv_v_ctrl_success_Xabbrev_OBJECTS) $(prctl_riscv_v_ctrl_success_Xabbrev_LDADD) $(LIBS)
+
+prctl-riscv-v-ctrl-success-Xraw$(EXEEXT): $(prctl_riscv_v_ctrl_success_Xraw_OBJECTS) $(prctl_riscv_v_ctrl_success_Xraw_DEPENDENCIES) $(EXTRA_prctl_riscv_v_ctrl_success_Xraw_DEPENDENCIES) 
+	@rm -f prctl-riscv-v-ctrl-success-Xraw$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_riscv_v_ctrl_success_Xraw_OBJECTS) $(prctl_riscv_v_ctrl_success_Xraw_LDADD) $(LIBS)
+
+prctl-riscv-v-ctrl-success-Xverbose$(EXEEXT): $(prctl_riscv_v_ctrl_success_Xverbose_OBJECTS) $(prctl_riscv_v_ctrl_success_Xverbose_DEPENDENCIES) $(EXTRA_prctl_riscv_v_ctrl_success_Xverbose_DEPENDENCIES) 
+	@rm -f prctl-riscv-v-ctrl-success-Xverbose$(EXEEXT)
+	$(AM_V_CCLD)$(LINK) $(prctl_riscv_v_ctrl_success_Xverbose_OBJECTS) $(prctl_riscv_v_ctrl_success_Xverbose_LDADD) $(LIBS)
 
 prctl-sched-core$(EXEEXT): $(prctl_sched_core_OBJECTS) $(prctl_sched_core_DEPENDENCIES) $(EXTRA_prctl_sched_core_DEPENDENCIES) 
 	@rm -f prctl-sched-core$(EXEEXT)
@@ -16149,6 +16763,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/epoll_pwait2.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/epoll_wait.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/erestartsys.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eventfd--decode-fd-eventfd.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eventfd-yy.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/eventfd.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/execve--secontext.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/execve--secontext_full.Po@am__quote@ # am--include-marker
@@ -16335,6 +16951,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io_uring_register-success.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io_uring_register.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/io_uring_setup.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl-v.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_block--pidns-translation.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_block.Po@am__quote@ # am--include-marker
@@ -16344,6 +16961,14 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_counter.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_dm-v.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_dm.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_epoll-Xabbrev.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_epoll-Xraw.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_epoll-Xverbose.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_epoll-success-Xabbrev.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_epoll-success-Xraw.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_epoll-success-Xverbose.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_epoll-success.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_epoll.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_evdev-Xabbrev.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_evdev-Xraw.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_evdev-Xverbose.Po@am__quote@ # am--include-marker
@@ -16440,6 +17065,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_mtd-success.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_mtd.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_nbd.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_nsfs-ns_get_pid--pidns-translation.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_nsfs-ns_get_pid.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_nsfs-ns_mnt_get.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_nsfs.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_perf-success.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_perf.Po@am__quote@ # am--include-marker
@@ -16495,6 +17123,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_v4l2-v-Xverbose.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_v4l2-v.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_v4l2.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_watchdog-success-v.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_watchdog-success.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_watchdog.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioctl_winsize.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/ioperm.Po@am__quote@ # am--include-marker
@@ -16576,6 +17206,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libtests_a-hexquote_strndup.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libtests_a-ifindex.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libtests_a-inode_of_sockfd.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libtests_a-k_sockopt.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libtests_a-libmmsg.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libtests_a-libsocketcall.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/libtests_a-lock_file.Po@am__quote@ # am--include-marker
@@ -16685,6 +17316,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mq_sendrecv-read.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mq_sendrecv-write.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mq_sendrecv.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mseal.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/msg_control-v.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/msg_control.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/msg_name.Po@am__quote@ # am--include-marker
@@ -16719,6 +17351,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/netlink_kobject_uevent.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/netlink_netfilter.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/netlink_netlink_diag.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/netlink_nlctrl.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/netlink_protocol.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/netlink_route.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/netlink_selinux.Po@am__quote@ # am--include-marker
@@ -16884,6 +17517,13 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-mce-kill.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-mdwe.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-name.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-no-args-Xabbrev.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-no-args-Xraw.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-no-args-Xverbose.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-no-args-success-Xabbrev.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-no-args-success-Xraw.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-no-args-success-Xverbose.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-no-args-success.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-no-args.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-pac-enabled-keys-Xabbrev.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-pac-enabled-keys-Xraw.Po@am__quote@ # am--include-marker
@@ -16895,6 +17535,26 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-pac-enabled-keys.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-pac-reset-keys.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-pdeathsig.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-ppc-dexcr-Xabbrev.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-ppc-dexcr-Xraw.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-ppc-dexcr-Xverbose.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-ppc-dexcr-success-Xabbrev.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-ppc-dexcr-success-Xraw.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-ppc-dexcr-success-Xverbose.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-ppc-dexcr-success.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-ppc-dexcr.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-riscv-icache-flush-ctx-Xabbrev.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-riscv-icache-flush-ctx-Xraw.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-riscv-icache-flush-ctx-Xverbose.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-riscv-icache-flush-ctx.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-riscv-v-ctrl-Xabbrev.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-riscv-v-ctrl-Xraw.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-riscv-v-ctrl-Xverbose.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-riscv-v-ctrl-success-Xabbrev.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-riscv-v-ctrl-success-Xraw.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-riscv-v-ctrl-success-Xverbose.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-riscv-v-ctrl-success.Po@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-riscv-v-ctrl.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-sched-core--pidns-translation-Xabbrev.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-sched-core--pidns-translation-Xraw.Po@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/prctl-sched-core--pidns-translation-Xverbose.Po@am__quote@ # am--include-marker
@@ -17521,6 +18181,20 @@ libtests_a-inode_of_sockfd.obj: inode_of_sockfd.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='inode_of_sockfd.c' object='libtests_a-inode_of_sockfd.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libtests_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libtests_a-inode_of_sockfd.obj `if test -f 'inode_of_sockfd.c'; then $(CYGPATH_W) 'inode_of_sockfd.c'; else $(CYGPATH_W) '$(srcdir)/inode_of_sockfd.c'; fi`
+
+libtests_a-k_sockopt.o: k_sockopt.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libtests_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libtests_a-k_sockopt.o -MD -MP -MF $(DEPDIR)/libtests_a-k_sockopt.Tpo -c -o libtests_a-k_sockopt.o `test -f 'k_sockopt.c' || echo '$(srcdir)/'`k_sockopt.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libtests_a-k_sockopt.Tpo $(DEPDIR)/libtests_a-k_sockopt.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='k_sockopt.c' object='libtests_a-k_sockopt.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libtests_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libtests_a-k_sockopt.o `test -f 'k_sockopt.c' || echo '$(srcdir)/'`k_sockopt.c
+
+libtests_a-k_sockopt.obj: k_sockopt.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libtests_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libtests_a-k_sockopt.obj -MD -MP -MF $(DEPDIR)/libtests_a-k_sockopt.Tpo -c -o libtests_a-k_sockopt.obj `if test -f 'k_sockopt.c'; then $(CYGPATH_W) 'k_sockopt.c'; else $(CYGPATH_W) '$(srcdir)/k_sockopt.c'; fi`
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) $(DEPDIR)/libtests_a-k_sockopt.Tpo $(DEPDIR)/libtests_a-k_sockopt.Po
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='k_sockopt.c' object='libtests_a-k_sockopt.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libtests_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libtests_a-k_sockopt.obj `if test -f 'k_sockopt.c'; then $(CYGPATH_W) 'k_sockopt.c'; else $(CYGPATH_W) '$(srcdir)/k_sockopt.c'; fi`
 
 libtests_a-libmmsg.o: libmmsg.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libtests_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libtests_a-libmmsg.o -MD -MP -MF $(DEPDIR)/libtests_a-libmmsg.Tpo -c -o libtests_a-libmmsg.o `test -f 'libmmsg.c' || echo '$(srcdir)/'`libmmsg.c
@@ -18743,6 +19417,8 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/epoll_pwait2.Po
 	-rm -f ./$(DEPDIR)/epoll_wait.Po
 	-rm -f ./$(DEPDIR)/erestartsys.Po
+	-rm -f ./$(DEPDIR)/eventfd--decode-fd-eventfd.Po
+	-rm -f ./$(DEPDIR)/eventfd-yy.Po
 	-rm -f ./$(DEPDIR)/eventfd.Po
 	-rm -f ./$(DEPDIR)/execve--secontext.Po
 	-rm -f ./$(DEPDIR)/execve--secontext_full.Po
@@ -18929,6 +19605,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/io_uring_register-success.Po
 	-rm -f ./$(DEPDIR)/io_uring_register.Po
 	-rm -f ./$(DEPDIR)/io_uring_setup.Po
+	-rm -f ./$(DEPDIR)/ioctl-v.Po
 	-rm -f ./$(DEPDIR)/ioctl.Po
 	-rm -f ./$(DEPDIR)/ioctl_block--pidns-translation.Po
 	-rm -f ./$(DEPDIR)/ioctl_block.Po
@@ -18938,6 +19615,14 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/ioctl_counter.Po
 	-rm -f ./$(DEPDIR)/ioctl_dm-v.Po
 	-rm -f ./$(DEPDIR)/ioctl_dm.Po
+	-rm -f ./$(DEPDIR)/ioctl_epoll-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/ioctl_epoll-Xraw.Po
+	-rm -f ./$(DEPDIR)/ioctl_epoll-Xverbose.Po
+	-rm -f ./$(DEPDIR)/ioctl_epoll-success-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/ioctl_epoll-success-Xraw.Po
+	-rm -f ./$(DEPDIR)/ioctl_epoll-success-Xverbose.Po
+	-rm -f ./$(DEPDIR)/ioctl_epoll-success.Po
+	-rm -f ./$(DEPDIR)/ioctl_epoll.Po
 	-rm -f ./$(DEPDIR)/ioctl_evdev-Xabbrev.Po
 	-rm -f ./$(DEPDIR)/ioctl_evdev-Xraw.Po
 	-rm -f ./$(DEPDIR)/ioctl_evdev-Xverbose.Po
@@ -19034,6 +19719,9 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/ioctl_mtd-success.Po
 	-rm -f ./$(DEPDIR)/ioctl_mtd.Po
 	-rm -f ./$(DEPDIR)/ioctl_nbd.Po
+	-rm -f ./$(DEPDIR)/ioctl_nsfs-ns_get_pid--pidns-translation.Po
+	-rm -f ./$(DEPDIR)/ioctl_nsfs-ns_get_pid.Po
+	-rm -f ./$(DEPDIR)/ioctl_nsfs-ns_mnt_get.Po
 	-rm -f ./$(DEPDIR)/ioctl_nsfs.Po
 	-rm -f ./$(DEPDIR)/ioctl_perf-success.Po
 	-rm -f ./$(DEPDIR)/ioctl_perf.Po
@@ -19089,6 +19777,8 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/ioctl_v4l2-v-Xverbose.Po
 	-rm -f ./$(DEPDIR)/ioctl_v4l2-v.Po
 	-rm -f ./$(DEPDIR)/ioctl_v4l2.Po
+	-rm -f ./$(DEPDIR)/ioctl_watchdog-success-v.Po
+	-rm -f ./$(DEPDIR)/ioctl_watchdog-success.Po
 	-rm -f ./$(DEPDIR)/ioctl_watchdog.Po
 	-rm -f ./$(DEPDIR)/ioctl_winsize.Po
 	-rm -f ./$(DEPDIR)/ioperm.Po
@@ -19170,6 +19860,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/libtests_a-hexquote_strndup.Po
 	-rm -f ./$(DEPDIR)/libtests_a-ifindex.Po
 	-rm -f ./$(DEPDIR)/libtests_a-inode_of_sockfd.Po
+	-rm -f ./$(DEPDIR)/libtests_a-k_sockopt.Po
 	-rm -f ./$(DEPDIR)/libtests_a-libmmsg.Po
 	-rm -f ./$(DEPDIR)/libtests_a-libsocketcall.Po
 	-rm -f ./$(DEPDIR)/libtests_a-lock_file.Po
@@ -19279,6 +19970,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/mq_sendrecv-read.Po
 	-rm -f ./$(DEPDIR)/mq_sendrecv-write.Po
 	-rm -f ./$(DEPDIR)/mq_sendrecv.Po
+	-rm -f ./$(DEPDIR)/mseal.Po
 	-rm -f ./$(DEPDIR)/msg_control-v.Po
 	-rm -f ./$(DEPDIR)/msg_control.Po
 	-rm -f ./$(DEPDIR)/msg_name.Po
@@ -19313,6 +20005,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/netlink_kobject_uevent.Po
 	-rm -f ./$(DEPDIR)/netlink_netfilter.Po
 	-rm -f ./$(DEPDIR)/netlink_netlink_diag.Po
+	-rm -f ./$(DEPDIR)/netlink_nlctrl.Po
 	-rm -f ./$(DEPDIR)/netlink_protocol.Po
 	-rm -f ./$(DEPDIR)/netlink_route.Po
 	-rm -f ./$(DEPDIR)/netlink_selinux.Po
@@ -19478,6 +20171,13 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/prctl-mce-kill.Po
 	-rm -f ./$(DEPDIR)/prctl-mdwe.Po
 	-rm -f ./$(DEPDIR)/prctl-name.Po
+	-rm -f ./$(DEPDIR)/prctl-no-args-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/prctl-no-args-Xraw.Po
+	-rm -f ./$(DEPDIR)/prctl-no-args-Xverbose.Po
+	-rm -f ./$(DEPDIR)/prctl-no-args-success-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/prctl-no-args-success-Xraw.Po
+	-rm -f ./$(DEPDIR)/prctl-no-args-success-Xverbose.Po
+	-rm -f ./$(DEPDIR)/prctl-no-args-success.Po
 	-rm -f ./$(DEPDIR)/prctl-no-args.Po
 	-rm -f ./$(DEPDIR)/prctl-pac-enabled-keys-Xabbrev.Po
 	-rm -f ./$(DEPDIR)/prctl-pac-enabled-keys-Xraw.Po
@@ -19489,6 +20189,26 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/prctl-pac-enabled-keys.Po
 	-rm -f ./$(DEPDIR)/prctl-pac-reset-keys.Po
 	-rm -f ./$(DEPDIR)/prctl-pdeathsig.Po
+	-rm -f ./$(DEPDIR)/prctl-ppc-dexcr-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/prctl-ppc-dexcr-Xraw.Po
+	-rm -f ./$(DEPDIR)/prctl-ppc-dexcr-Xverbose.Po
+	-rm -f ./$(DEPDIR)/prctl-ppc-dexcr-success-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/prctl-ppc-dexcr-success-Xraw.Po
+	-rm -f ./$(DEPDIR)/prctl-ppc-dexcr-success-Xverbose.Po
+	-rm -f ./$(DEPDIR)/prctl-ppc-dexcr-success.Po
+	-rm -f ./$(DEPDIR)/prctl-ppc-dexcr.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-icache-flush-ctx-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-icache-flush-ctx-Xraw.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-icache-flush-ctx-Xverbose.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-icache-flush-ctx.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-v-ctrl-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-v-ctrl-Xraw.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-v-ctrl-Xverbose.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-v-ctrl-success-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-v-ctrl-success-Xraw.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-v-ctrl-success-Xverbose.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-v-ctrl-success.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-v-ctrl.Po
 	-rm -f ./$(DEPDIR)/prctl-sched-core--pidns-translation-Xabbrev.Po
 	-rm -f ./$(DEPDIR)/prctl-sched-core--pidns-translation-Xraw.Po
 	-rm -f ./$(DEPDIR)/prctl-sched-core--pidns-translation-Xverbose.Po
@@ -20082,6 +20802,8 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/epoll_pwait2.Po
 	-rm -f ./$(DEPDIR)/epoll_wait.Po
 	-rm -f ./$(DEPDIR)/erestartsys.Po
+	-rm -f ./$(DEPDIR)/eventfd--decode-fd-eventfd.Po
+	-rm -f ./$(DEPDIR)/eventfd-yy.Po
 	-rm -f ./$(DEPDIR)/eventfd.Po
 	-rm -f ./$(DEPDIR)/execve--secontext.Po
 	-rm -f ./$(DEPDIR)/execve--secontext_full.Po
@@ -20268,6 +20990,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/io_uring_register-success.Po
 	-rm -f ./$(DEPDIR)/io_uring_register.Po
 	-rm -f ./$(DEPDIR)/io_uring_setup.Po
+	-rm -f ./$(DEPDIR)/ioctl-v.Po
 	-rm -f ./$(DEPDIR)/ioctl.Po
 	-rm -f ./$(DEPDIR)/ioctl_block--pidns-translation.Po
 	-rm -f ./$(DEPDIR)/ioctl_block.Po
@@ -20277,6 +21000,14 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/ioctl_counter.Po
 	-rm -f ./$(DEPDIR)/ioctl_dm-v.Po
 	-rm -f ./$(DEPDIR)/ioctl_dm.Po
+	-rm -f ./$(DEPDIR)/ioctl_epoll-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/ioctl_epoll-Xraw.Po
+	-rm -f ./$(DEPDIR)/ioctl_epoll-Xverbose.Po
+	-rm -f ./$(DEPDIR)/ioctl_epoll-success-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/ioctl_epoll-success-Xraw.Po
+	-rm -f ./$(DEPDIR)/ioctl_epoll-success-Xverbose.Po
+	-rm -f ./$(DEPDIR)/ioctl_epoll-success.Po
+	-rm -f ./$(DEPDIR)/ioctl_epoll.Po
 	-rm -f ./$(DEPDIR)/ioctl_evdev-Xabbrev.Po
 	-rm -f ./$(DEPDIR)/ioctl_evdev-Xraw.Po
 	-rm -f ./$(DEPDIR)/ioctl_evdev-Xverbose.Po
@@ -20373,6 +21104,9 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/ioctl_mtd-success.Po
 	-rm -f ./$(DEPDIR)/ioctl_mtd.Po
 	-rm -f ./$(DEPDIR)/ioctl_nbd.Po
+	-rm -f ./$(DEPDIR)/ioctl_nsfs-ns_get_pid--pidns-translation.Po
+	-rm -f ./$(DEPDIR)/ioctl_nsfs-ns_get_pid.Po
+	-rm -f ./$(DEPDIR)/ioctl_nsfs-ns_mnt_get.Po
 	-rm -f ./$(DEPDIR)/ioctl_nsfs.Po
 	-rm -f ./$(DEPDIR)/ioctl_perf-success.Po
 	-rm -f ./$(DEPDIR)/ioctl_perf.Po
@@ -20428,6 +21162,8 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/ioctl_v4l2-v-Xverbose.Po
 	-rm -f ./$(DEPDIR)/ioctl_v4l2-v.Po
 	-rm -f ./$(DEPDIR)/ioctl_v4l2.Po
+	-rm -f ./$(DEPDIR)/ioctl_watchdog-success-v.Po
+	-rm -f ./$(DEPDIR)/ioctl_watchdog-success.Po
 	-rm -f ./$(DEPDIR)/ioctl_watchdog.Po
 	-rm -f ./$(DEPDIR)/ioctl_winsize.Po
 	-rm -f ./$(DEPDIR)/ioperm.Po
@@ -20509,6 +21245,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/libtests_a-hexquote_strndup.Po
 	-rm -f ./$(DEPDIR)/libtests_a-ifindex.Po
 	-rm -f ./$(DEPDIR)/libtests_a-inode_of_sockfd.Po
+	-rm -f ./$(DEPDIR)/libtests_a-k_sockopt.Po
 	-rm -f ./$(DEPDIR)/libtests_a-libmmsg.Po
 	-rm -f ./$(DEPDIR)/libtests_a-libsocketcall.Po
 	-rm -f ./$(DEPDIR)/libtests_a-lock_file.Po
@@ -20618,6 +21355,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/mq_sendrecv-read.Po
 	-rm -f ./$(DEPDIR)/mq_sendrecv-write.Po
 	-rm -f ./$(DEPDIR)/mq_sendrecv.Po
+	-rm -f ./$(DEPDIR)/mseal.Po
 	-rm -f ./$(DEPDIR)/msg_control-v.Po
 	-rm -f ./$(DEPDIR)/msg_control.Po
 	-rm -f ./$(DEPDIR)/msg_name.Po
@@ -20652,6 +21390,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/netlink_kobject_uevent.Po
 	-rm -f ./$(DEPDIR)/netlink_netfilter.Po
 	-rm -f ./$(DEPDIR)/netlink_netlink_diag.Po
+	-rm -f ./$(DEPDIR)/netlink_nlctrl.Po
 	-rm -f ./$(DEPDIR)/netlink_protocol.Po
 	-rm -f ./$(DEPDIR)/netlink_route.Po
 	-rm -f ./$(DEPDIR)/netlink_selinux.Po
@@ -20817,6 +21556,13 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/prctl-mce-kill.Po
 	-rm -f ./$(DEPDIR)/prctl-mdwe.Po
 	-rm -f ./$(DEPDIR)/prctl-name.Po
+	-rm -f ./$(DEPDIR)/prctl-no-args-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/prctl-no-args-Xraw.Po
+	-rm -f ./$(DEPDIR)/prctl-no-args-Xverbose.Po
+	-rm -f ./$(DEPDIR)/prctl-no-args-success-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/prctl-no-args-success-Xraw.Po
+	-rm -f ./$(DEPDIR)/prctl-no-args-success-Xverbose.Po
+	-rm -f ./$(DEPDIR)/prctl-no-args-success.Po
 	-rm -f ./$(DEPDIR)/prctl-no-args.Po
 	-rm -f ./$(DEPDIR)/prctl-pac-enabled-keys-Xabbrev.Po
 	-rm -f ./$(DEPDIR)/prctl-pac-enabled-keys-Xraw.Po
@@ -20828,6 +21574,26 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/prctl-pac-enabled-keys.Po
 	-rm -f ./$(DEPDIR)/prctl-pac-reset-keys.Po
 	-rm -f ./$(DEPDIR)/prctl-pdeathsig.Po
+	-rm -f ./$(DEPDIR)/prctl-ppc-dexcr-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/prctl-ppc-dexcr-Xraw.Po
+	-rm -f ./$(DEPDIR)/prctl-ppc-dexcr-Xverbose.Po
+	-rm -f ./$(DEPDIR)/prctl-ppc-dexcr-success-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/prctl-ppc-dexcr-success-Xraw.Po
+	-rm -f ./$(DEPDIR)/prctl-ppc-dexcr-success-Xverbose.Po
+	-rm -f ./$(DEPDIR)/prctl-ppc-dexcr-success.Po
+	-rm -f ./$(DEPDIR)/prctl-ppc-dexcr.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-icache-flush-ctx-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-icache-flush-ctx-Xraw.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-icache-flush-ctx-Xverbose.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-icache-flush-ctx.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-v-ctrl-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-v-ctrl-Xraw.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-v-ctrl-Xverbose.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-v-ctrl-success-Xabbrev.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-v-ctrl-success-Xraw.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-v-ctrl-success-Xverbose.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-v-ctrl-success.Po
+	-rm -f ./$(DEPDIR)/prctl-riscv-v-ctrl.Po
 	-rm -f ./$(DEPDIR)/prctl-sched-core--pidns-translation-Xabbrev.Po
 	-rm -f ./$(DEPDIR)/prctl-sched-core--pidns-translation-Xraw.Po
 	-rm -f ./$(DEPDIR)/prctl-sched-core--pidns-translation-Xverbose.Po
@@ -21620,6 +22386,12 @@ $(srcdir)/epoll_wait.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 $(srcdir)/erestartsys.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
+$(srcdir)/eventfd-yy.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/eventfd--decode-fd-eventfd.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
 $(srcdir)/execve--secontext.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
@@ -22154,6 +22926,9 @@ $(srcdir)/io_uring_register-success-Xverbose.gen.test: $(abs_srcdir)/gen_tests.s
 $(srcdir)/io_uring_setup.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
+$(srcdir)/ioctl-v.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
 $(srcdir)/ioctl_block.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
@@ -22173,6 +22948,30 @@ $(srcdir)/ioctl_dm.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
 $(srcdir)/ioctl_dm-v.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/ioctl_epoll.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/ioctl_epoll-Xabbrev.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/ioctl_epoll-Xraw.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/ioctl_epoll-Xverbose.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/ioctl_epoll-success.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/ioctl_epoll-success-Xabbrev.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/ioctl_epoll-success-Xraw.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/ioctl_epoll-success-Xverbose.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
 $(srcdir)/ioctl_evdev.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
@@ -22463,6 +23262,15 @@ $(srcdir)/ioctl_nbd.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 $(srcdir)/ioctl_nsfs.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
+$(srcdir)/ioctl_nsfs-ns_get_pid.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/ioctl_nsfs-ns_get_pid--pidns-translation.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/ioctl_nsfs-ns_mnt_get.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
 $(srcdir)/ioctl_perf.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
@@ -22626,6 +23434,12 @@ $(srcdir)/ioctl_v4l2-v-Xverbose.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/g
 	$(AM_V_GEN) $^ $@
 
 $(srcdir)/ioctl_watchdog.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/ioctl_watchdog-success.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/ioctl_watchdog-success-v.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
 $(srcdir)/ioctl_winsize.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
@@ -23054,6 +23868,9 @@ $(srcdir)/mq_sendrecv-read.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_te
 $(srcdir)/mq_sendrecv-write.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
+$(srcdir)/mseal.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
 $(srcdir)/msg_control.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
@@ -23130,6 +23947,9 @@ $(srcdir)/netlink_kobject_uevent.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/
 	$(AM_V_GEN) $^ $@
 
 $(srcdir)/netlink_netfilter.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/netlink_nlctrl.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
 $(srcdir)/netlink_protocol.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
@@ -23597,6 +24417,27 @@ $(srcdir)/prctl-name.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 $(srcdir)/prctl-no-args.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
+$(srcdir)/prctl-no-args-Xabbrev.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-no-args-Xraw.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-no-args-Xverbose.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-no-args-success.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-no-args-success-Xabbrev.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-no-args-success-Xraw.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-no-args-success-Xverbose.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
 $(srcdir)/prctl-pac-enabled-keys.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
@@ -23625,6 +24466,66 @@ $(srcdir)/prctl-pac-reset-keys.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/ge
 	$(AM_V_GEN) $^ $@
 
 $(srcdir)/prctl-pdeathsig.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-ppc-dexcr.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-ppc-dexcr-Xabbrev.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-ppc-dexcr-Xraw.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-ppc-dexcr-Xverbose.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-ppc-dexcr-success.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-ppc-dexcr-success-Xabbrev.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-ppc-dexcr-success-Xraw.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-ppc-dexcr-success-Xverbose.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-riscv-icache-flush-ctx.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-riscv-icache-flush-ctx-Xabbrev.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-riscv-icache-flush-ctx-Xraw.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-riscv-icache-flush-ctx-Xverbose.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-riscv-v-ctrl.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-riscv-v-ctrl-Xabbrev.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-riscv-v-ctrl-Xraw.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-riscv-v-ctrl-Xverbose.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-riscv-v-ctrl-success.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-riscv-v-ctrl-success-Xabbrev.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-riscv-v-ctrl-success-Xraw.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
+	$(AM_V_GEN) $^ $@
+
+$(srcdir)/prctl-riscv-v-ctrl-success-Xverbose.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in
 	$(AM_V_GEN) $^ $@
 
 $(srcdir)/prctl-sched-core.gen.test: $(abs_srcdir)/gen_tests.sh $(srcdir)/gen_tests.in

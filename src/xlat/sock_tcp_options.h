@@ -297,6 +297,13 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define TCP_AO_REPAIR 42
 #endif
+#if defined(TCP_IS_MPTCP) || (defined(HAVE_DECL_TCP_IS_MPTCP) && HAVE_DECL_TCP_IS_MPTCP)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((TCP_IS_MPTCP) == (43), "TCP_IS_MPTCP != 43");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define TCP_IS_MPTCP 43
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -435,6 +442,9 @@ static const struct xlat_data sock_tcp_options_xdata[] = {
  [TCP_AO_REPAIR] = XLAT(TCP_AO_REPAIR),
  #define XLAT_VAL_41 ((unsigned) (TCP_AO_REPAIR))
  #define XLAT_STR_41 STRINGIFY(TCP_AO_REPAIR)
+ [TCP_IS_MPTCP] = XLAT(TCP_IS_MPTCP),
+ #define XLAT_VAL_42 ((unsigned) (TCP_IS_MPTCP))
+ #define XLAT_STR_42 STRINGIFY(TCP_IS_MPTCP)
 };
 static
 const struct xlat sock_tcp_options[1] = { {
@@ -568,6 +578,9 @@ const struct xlat sock_tcp_options[1] = { {
 #  ifdef XLAT_VAL_41
   | XLAT_VAL_41
 #  endif
+#  ifdef XLAT_VAL_42
+  | XLAT_VAL_42
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -696,6 +709,9 @@ const struct xlat sock_tcp_options[1] = { {
 #  ifdef XLAT_STR_41
   + sizeof(XLAT_STR_41)
 #  endif
+#  ifdef XLAT_STR_42
+  + sizeof(XLAT_STR_42)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -784,6 +800,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_40
 #  undef XLAT_STR_41
 #  undef XLAT_VAL_41
+#  undef XLAT_STR_42
+#  undef XLAT_VAL_42
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

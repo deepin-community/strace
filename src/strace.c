@@ -65,7 +65,7 @@ enum stack_trace_modes stack_trace_mode;
 # define fork() vfork()
 #endif
 
-const unsigned int syscall_trap_sig = SIGTRAP | 0x80;
+static const unsigned int syscall_trap_sig = SIGTRAP | 0x80;
 
 cflag_t cflag = CFLAG_NONE;
 bool followfork;
@@ -379,7 +379,8 @@ Output format:\n\
                  print exit reason of kvm vcpu\n\
   -e decode-fds=SET, --decode-fds=SET\n\
                  what kinds of file descriptor information details to decode\n\
-     details:    dev (device major/minor for block/char device files)\n\
+     details:    dev (device major/minor for block/char device files),\n\
+                 eventfd (associated eventfd object details for eventfds),\n\
                  path (file path),\n\
                  pidfd (associated PID for pidfds),\n\
                  socket (protocol-specific information for socket descriptors),\n\
@@ -1175,7 +1176,7 @@ droptcb_verbose(struct tcb *tcp)
 
 /* Returns true when the tracee has to be waited for. */
 static bool
-interrupt_or_stop(struct tcb *tcp)
+detach_or_interrupt_or_stop(struct tcb *tcp)
 {
 	/*
 	 * Linux wrongly insists the child be stopped
@@ -1186,7 +1187,8 @@ interrupt_or_stop(struct tcb *tcp)
 	if (!(tcp->flags & TCB_ATTACHED))
 		return false;
 
-	/* We attached but possibly didn't see the expected SIGSTOP.
+	/*
+	 * We attached but possibly didn't see the expected SIGSTOP yet.
 	 * We must catch exactly one as otherwise the detached process
 	 * would be left stopped (process state T).
 	 */
@@ -1315,7 +1317,7 @@ detach_interrupted_or_stopped(struct tcb *tcp, int status)
 static void
 detach(struct tcb *tcp)
 {
-	if (!interrupt_or_stop(tcp))
+	if (!detach_or_interrupt_or_stop(tcp))
 		goto drop;
 
 	/*
@@ -3284,7 +3286,7 @@ cleanup(int fatal_sig)
 			kill(tcp->pid, SIGCONT);
 			kill(tcp->pid, fatal_sig);
 		}
-		if (interrupt_or_stop(tcp))
+		if (detach_or_interrupt_or_stop(tcp))
 			++num_to_wait;
 		else
 			droptcb_verbose(tcp);
@@ -3547,8 +3549,16 @@ startup_tcb(struct tcb *tcp)
 		}
 	}
 
-	if ((tcp->flags & TCB_GRABBED) && (get_scno(tcp) == 1))
-		tcp->s_prev_ent = tcp->s_ent;
+	if (tcp->flags & TCB_GRABBED) {
+		/*
+		 * There is no guarantee the state of the tracee is such that
+		 * would allow get_scno() to obtain meaningful information.
+		 * However, if the tracee is not in a syscall, then the garbage
+		 * obtained by get_scno() is not going to be used.
+		 */
+		if (get_scno(tcp) == 1)
+			tcp->s_prev_ent = tcp->s_ent;
+	}
 
 	if (cflag) {
 		tcp->atime = tcp->stime;

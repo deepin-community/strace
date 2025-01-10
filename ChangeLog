@@ -1,3 +1,1861 @@
+2024-11-18  Dmitry V. Levin  <ldv@strace.io>
+
+	Prepare for 6.12 release.
+	* NEWS: Update for 6.12 release.
+
+	Update .mailmap.
+	* .mailmap: Add both email addresses of Sahil Siddiq to avoid
+	duplication in CREDITS file.
+
+	Update copyright headers.
+	Headers updated automatically using maint/update_copyright_years.sh
+	script.
+
+2024-11-17  Dmitry V. Levin  <ldv@strace.io>
+
+	nsfs: implement decoding of NS_MNT_GET_* ioctl commands.
+	* src/nsfs.c (print_mnt_ns_info): New function.
+	(nsfs_ioctl): Decode NS_MNT_GET_{INFO,NEXT,PREV} ioctl commands
+	introduced by Linux kernel commit v6.12-rc1~210^2^2.
+	* tests/ioctl_nsfs-ns_mnt_get.c: New file.
+	* tests/pure_executables.list: Add ioctl_nsfs-ns_mnt_get.
+	* tests/.gitignore: Likewise.
+	* tests/gen_tests.in (ioctl_nsfs-ns_mnt_get): New entry.
+	* NEWS: Mention this change.
+
+2024-11-14  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update V4L2_* constants.
+	* src/xlat/v4l2_device_capabilities_flags.in (V4L2_CAP_EDID): New
+	constant introduced by Linux kernel commit v6.12-rc1~82^2~25.
+	(V4L2_CAP_ASYNCIO): Remove constant deprecated by Linux kernel commit
+	v6.1-rc1~130^2~49 because it had the same value as V4L2_CAP_EDID.
+	* src/xlat/v4l2_meta_fmts.in (V4L2_META_FMT_RPI_BE_CFG): New constant
+	introduced by Linux kernel commit v6.11-rc1~142^2~67.
+	(V4L2_META_FMT_RK_ISP1_EXT_PARAMS): New constant introduced
+	by Linux kernel commit v6.12-rc1~82^2~93^2~10.
+	* src/xlat/v4l2_pix_fmts.in (V4L2_PIX_FMT_BGR48, V4L2_PIX_FMT_RGB48):
+	New constants introduced by Linux kernel commit v6.11-rc1~142^2~69.
+	(V4L2_PIX_FMT_PISP_COMP1_RGGB, V4L2_PIX_FMT_PISP_COMP1_GRBG,
+	V4L2_PIX_FMT_PISP_COMP1_GBRG, V4L2_PIX_FMT_PISP_COMP1_BGGR,
+	V4L2_PIX_FMT_PISP_COMP1_MONO, V4L2_PIX_FMT_PISP_COMP2_RGGB,
+	V4L2_PIX_FMT_PISP_COMP2_GRBG, V4L2_PIX_FMT_PISP_COMP2_GBRG,
+	V4L2_PIX_FMT_PISP_COMP2_BGGR, V4L2_PIX_FMT_PISP_COMP2_MONO): New
+	constants introduced by Linux kernel commit v6.11-rc1~142^2~66.
+	* tests/ioctl_v4l2-success.c (main): Update expected output.
+	* NEWS: Mention this change.
+
+2024-11-13  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update SCHED_* constants.
+	* src/xlat/schedulers.in (SCHED_EXT): New constant introduced
+	by Linux kernel commit v6.12-rc1~111^2~108.
+	* tests/sched_xetscheduler.c (main): Update.
+	* NEWS: Mention this change.
+
+2024-11-12  Dmitry V. Levin  <ldv@strace.io>
+
+	nsfs: implement decoding of NS_GET_{PID,TGID}_{FROM,IN}_PIDNS ioctl commands
+	* src/nsfs.c (nsfs_ioctl): Decode NS_GET_{PID,TGID}_{FROM,IN}_PIDNS
+	ioctl commands introduced by Linux kernel commit v6.11-rc1~235.
+	* tests/ioctl_nsfs-ns_get_pid.c: New file.
+	* tests/ioctl_nsfs-ns_get_pid--pidns-translation.c: Likewise.
+	* tests/Makefile.am (check_PROGRAMS): Add ioctl_nsfs-ns_get_pid
+	and ioctl_nsfs-ns_get_pid--pidns-translation.
+	* tests/.gitignore: Likewise.
+	* tests/gen_tests.in (ioctl_nsfs-ns_get_pid,
+	ioctl_nsfs-ns_get_pid--pidns-translation): New entries.
+	* NEWS: Mention this change.
+
+2024-11-12  Dmitry V. Levin  <ldv@strace.io>
+
+	nsfs: fix decoding of NS_GET_MNTNS_ID ioctl command.
+	* src/nsfs.c (nsfs_ioctl): Fix format string.
+	* tests/ioctl_nsfs.c: Likewise.
+
+	Fixes: v6.11-46-g87388edf2 "nsfs: implement decoding of NS_GET_MNTNS_ID ioctl command"
+
+2024-11-12  Dmitry V. Levin  <ldv@strace.io>
+
+	tests: fix NS_GET_MNTNS_ID ioctl check.
+	* tests/ioctl_nsfs.c: Use an appropriate file descriptor
+	for NS_GET_MNTNS_ID command.
+
+	Fixes: v6.11-46-g87388edf2 "nsfs: implement decoding of NS_GET_MNTNS_ID ioctl command"
+
+2024-11-12  Gleb Fotengauer-Malinovskiy  <glebfm@altlinux.org>
+
+	Update ioctl entries from linux v6.12.
+	* src/linux/32/ioctls_inc_align16.h: Update from linux v6.12-rc7 using
+	ioctls_gen.sh.
+	* src/linux/32/ioctls_inc_align32.h: Likewise.
+	* src/linux/32/ioctls_inc_align64.h: Likewise.
+	* src/linux/64/ioctls_inc.h: Likewise.
+	* src/linux/x32/ioctls_inc0.h: Likewise.
+	* NEWS: Mention this.
+
+2024-11-11  Dmitry V. Levin  <ldv@strace.io>
+
+	nsfs: implement decoding of NS_GET_MNTNS_ID ioctl command.
+	* src/nsfs.c (nsfs_ioctl): Decode NS_GET_MNTNS_ID introduced
+	by Linux kernel commits v6.11-rc1~236^2~6^2~1 and v6.11-rc4~40^2~9.
+	* tests/ioctl_nsfs.c: Check it.
+	* NEWS: Mention this change.
+
+	xlat: update LSM_* constants.
+	* src/xlat/lsm_ids.in (LSM_ID_IPE): New constant introduced
+	by Linux kernel commit v6.12-rc1~81^2~31.
+	* tests/lsm_list_modules.c (main): Update expected output.
+	* tests/gen_tests.in (lsm_list_modules-success): Update.
+	* NEWS: Mention this change.
+
+	landlock: update decoding of struct landlock_ruleset_attr.
+	* src/xlat/landlock_scope_flags.in: New file.
+	* src/landlock.c: Include "xlat/landlock_scope_flags.h".
+	(print_landlock_ruleset_attr): Decode landlock_ruleset_attr.scoped field
+	introduced by Linux kernel commit v6.12-rc1~79^2~13.
+	* tests/landlock_create_ruleset.c: Check it.
+	* NEWS: Mention this change.
+
+	io_uring: implement IORING_REGISTER_CLONE_BUFFERS decoding.
+	* src/xlat/uring_clone_buffers_flags.in: New file.
+	* src/xlat/uring_register_opcodes.in (IORING_REGISTER_CLONE_BUFFERS):
+	New constant introduced by Linux kernel commit v6.12-rc1~74^2~9.
+	* src/io_uring.c: Include "xlat/uring_clone_buffers_flags.h".
+	(print_io_uring_clone_buffers, print_ioring_register_clone_buffers): New
+	functions.
+	(SYS_FUNC(io_uring_register)) <IORING_REGISTER_CLONE_BUFFERS>: Use
+	print_ioring_register_clone_buffers.
+	* tests/io_uring_register.c (main): Check it.
+	* NEWS: Mention this change.
+
+	io_uring: implement IORING_REGISTER_CLOCK decoding.
+	* src/xlat/uring_register_opcodes.in (IORING_REGISTER_CLOCK):
+	New constant introduced by Linux kernel commit v6.12-rc1~74^2~34.
+	* src/io_uring.c (print_io_uring_clock_register,
+	print_ioring_register_clock): New functions.
+	(SYS_FUNC(io_uring_register)) <IORING_REGISTER_CLOCK>: Use
+	print_ioring_register_clock.
+	* tests/io_uring_register.c (main): Check it.
+	* NEWS: Mention this change.
+
+	xlat: update IORING_FEAT_* constants.
+	* src/xlat/uring_setup_features.in (IORING_FEAT_MIN_TIMEOUT): New
+	constant introduced by Linux kernel commit v6.12-rc1~74^2~29.
+
+	xlat: update IORING_ENTER_* constants.
+	* src/xlat/uring_enter_flags.in (IORING_ENTER_ABS_TIMER): New constant
+	introduced by Linux kernel commit v6.12-rc1~74^2~35.
+	* tests/io_uring_enter.c (main): Update expected output.
+	* NEWS: Mention this change.
+
+	Implement decoding of FRA_DSCP netlink attribute.
+	* src/xlat/rtnl_rule_attrs.in (FRA_DSCP): New constant introduced
+	by Linux kernel commit v6.12-rc1~232^2~13^2~5.
+	* src/rtnl_rule.c (fib_rule_hdr_nla_decoders): Add it.
+	* NEWS: Mention this change.
+
+	xlat: update NT_* constants.
+	* src/xlat/nt_descriptor_types.in (NT_X86_XSAVE_LAYOUT): New constant
+	introduced by Linux kernel commit v6.12-rc1~180^2.
+	(NT_ARM_POE): New constant introduced by Linux kernel commit
+	v6.12-rc1~221^2~2^2~10.
+	* NEWS: Mention this change.
+
+	xlat: update AUDIT_* constants.
+	* xlat/nl_audit_types.in (AUDIT_IPE_ACCESS, AUDIT_IPE_CONFIG_CHANGE,
+	AUDIT_IPE_POLICY_LOAD): New constants introduced by Linux kernel
+	commit v6.12-rc1~81^2~23.
+	* NEWS: Mention this change.
+
+2024-11-11  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	tests/looping_threads: do not loop as much.
+	Current calculations of the test running time scales linearly with
+	TIMEOUT_DURATION, which makes running tests unreasonably long times
+	in environments where this value is increased to accommodate slower
+	machines (and even the current default, 1500, makes it run for over
+	90 seconds, which is way more that it is needed to be).  Change
+	the scaling to a square root, so the test runs a half of the square
+	root of the TIMEOUT_DURATION value (so, around 8 seconds with
+	TIMEOUT_DURATION=75, around 20 seconds with the current default of
+	TIMEOUT_DURATION=1500, around 30 seconds with TIMEOUT_DURATION=3600)
+
+	* tests/init.sh (sq_root): New function.
+	* tests/looping_threads.test: Override TIMEOUT_DURATION to 4
+	if it is less than that;  change timeout_16 to timeout_4_sq and set
+	it to $(sq_root "$((TIMEOUT_DURATION/4))").
+
+2024-11-10  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	tests: introduce struct strival32 and use it.
+	There are several tests that define their own struct type that holds
+	a pair of integer value and its string definition;  provide one
+	in tests.h and use it elsewhere.
+
+	* tests/tests.h (struct strival32): New type definition.
+	* tests/faccessat.c (main) <dirfds>: Change the type to struct
+	strival32.
+	* tests/faccessat2.c (main) <dirfds>: Likewise.
+	* tests/landlock_add_rule.c (main) <parent_fd_vals>: Likewise.
+	* tests/landlock_restrict_self.c (main) <flags_vals>: Likewise.
+	* tests/sockopt-sol_netlink.c (main) <names>: Likise.
+	* tests/perf_event_open.c (struct s32_val_str): Remove.
+	(main) <clockids>: change the type to struct strival32.
+	* tests/sockopt-sol_socket.c (struct intstr): Remove.
+	(printoptval): Change the type of the vecs parameter to struct
+	strival32*.
+	(main) <int_vecs, txrehash_vecs>: Change the type to struct strival32.
+	(main) <names>: Change the type of the vecs field to struct strival32.
+	(main) <vecs>: Change the type to struct strival32 *const.
+
+2024-11-10  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	tests: use strval8 where appropriate.
+	There are several tests that define their own variant of a struct
+	that holds a pair of an 8-bit integer and its string representation;
+	replace those with struct strval8 usage, already provided by tests.h.
+
+	* tests/nlattr_ifla_linkinfo.c (main) <tun_types>: Change the type
+	to struct strval8.
+	* tests/nlattr_ifla_proto_down_reason.c (main) <inv_attrs>: Likewise.
+	* tests/nlattr_ifla_xdp.c (main) <attach_types>: Likewise.
+
+2024-11-10  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	tests: use strval32/strval64 where appropriate.
+	There are several tests that define their own variant of a struct
+	that holds a pair of a 32/64-bit integer and its string representation;
+	replace those with struct strval32/strval64 usage, already provided
+	by tests.h.
+
+	* tests/fsmount.c (main) <flags>: Change the type to struct strval32,
+	add static and const qualifiers.
+	* tests/io_uring_register.c (main) <op_flags>: Likewise.
+	* tests/openat.c (main) <modes>: Likewise.
+	* tests/seccomp_get_action_avail.c (main) <actions>: Likewise.
+	* tests/userfaultfd.c (main) <flags>: Likewise.
+	* tests/futex_requeue.c (main) <pair>: Change the type to struct
+	strval32.
+	* tests/ioctl_counter.c (main) <dirs>: Likewise.
+	* tests/ioctl_epoll.c (main) <dirs>: Likewise.
+	* tests/ioctl_seccomp.c (main) <dirs>: Likewise.
+	* tests/memfd_secret.c (main) <flags_vals>: Likewise.
+	* tests/nlattr_ifinfomsg.c (main) <ifla_events, attrs>: Likewise.
+	* tests/nlattr_ifla_proto_down_reason.c (main) <attrs>: Likewise.
+	* tests/nlattr_ifla_xdp.c (main) <attrs>: Likewise.
+	* tests/nlattr_mdba_router_port.c (main) <pattrs>: Likewise.
+	* tests/nlattr_tcamsg.c (main) <nla_default, tcaa_default>: Likewise.
+	* tests/prctl-sched-core.c (main) <pidtypes>: Likewise.
+	* tests/setns.c (main) <nstypes>: Likewise.
+	* tests/landlock_add_rule.c (main) <fs_vals>: Change the type to struct
+	strval64.
+	* tests/landlock_create_ruleset.c (main) <fs_vals>: Likewise.
+	* tests/landlock_restrict_self.c (main) <ruleset_fd_vals>: Likewise.
+	* tests/nlattr_ifla_linkinfo.c (main) <struct val_name>: Remove.
+	(main) <und_br_attrs, hwa_br_attrs, c_t_br_attrs, u32_br_attrs,
+	u16_br_attrs, x16_br_attrs, u8_br_attrs, br_id_attrs, u8_tun_attrs,
+	u32_tun_attrs, und_tun_attrs, uid_tun_attrs, und_brport_attrs,
+	u8_brport_attrs, u16_brport_attrs, x16_brport_attrs, u32_brport_attrs,
+	brport_id_attrs, c_t_brport_attrs, ifidx_brport_attrs>: Change the type
+	to struct strval32.
+	(main): Use the str field instead of name.
+	* tests/perf_event_open.c (struct u32_val_str, struct u64_val_str):
+	Remove.
+	(main) <attr_types, attr_configs, sample_types, read_formats,
+	branch_sample_types>: Change the type to struct strval64.
+	(main) <bp_types>: Change the type to struct strval32.
+
+2024-11-06  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	Implement decoding of EPIOC[GS]PARAMS ioctls.
+	Introduced by Linux commit v6.9-rc1~159^2~258^2.
+
+	* bundled/linux/include/uapi/linux/eventpoll.h: New file.
+	* bundled/Makefile.am (EXTRA_DIST): Add it.
+	* src/Makefile.am (libstrace_a_SOURCES): Add epoll_ioctl.c.
+	* src/defs.h (DECL_IOCTL(epoll)): New declaration.
+	* src/epoll_ioctl.c: New file.
+	* src/ioctl.c (ioctl_decode) <case 0x8a>: Call epoll_ioctl.
+	* tests/.gitignore: Add ioctl_epoll, ioctl_epoll-Xabbrev,
+	ioctl_epoll-Xraw, ioctl_epoll-Xverbose, ioctl_epoll-success,
+	ioctl_epoll-success-Xabbrev, ioctl_epoll-success-Xraw,
+	and ioctl_epoll-success-Xverbose.
+	* tests/Makefile.am (check_PROGRAMS): Add ioctl_epoll-success,
+	ioctl_epoll-success-Xabbrev, ioctl_epoll-success-Xraw,
+	and ioctl_epoll-success-Xverbose.
+	* tests/gen_tests.in (ioctl_epoll, ioctl_epoll-Xabbrev, ioctl_epoll-Xraw,
+	ioctl_epoll-Xverbose, ioctl_epoll-success, ioctl_epoll-success-Xabbrev,
+	ioctl_epoll-success-Xraw, ioctl_epoll-success-Xverbose): New tests.
+	* tests/ioctl_epoll-Xabbrev.c: New file.
+	* tests/ioctl_epoll-Xraw.c: Likewise.
+	* tests/ioctl_epoll-Xverbose.c: Likewise.
+	* tests/ioctl_epoll-success-Xabbrev.c: Likewise.
+	* tests/ioctl_epoll-success-Xraw.c: Likewise.
+	* tests/ioctl_epoll-success-Xverbose.c: Likewise.
+	* tests/ioctl_epoll-success.c: Likewise.
+	* tests/ioctl_epoll.c: Likewise.
+	* tests/pure_executables.list: Add ioctl_epoll, ioctl_epoll-Xabbrev,
+	ioctl_epoll-Xraw, and ioctl_epoll-Xverbose.
+	* NEWS: Mention it.
+
+2024-11-03  Dmitry V. Levin  <ldv@strace.io>
+
+	tests/pipe_maxfd: decrease the maximal pipe fd.
+	Apparently, INT_MAX is too big, attempts to create such file descriptors
+	usually fail with ENOMEM, this results to move_fd() looping too long in
+	attempts to find a suitable pipe fd, leading to test timeouts.
+
+	* tests/pipe_maxfd.c: (pipe_maxfd): Decrease the maximal pipe fd
+	from INT_MAX to 0x10000.
+
+	Resolves: https://github.com/strace/strace/issues/323
+
+2024-11-02  Dmitry V. Levin  <ldv@strace.io>
+
+	Use linux/sched/types.h instead of sched_attr.h.
+	With the recent changes to sched_attr.h, it almost became a replica
+	of linux/sched/types.h, so use the latter instead.
+
+	* src/sched_attr.h: Remove.
+	* src/Makefile.am (libstrace_a_SOURCES): Remove sched_attr.h.
+	* src/sched.c: Include <linux/sched/types.h> instead of "sched_attr.h".
+	(print_sched_attr): Replace SCHED_ATTR_MIN_SIZE with
+	SCHED_ATTR_SIZE_VER0.
+	* tests/sched_xetattr.c: Include <linux/sched/types.h> instead of
+	"sched_attr.h".
+	(main): Replace SCHED_ATTR_MIN_SIZE with SCHED_ATTR_SIZE_VER0.
+
+2024-11-02  Dmitry V. Levin  <ldv@strace.io>
+
+	bundled: add uapi/linux/sched/types.h.
+	* bundled/linux/include/uapi/linux/sched/types.h: New file.
+	* bundled/Makefile.am (EXTRA_DIST): Add
+	linux/include/uapi/linux/sched/types.h.
+
+2024-11-02  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	tests: limit the number of binaries for the negative check in test_trace_expr
+	Part of the test in the test_trace_expr function is to check that only
+	the provided list of binaries produces the expected output, which
+	is implemented by checking for the absence of output against
+	(the rest of) the binaries provided in pure_executables.list.
+	As the number of tests implemented in the strace test suite grew
+	over time, the execution time of such tests grew as well, which makes
+	the test suite runs longer and tends to hit the (already extremely
+	generous) test execution time limit more often on underpowered
+	and/or heavily utilised machines.  Limit the test execution time
+	by randomly sampling the binaries to test for the absence of output.
+	This makes the check probabilistic, but the probability rather quickly
+	approaches 100% with the number of test runs strace undergoes during
+	each development cycle.
+
+	* tests/init.sh (test_trace_expr): Filter the result of the program set
+	subtraction through shuf -n before storing it in negative.list.
+	(TRACE_TESTS_SAMPLE): New environment variable to control the sample
+	size.
+
+2024-11-01  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	tests/sockopt-timestamp.c: use k_getsockopt and k_setsockopt.
+	Avoid using glibc wrappers as these performs additional actions
+	that lead to the following issues:
+	 - Test segfault on 32-bit compat when an attempt to use
+	   SO_RCVTIMEO_NEW/SO_SNDTIMEO_NEW with opt pointing to unavailable
+	   memory is made;
+	 - Additional calls to SO_TIMESTAMP{,NS}_OLD when SO_TIMESTAMP{NS}_NEW
+	   are called:
+
+	   -getsockopt(3, SOL_SOCKET, SO_TIMESTAMP_NEW, [0], [4]) = 0
+	   [...]
+	   +getsockopt(3, SOL_SOCKET, SO_TIMESTAMP_NEW, 0xf7d3cffc, [4]) = -1 ENOPROTOOPT (Protocol not available)
+	   +getsockopt(3, SOL_SOCKET, SO_TIMESTAMP_OLD, [0], [4]) = 0
+
+	* tests/sockopt-sol_socket.c: Include "k_sockopt.h".
+	{get_sockopt): Use k_getsockopt() instead of getsockopt().
+	{set_sockopt): Use k_setsockopt() instead of setsockopt().
+
+2024-11-01  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	tests: move k_setsockopt definition into a separate file.
+	...and add k_getsockopt definition as well (for completeness's sake
+	and because it will be utilised in the next patch).
+
+	* tests/k_sockopt.c: New file.
+	* tests/k_sockopt.h: Likewise.
+	* tests/Makefile.am (libtests_a_SOURCES): Add k_sockopt.c
+	and k_sockopt.h.
+	* tests/sockopt-timestamp.c: Include "k_sockopt.h".
+
+2024-11-01  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	linux/s390/get_scno.c: use NT_S390_SYSTEM_CALL if gprs[2] is clobbered.
+	The way the syscall number is retrieved currently relies on the kernel
+	propagating it properly into gprs[2], which is not however always the case;
+	apart of the situation where scno > NR_syscalls, there is also an issue
+	of inspecting it during syscall restart (as it happens on attach, for
+	example), when it is already clobbered by a ERESTART* errno.  Luckily
+	for strace, this issue has been already foreseen by the kernel
+	developers, and support for retrieving syscall number on s390
+	via a separate ptrace regset has been added by the Linux commit
+	v3.2-rc1~109^2~34;  13 years later, it is time for it to fulfill
+	its purpose and finally get utilised.
+
+	* src/linux/s390/get_scno.c (arch_get_scno): Try to retrieve the syscall
+	number by querying NT_S390_SYSTEM_CALL regset if gprs[2] contains an errno.
+
+	Complements: v6.11-21-gc7e0ea6d712e "syscall: do not use uninitialized parts of struct ptrace_syscall_info"
+
+2024-10-28  Dmitry V. Levin  <ldv@strace.io>
+
+	NEWS: mention the latest restart_syscall fix.
+
+	tests: add another test of restart_syscall decoding.
+	* tests/restart_syscall-p.test: New test.
+	* tests/restart_syscall-p.expected: New file.
+	* tests/Makefile.am (DECODER_TESTS): Add restart_syscall-p.test.
+	(check_DATA): Add restart_syscall-p.expected.
+
+	startup_tcb: add a comment.
+	* src/strace.c (startup_tcb): Add a comment explaining why it is safe
+	to call get_scno().
+
+2024-10-28  Dmitry V. Levin  <ldv@strace.io>
+
+	syscall: do not use uninitialized parts of struct ptrace_syscall_info.
+	* src/syscall.c (ptrace_syscall_info_is_entry,
+	ptrace_syscall_info_is_exit): New functions.
+	(get_scno): Replace ptrace_syscall_info_is_valid() with
+	ptrace_syscall_info_is_entry().
+	(get_error): Replace ptrace_syscall_info_is_valid() with
+	ptrace_syscall_info_is_exit().
+	(get_syscall_regs): Fall back to get_regs() if strace_get_syscall_info()
+	succeeded but couldn't obtain the necessary data.
+
+	Resolves: https://github.com/strace/strace/issues/322
+
+2024-10-26  Dmitry V. Levin  <ldv@strace.io>
+
+	tests: do not rely on creat syscall failing with ETXTBSY.
+	For many years "creat" syscall used to fail with ETXTBSY when applied
+	to the running executable:
+
+	$ strace -v tests/creat
+	execve("tests/creat", ["tests/creat"], []) = 0
+	...
+	creat("tests/creat", 000)               = -1 ETXTBSY (Text file busy)
+	...
+
+	Apparently, something has changed in Fedora Rawhide:
+	$ strace -v tests/creat
+	execve("tests/creat", ["tests/creat"], []) = 0
+	...
+	creat("tests/creat", 000)               = 3
+	--- SIGBUS {si_signo=SIGBUS, si_code=BUS_ADRERR, si_addr=0x401288} ---
+	+++ killed by SIGBUS (core dumped) +++
+	$ stat -c %s tests/creat
+	0
+
+	* tests/umode_t.c (sample): Change to ".".
+	* tests/gen_tests.in (creat, mkdir, mkdirat): Update -a option argument.
+
+2024-10-26  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update F_* constants.
+	* src/xlat/fcntlcmds.in (F_CREATED_QUERY): New constant introduced
+	by Linux kernel commit v6.12-rc1~215^2~51.
+	* tests/fcntl-common.c (test_fcntl_others): Check it.
+	* NEWS: Mention this change.
+
+	xlat: update ETHTOOL_MSG_* constants.
+	* src/xlat/genl_ethtool_msg_recv.in (ETHTOOL_MSG_PHY_GET_REPLY,
+	ETHTOOL_MSG_PHY_NTF): New constants introduced by Linux kernel commit
+	v6.12-rc1~232^2~196^2~6.
+	* src/xlat/genl_ethtool_msg_send.in (ETHTOOL_MSG_PHY_GET): Likewise.
+	* tests/netlink_nlctrl.c (test_nla_ops_family): Check it.
+	* NEWS: Mention this change.
+
+	xlat: update SO_* constants.
+	* src/xlat/scmvals.in (SO_DEVMEM_DONTNEED): New constant introduced
+	by Linux kernel commit v6.12-rc1~232^2~32^2~3.
+	* NEWS: Mention this change.
+
+	xlat: update SCM_* constants.
+	* src/xlat/scmvals.in (SCM_DEVMEM_LINEAR, SCM_DEVMEM_DMABUF): New
+	constants introduced by Linux kernel commit v6.12-rc1~232^2~32^2~4.
+	* NEWS: Mention this change.
+
+	xlat: update MSG_* constants.
+	* src/xlat/msg_flags.in (MSG_SOCK_DEVMEM): New constant introduced
+	by Linux kernel commit v6.12-rc1~232^2~32^2~4.
+	* NEWS: Mention this change.
+
+	xlat: update MAP_* constants.
+	* src/xlat/mmap_flags.in (MAP_DROPPABLE): New constant introduced
+	by Linux kernel commit v6.11-rc1~55^2~5.
+	* NEWS: Mention this change.
+
+2024-10-26  Dmitry V. Levin  <ldv@strace.io>
+
+	build: use -isystem instead of -I for bundled Linux UAPI headers.
+	This way these headers will be treated as system headers by the
+	compiler, which means warnings in these headers are suppressed by
+	default.
+
+	* configure.ac [USE_BUNDLED_HEADERS] (CPPFLAGS): Replace -I with -isystem.
+	* src/Makefile.am [USE_BUNDLED_HEADERS] (bundled_CPPFLAGS): Likewise.
+	* tests/Makefile.am [USE_BUNDLED_HEADERS] (bundled_CPPFLAGS): Likewise.
+
+	Suggested-by: Florian Weimer <fweimer@redhat.com>
+
+2024-10-25  Florian Weimer  <fweimer@redhat.com>
+
+	sched_attr: Use Linux types in struct sched_attr.
+	The recent addition of struct sched_attr to glibc deliberately used
+	Linux types to simplify porting from <linux/sched.h> to <sched.h>.
+	Switch the bundled definition here to __u32 and __u64 as well.
+
+2024-10-10  Khem Raj  <raj.khem@gmail.com>
+
+	sched_attr: Define conditionally on SCHED_ATTR_SIZE_VER1.
+	glibc 2.41+ has added [1] definitions for sched_setattr and
+	sched_getattr functions and struct sched_attr.  Therefore, it needs
+	to be checked for here as well before defining struct sched_attr.
+
+	Fixes builds with glibc/trunk.
+
+	In file included from ../../strace-6.11/src/sched.c:14:
+	../../strace-6.11/src/sched_attr.h:16:8: error: redefinition of 'sched_attr'
+	   16 | struct sched_attr {
+	      |        ^
+	/usr/include/linux/sched/types.h:98:8: note: previous definition is here
+	   98 | struct sched_attr {
+	      |        ^
+
+	[1] https://sourceware.org/git/?p=glibc.git;a=commitdiff;h=21571ca0d70302909cf72707b2a7736cf12190a0
+
+2024-10-13  Dmitry V. Levin  <ldv@strace.io>
+
+	.github: switch builder jobs from ubuntu-latest to ubuntu-24.04.
+	Even though ubuntu-latest is still ubuntu-22.04 yet, let's move on
+	by switching builder jobs to ubuntu-24.04.
+
+	* .github/workflows/ci.yml (coverage, gcc13-x86_64-kheaders,
+	gcc13-x86_64-dw, gcc13-x86_64-unwind, gcc12-x86_64-kheaders,
+	gcc12-x86_64-dw, gcc12-x86_64-unwind, clang15-x86_64-kheaders,
+	clang15-x86_64-dw, clang15-x86_64-unwind, clang14-x86_64-kheaders,
+	clang14-x86_64-dw, clang14-x86_64-unwind, gcc13-x86-kheaders,
+	gcc13-x86-nostacktrace, gcc12-x86-kheaders, gcc12-x86-nostacktrace,
+	clang15-x86-kheaders, clang15-x86-nostacktrace, clang14-x86-kheaders,
+	clang14-x86-nostacktrace): Replace ubuntu-latest with ubuntu-24.04.
+
+2024-10-13  Dmitry V. Levin  <ldv@strace.io>
+
+	.github: drop old clang jobs.
+	These clang versions suddenly disappeared from ubuntu-22.04 repository,
+	and it is highly unlikely that old clang jobs will be missed anyway.
+
+	* .github/workflows/ci.yml (clang13-x86_64-kheaders, clang13-x86_64-dw,
+	clang13-x86_64-unwind, clang12-x86_64-kheaders, clang12-x86_64-dw,
+	clang12-x86_64-unwind, clang11-x86_64-kheaders, clang11-x86_64-dw,
+	clang11-x86_64-unwind, clang10-x86_64-kheaders, clang10-x86_64-dw,
+	clang10-x86_64-unwind, clang13-x86-kheaders, clang13-x86-nostacktrace,
+	clang12-x86-kheaders, clang12-x86-nostacktrace, clang11-x86-kheaders,
+	clang11-x86-nostacktrace, clang10-x86-kheaders,
+	clang10-x86-nostacktrace): Remove.
+
+2024-10-13  Dmitry V. Levin  <ldv@strace.io>
+
+	.github: add gcc-14 and clang-16/clang-17/clang-18 jobs.
+	* .github/workflows/ci.yml (gcc14-x86_64-kheaders, gcc14-x86_64-dw,
+	gcc14-x86_64-unwind, gcc14-x86-kheaders, gcc14-x86-nostacktrace,
+	clang18-x86_64-kheaders, clang18-x86_64-dw, clang18-x86_64-unwind,
+	clang17-x86_64-kheaders, clang17-x86_64-dw, clang17-x86_64-unwind,
+	clang16-x86_64-kheaders, clang16-x86_64-dw, clang16-x86_64-unwind,
+	clang18-x86-kheaders, clang18-x86-nostacktrace, clang17-x86-kheaders,
+	clang17-x86-nostacktrace, clang16-x86-kheaders,
+	clang16-x86-nostacktrace): New jobs.
+
+2024-10-10  Dmitry V. Levin  <ldv@strace.io>
+
+	.github: move ubuntu-20.04 based jobs a bit down the list.
+	Prepare for the inevitable moment when ubuntu-20.04 jobs would cease
+	to function and would have to be removed.
+
+	* .github/workflows/ci.yml (gcc11-x86-nostacktrace): Move up.
+	(gcc9-x86-nostacktrace): Move down.
+
+2024-10-10  Dmitry V. Levin  <ldv@strace.io>
+
+	.github: pin gcc-11 jobs on ubuntu-latest to ubuntu-22.04.
+	Given that ubuntu-latest is currently ubuntu-22.04 and gcc-11 is
+	the default gcc compiler there, pin these jobs to ubuntu-22.04
+	and specify "gcc" instead of "gcc-11" there.
+
+	* .github/workflows/ci.yml (gcc11-x86_64-kheaders, gcc11-x86_64-dw,
+	gcc11-x86_64-unwind, gcc11-x86-kheaders, gcc11-x86-nostacktrace):
+	Replace ubuntu-latest with ubuntu-22.04, replace gcc-11 with gcc.
+
+2024-10-09  Dmitry V. Levin  <ldv@strace.io>
+
+	Update decoding of struct nexthop_grp.
+	* bundled/linux/include/uapi/linux/nexthop.h: Update to
+	headers_install'ed Linux kernel v6.12-rc2.
+	* src/rtnl_nh.c (print_nh_grp): Print new weight_high member
+	of struct nexthop_grp introduced by Linux kernel commit
+	v6.12-rc1~232^2~274^2~4.
+	* tests/nlattr_nhmsg.c (print_nh_grp, main): Check it.
+
+2024-10-08  Dmitry V. Levin  <ldv@strace.io>
+
+	Update decoding of struct ptp_sys_offset_extended.
+	* bundled/linux/include/uapi/linux/ptp_clock.h: Update to
+	headers_install'ed Linux kernel v6.12-rc2.
+	* src/ptp.c (ptp_ioctl): Print new clockid member of
+	struct ptp_sys_offset_extended introduced by Linux kernel commit
+	v6.12-rc1~232^2~74.
+	* tests/ioctl_ptp.c (test_no_device): Check it.
+
+2024-10-07  Dmitry V. Levin  <ldv@strace.io>
+
+	bundled: update linux UAPI headers to v6.12-rc2.
+	The update of linux/ptp_clock.h is delayed because it has to be updated
+	along with the decoder of struct ptp_sys_offset_extended.
+
+	The update of linux/nexthop.h is delayed because it has to be updated
+	along with the decoder of struct nexthop_grp.
+
+	* bundled/linux/include/uapi/linux/const.h: Update to
+	headers_install'ed Linux kernel v6.12-rc2.
+	* bundled/linux/include/uapi/linux/ethtool.h: Likewise.
+	* bundled/linux/include/uapi/linux/ethtool_netlink.h: Likewise.
+	* bundled/linux/include/uapi/linux/falloc.h: Likewise.
+	* bundled/linux/include/uapi/linux/fcntl.h: Likewise.
+	* bundled/linux/include/uapi/linux/fib_rules.h: Likewise.
+	* bundled/linux/include/uapi/linux/in.h: Likewise.
+	* bundled/linux/include/uapi/linux/inet_diag.h: Likewise.
+	* bundled/linux/include/uapi/linux/io_uring.h: Likewise.
+	* bundled/linux/include/uapi/linux/landlock.h: Likewise.
+	* bundled/linux/include/uapi/linux/libc-compat.h: Likewise.
+	* bundled/linux/include/uapi/linux/lsm.h: Likewise.
+	* bundled/linux/include/uapi/linux/netdev.h: Likewise.
+	* bundled/linux/include/uapi/linux/netfilter/nf_tables.h: Likewise.
+	* bundled/linux/include/uapi/linux/nsfs.h: Likewise.
+	* bundled/linux/include/uapi/linux/sched.h: Likewise.
+	* bundled/linux/include/uapi/linux/version.h: Likewise.
+	* bundled/linux/include/uapi/linux/videodev2.h: Likewise.
+
+2024-10-06  Dmitry V. Levin  <ldv@strace.io>
+
+	build: check that ipx.h headers provide struct sockaddr_ipx.
+	Do not assume that ipx.h headers necessarily provide struct
+	sockaddr_ipx, check this explicitly because they could be incomplete.
+
+	* configure.ac (HAVE_STRUCT_SOCKADDR_IPX_IN_LINUX_IPX_H): Define if
+	<linux/ipx.h> provides struct sockaddr_ipx.
+	(HAVE_STRUCT_SOCKADDR_IPX_IN_NETIPX_IPX_H): Define if <netipx/ipx.h>
+	provides struct sockaddr_ipx.
+	* tests/net-sockaddr.c: Check for
+	HAVE_STRUCT_SOCKADDR_IPX_IN_LINUX_IPX_H instead of HAVE_LINUX_IPX_H,
+	check for HAVE_STRUCT_SOCKADDR_IPX_IN_NETIPX_IPX_H instead of
+	HAVE_NETIPX_IPX_H.
+
+2024-09-16  Dmitry V. Levin  <ldv@strace.io>
+
+	Post-release administrivia.
+	* NEWS: Add a header line for the next release.
+	* debian/changelog.in: Add a changelog entry for 6.11-1.
+	* strace.spec.in: Likewise.
+
+2024-09-15  Dmitry V. Levin  <ldv@strace.io>
+
+	Prepare for 6.11 release.
+	* NEWS: Update for 6.11 release.
+
+	Update copyright headers.
+	Headers updated automatically using maint/update_copyright_years.sh
+	script.
+
+2024-09-15  tstabrawa  <59430211+tstabrawa@users.noreply.github.com>
+	    Dmitry V. Levin  <ldv@strace.io>
+
+	ioctl: print arg buffer for unknown ioctls in hexadecimal format.
+	Limit this feature to non-abbreviated mode for now.
+
+	* ioctl.c (ioctl_decode_unknown_type): New function.
+	(ioctl_decode): Use it.
+	* tests/ioctl-v.c: New file.
+	* tests/gen_tests.in (ioctl-v): New entry.
+	* tests/pure_executables.list: Add ioctl-v.
+	* tests/.gitignore: Likewise.
+	* NEWS: Mention this change.
+
+2024-09-12  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	tests/linkat: replace unconfined_t with user_home_t.
+	The latter has more chances to be successful, it seems.
+
+	* tests/linkat.c (main): Replace "unconfined_t" with "user_home_t".
+
+2024-09-12  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	tests: avoid linkat--secontext_mismatch failures on setfilecon errors.
+	linkat--secontext_mismatch can fail if setfilecon cannot update SELinux
+	context (for example, that happens when the test is run under
+	an unprivileged user and tries to change the type to unconfined_t).
+	Avoid it by actually checking the return code and skipping the test
+	if there are errors reported by reset_secontext_file
+	or update_secontext_field calls.
+
+	* tests/secontext.h: Include <errno.h>.
+	(reset_secontext_file, update_secontext_field): Change the return type
+	from void to int.
+	[!(TEST_SECONTEXT && HAVE_SELINUX_RUNTIME)] (reset_secontext_file,
+	update_secontext_field): Return -ENOSYS.
+	* tests/secontext.c: (reset_secontext_file): Change the return type
+	to int;  save the setfilecon return value to ret and reset it to -errno
+	if the latter is non-zero;  return ret.
+	(update_secontext_field): Change the return type to int;  return -1
+	if ctx is NULL;  save the setfilecon return value to ret and reset
+	it to -errno if the latter is non-zero;  return ret.
+	* tests/linkat.c: Include "xlat.h".
+	(secontext_types_data, secontext_types): New constants.
+	(mangle_secontext_field): Store the new field value in the new variable;
+	store the update_secontext_field return value to the ret variable, error
+	and skip if it is non-zero.
+	(main): Error and skip if reset_secontext_file returns non-zero.
+
+	Reported-by: Edjunior Machado <emachado@redhat.com>
+
+2024-09-12  Sahil Siddiq  <icegambit91@gmail.com>
+
+	tests: Improve tests for watchdog ioctl commands.
+	Add new tests for WDIOC_GETSUPPORT and WDIOC_SETOPTIONS decoders.
+	Also enhance tests for currently available watchdog ioctl decoders.
+	This enables the verification of their behaviour when:
+	- the ioctl is successful (returns a non-negative integer);
+	- strace is run with the -v option.
+
+	* tests/ioctl_watchdog-success.c: New file.
+	* tests/ioctl_watchdog-success-v.c: Likewise.
+	* tests/ioctl_watchdog.c: (do_ioctl, do_ioctl_ptr): New functions.
+	(main): Add argc and argv arguments.
+	(WDIOC_GETSUPPORT, WDIOC_SETOPTIONS): Add decoder tests.
+	(WDIOC_GET*): Improve existing decoder tests.
+	* tests/gen_tests.in (ioctl_watchdog-success, ioctl_watchdog-success-v):
+	New entries.
+	* tests/Makefile.am (check_PROGRAMS): Add ioctl_watchdog-success and
+	ioctl_watchdog-success-v.
+	* tests/.gitignore: Likewise.
+
+	Reviewed-by: Eugene Syromyatnikov <evgsyr@gmail.com>
+
+2024-09-12  Sahil Siddiq  <icegambit91@gmail.com>
+
+	watchdog_ioctl: Add decoding of WDIOC_GETSUPPORT and WDIOC_SETOPTIONS ioctls
+	* src/xlat/watchdog_ioctl_cmds.in (WDIOC_GETSUPPORT): New constant.
+	* src/xlat/watchdog_ioctl_flags.in: New file.
+	* src/xlat/watchdog_ioctl_setoptions.in: Likewise.
+	* src/watchdog_ioctl.c: Include "xlat/watchdog_ioctl_flags.h" and
+	"xlat/watchdog_ioctl_setoptions.h".
+	(watchdog_ioctl): Decode WDIOC_GETSUPPORT and WDIOC_SETOPTIONS.
+	* NEWS: Mention this change.
+
+	Reviewed-by: Eugene Syromyatnikov <evgsyr@gmail.com>
+
+2024-09-09  Gleb Fotengauer-Malinovskiy  <glebfm@altlinux.org>
+
+	Update ioctl entries from linux v6.11.
+	* src/linux/32/ioctls_inc_align16.h: Update from linux v6.11-rc7 using
+	ioctls_gen.sh.
+	* src/linux/32/ioctls_inc_align32.h: Likewise.
+	* src/linux/32/ioctls_inc_align64.h: Likewise.
+	* src/linux/64/ioctls_inc.h: Likewise.
+	* src/linux/x32/ioctls_inc0.h: Likewise.
+	* src/linux/aarch64/ioctls_arch0.h: Likewise.
+	* src/linux/i386/ioctls_arch0.h: Likewise.
+	* src/linux/mips/ioctls_arch0.h: Likewise.
+	* src/linux/powerpc/ioctls_arch0.h: Likewise.
+	* src/linux/s390/ioctls_arch0.h: Likewise.
+	* src/linux/s390x/ioctls_arch0.h: Likewise.
+	* src/linux/x86_64/ioctls_arch0.h: Likewise.
+	* NEWS: Mention this.
+
+	maint: update for linux v6.11-rc7.
+	* maint/ioctls_sym.sh: Add a workaround for the
+	drm/xe_drm.h header.
+
+2024-08-13  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	sg_io_v[34]: avoid copying of uninitialised memory.
+	Static analysis complains about copying uninitialised memory:
+
+	    Error: UNINIT (CWE-457):
+	    src/sg_io_v3.c: 90 in decode_request()
+	    84     	if (sg_io.dxfer_direction == SG_DXFER_TO_DEV ||
+	    85     	    sg_io.dxfer_direction == SG_DXFER_TO_FROM_DEV) {
+	    86     		tprint_struct_next();
+	    87     		PRINT_FIELD_SG_IO_BUFFER(sg_io, dxferp, sg_io.dxfer_len, sg_io.iovec_count, tcp);
+	    88     	}
+	    89
+	    >>>     Using uninitialized value "sg_io". Field "sg_io.interface_id" is uninitialized when calling "xmemdup".
+	    90     	struct_sg_io_hdr *entering_sg_io = xobjdup(&sg_io);
+	    91     	entering_sg_io->interface_id = (unsigned char) 'S';
+	    92     	set_tcb_priv_data(tcp, entering_sg_io, free);
+	    93
+	    94     	return 0;
+	    95     }
+
+	    Error: UNINIT (CWE-457):
+	    src/sg_io_v4.c: 87 in decode_request()
+	    81     	PRINT_FIELD_U(sg_io, timeout);
+	    82     	tprint_struct_next();
+	    83     	PRINT_FIELD_FLAGS(sg_io, flags, bsg_flags, "BSG_FLAG_???");
+	    84     	tprint_struct_next();
+	    85     	PRINT_FIELD_X(sg_io, usr_ptr);
+	    86
+	    >>>     Using uninitialized value "sg_io". Field "sg_io.guard" is uninitialized when calling "xmemdup".
+	    87     	struct sg_io_v4 *entering_sg_io = xobjdup(&sg_io);
+	    88     	entering_sg_io->guard = (unsigned char) 'Q';
+	    89     	set_tcb_priv_data(tcp, entering_sg_io, free);
+	    90
+	    91     	return 0;
+	    92     }
+
+	Avoid this by initialising the field in the src before copying it
+	and not in dst after.
+
+	* src/sg_io_v3.c (decode_request): Initialise interface_id field in sg_io
+	and not entering_sg_io.
+	* src/sg_io_v4.c (decode_request): Initialise guard field in sg_io
+	and not entering_sg_io.
+
+2024-08-06  Dmitry V. Levin  <ldv@strace.io>
+
+	Implement decoding of uretprobe syscall.
+	This new syscall was introduced by Linux kernel commits
+	v6.11-rc1~136^2~14 and v6.11-rc2~22^2~1.
+
+	* src/linux/x86_64/syscallent.h [335]: Wire up uretprobe.
+	* src/syscall_dummy.h (sys_uretprobe): Alias to printargs.
+	* NEWS: Mention this change.
+
+2024-07-31  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update V4L2_* constants.
+	* src/xlat/v4l2_control_ids.in (V4L2_CID_MPEG_VIDEO_AVERAGE_QP): New
+	constant introduced by Linux kernel commit v6.11-rc1~142^2~140.
+	* NEWS: Mention this change.
+
+	Update decoding of statx syscall.
+	* src/xlat/statx_attrs.in (STATX_ATTR_WRITE_ATOMIC): New constant
+	introduced by Linux kernel commit v6.11-rc1~80^2~60.
+	* src/xlat/statx_masks.in (STATX_WRITE_ATOMIC): Likewise.
+	* src/statx.h (struct_statx): Add stx_atomic_write_unit_min,
+	stx_atomic_write_unit_max, and stx_atomic_write_segments_max fields.
+	Update reserved space.
+	* src/statx.c (SYS_FUNC(statx)): Print new members of struct statx
+	when STATX_ATTR_WRITE_ATOMIC attribute is set.
+	* tests/xstatx.c (print_stat, main): Check it.
+	* NEWS: Mention this change.
+
+	xlat: update IPPROTO_* constants.
+	* src/xlat/inet_protocols.in (IPPROTO_SMC): New constant introduced
+	by Linux kernel commit v6.11-rc1~163^2~192^2.
+	* tests/nlattr_inet_diag_req_v2.c (test_inet_diag_proto): Check it.
+	* NEWS: Mention this change.
+
+	xlat: update RWF_* constants.
+	* src/xlat/rwf_flags.in (RWF_ATOMIC): New constant introduced
+	by Linux kernel commit v6.11-rc1~80^2~61.
+	* NEWS: Mention this change.
+
+	xlat: update ETHTOOL_MSG_* constants.
+	* src/xlat/genl_ethtool_msg_recv.in (ETHTOOL_MSG_MODULE_FW_FLASH_NTF):
+	New constant introduced by Linux kernel commit v6.11-rc1~163^2~123^2~6.
+	* src/xlat/genl_ethtool_msg_send.in (ETHTOOL_MSG_MODULE_FW_FLASH_ACT):
+	Likewise.
+	* tests/netlink_nlctrl.c (test_nla_ops_family): Check it.
+	* NEWS: Mention this change.
+
+2024-07-30  Dmitry V. Levin  <ldv@strace.io>
+
+	statmount: print fields of struct statmount according to its mask field.
+	* src/statmount.c (print_statmount): Consult with struct statmount.mask
+	to decide which fields of struct statmount have to be printed.
+	* tests/statmount.c (main): Check it.
+
+	Update decoding of statmount syscall.
+	* src/xlat/statmount_mask.in (STATMOUNT_MNT_NS_ID): New constant
+	introduced by Linux kernel commit v6.11-rc1~236^2~6^2~4.
+	(STATMOUNT_MNT_OPTS): New constant introduced by Linux kernel commit
+	v6.11-rc1~236^2~4^2~1.
+	* src/statmount.c (print_statmount): Print new mnt_opts and mnt_ns_id
+	members of struct statmount.
+	* tests/statmount.c (main): Check it.
+	* NEWS: Mention this change.
+
+	Update decoding of listmount syscall.
+	* src/xlat/listmount_flags.in: New file containing LISTMOUNT_REVERSE
+	constant introduced by Linux kernel commit v6.11-rc1~236^2~7.
+	* src/listmount.c: Include "xlat/listmount_flags.h".
+	(SYS_FUNC(listmount)): Print flag argument as flags.
+	* tests/listmount.c (main): Check it.
+	* NEWS: Mention this change.
+
+	Update decoding of struct mnt_id_req.
+	* bundled/linux/include/uapi/linux/mount.h: Update to
+	headers_install'ed Linux kernel v6.11-rc1.
+	* src/listmount.c (print_mnt_id_req): Print new mnt_ns_id member
+	of struct mnt_id_req introduced by Linux kernel commit
+	v6.11-rc1~236^2~6^2~3.
+	* src/statmount.c (print_mnt_id_req): Likewise.
+	* tests/listmount.c (main): Check it.
+	* tests/statmount.c (main): Likewise.
+
+2024-07-29  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update IORING_* constants.
+	* bundled/linux/include/uapi/linux/io_uring.h: Update to
+	headers_install'ed Linux kernel v6.11-rc1.
+	* src/xlat/uring_ops.in (IORING_OP_BIND): New constant introduced
+	by Linux kernel commit v6.11-rc1~232^2~17.
+	(IORING_OP_LISTEN): New constant introduced by Linux kernel commit
+	v6.11-rc1~232^2~16.
+	* tests/io_uring_register.c (main): Update expected output.
+	* NEWS: Mention this change.
+
+2024-07-29  Dmitry V. Levin  <ldv@strace.io>
+
+	bundled: update linux UAPI headers to v6.11-rc1.
+	The update of linux/io_uring.h is delayed because it has to be updated
+	along with the decoder of io_uring_register syscall.
+
+	The update of linux/mount.h is delayed because it has to be updated
+	along with the decoders of listmount and statmount syscalls.
+
+	* bundled/linux/include/uapi/linux/btrfs_tree.h: Update to
+	headers_install'ed Linux kernel v6.11-rc1.
+	* bundled/linux/include/uapi/linux/ethtool.h: Likewise.
+	* bundled/linux/include/uapi/linux/ethtool_netlink.h: Likewise.
+	* bundled/linux/include/uapi/linux/fs.h: Likewise.
+	* bundled/linux/include/uapi/linux/if_xdp.h: Likewise.
+	* bundled/linux/include/uapi/linux/in.h: Likewise.
+	* bundled/linux/include/uapi/linux/landlock.h: Likewise.
+	* bundled/linux/include/uapi/linux/netfilter/nf_tables.h: Likewise.
+	* bundled/linux/include/uapi/linux/nl80211.h: Likewise.
+	* bundled/linux/include/uapi/linux/nsfs.h: Likewise.
+	* bundled/linux/include/uapi/linux/perf_event.h: Likewise.
+	* bundled/linux/include/uapi/linux/stat.h: Likewise.
+	* bundled/linux/include/uapi/linux/tcp_metrics.h: Likewise.
+	* bundled/linux/include/uapi/linux/v4l2-controls.h: Likewise.
+	* bundled/linux/include/uapi/linux/version.h: Likewise.
+	* bundled/linux/include/uapi/linux/videodev2.h: Likewise.
+
+2024-07-28  Masatake YAMATO  <yamato@redhat.com>
+
+	defs.h: fix a typo in a name of parameter.
+	* src/defs.h (translate_pid): s/dest_id/from_id/.
+
+2024-07-22  Dmitry V. Levin  <ldv@strace.io>
+
+	Post-release administrivia.
+	* NEWS: Add a header line for the next release.
+	* debian/changelog.in: Add a changelog entry for 6.10-1.
+	* strace.spec.in: Likewise.
+
+2024-07-21  Dmitry V. Levin  <ldv@strace.io>
+
+	Prepare for 6.10 release.
+	* NEWS: Update for 6.10 release.
+
+2024-07-19  Dmitry V. Levin  <ldv@strace.io>
+
+	Update copyright headers.
+	Headers updated automatically using maint/update_copyright_years.sh
+	script.
+
+2024-07-19  Jan Macku  <jamacku@redhat.com>
+
+	ci: enable Packit rpm build test.
+	Documentation: https://packit.dev/docs
+
+2024-07-17  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	prctl: PR_PPC_[GS]ET_DEXCR.
+	Introduced by Linux commit v6.10-rc1~129^2~41.
+
+	* src/xlat/pr_ppc_dexcr_aspects.in: New xlat.
+	* src/xlat/pr_ppc_dexcr_ctrl_flags.in: Likewise.
+	* src/prctl.c: Include "xlat/pr_ppc_dexcr_aspects.h"
+	and "xlat/pr_ppc_dexcr_ctrl_flags.h".
+	(SYS_FUNC(prctl)) <case PR_PPC_GET_DEXCR, case PR_PPC_SET_DEXCR>: New
+	option decoders.
+	* tests/.gitignore: Add prctl-ppc-dexcr, prctl-ppc-dexcr-Xabbrev,
+	prctl-ppc-dexcr-Xraw, prctl-ppc-dexcr-Xverbose,
+	prctl-ppc-dexcr-success, prctl-ppc-dexcr-success-Xabbrev,
+	prctl-ppc-dexcr-success-Xraw,
+	and prctl-ppc-dexcr-success-Xverbose.
+	* tests/Makefile.am (check_PROGRAMS): Add prctl-ppc-dexcr-success,
+	prctl-ppc-dexcr-success-Xabbrev, prctl-ppc-dexcr-success-Xraw,
+	and prctl-ppc-dexcr-success-Xverbose.
+	* tests/pure_executables.list: Add prctl-ppc-dexcr,
+	prctl-ppc-dexcr-Xabbrev, prctl-ppc-dexcr-Xraw,
+	and prctl-ppc-dexcr-Xverbose.
+	* tests/gen_tests.in (prctl-ppc-dexcr, prctl-ppc-dexcr-Xabbrev,
+	prctl-ppc-dexcr-Xraw, prctl-ppc-dexcr-Xverbose,
+	prctl-ppc-dexcr-success, prctl-ppc-dexcr-success-Xabbrev,
+	prctl-ppc-dexcr-success-Xraw, prctl-ppc-dexcr-success-Xverbose):
+	New tests.
+	* tests/prctl-ppc-dexcr.c: New file.
+	* tests/prctl-ppc-dexcr-Xabbrev.c: Likewise.
+	* tests/prctl-ppc-dexcr-Xraw.c: Likewise.
+	* tests/prctl-ppc-dexcr-Xverbose.c: Likewise.
+	* tests/prctl-ppc-dexcr-success-Xabbrev.c: Likewise.
+	* tests/prctl-ppc-dexcr-success-Xraw.c: Likewise.
+	* tests/prctl-ppc-dexcr-success-Xverbose.c: Likewise.
+	* tests/prctl-ppc-dexcr-success.c: Likewise.
+
+2024-07-17  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	prctl: PR_RISCV_SET_ICACHE_FLUSH_CTX.
+	Implemented by Linux commit v6.10-rc1~52^2~7^2~2.
+
+	* src/xlat/pr_riscv_icache_flush_ctxes.in: New xlat.
+	* src/xlat/pr_riscv_icache_flush_scopes.in: Likewise.
+	* src/prctl.c (SYS_FUNC(prctl)) <case PR_RISCV_SET_ICACHE_FLUSH_CTX>:
+	New option decoder.
+	* tests/.gitignore: Add prctl-riscv-icache-flush-ctx,
+	prctl-riscv-icache-flush-ctx-Xabbrev, prctl-riscv-icache-flush-ctx-Xraw,
+	and prctl-riscv-icache-flush-ctx-Xverbose.
+	* tests/pure_executables.list: Likewise.
+	* tests/gen_tests.in (prctl-riscv-icache-flush-ctx,
+	prctl-riscv-icache-flush-ctx-Xabbrev, prctl-riscv-icache-flush-ctx-Xraw,
+	prctl-riscv-icache-flush-ctx-Xverbose): New tests.
+	* tests/tests.h (struct strval_klong): New type definition.
+	* tests/prctl-riscv-icache-flush-ctx.c: New file.
+	* tests/prctl-riscv-icache-flush-ctx-Xabbrev.c: Likewise.
+	* tests/prctl-riscv-icache-flush-ctx-Xraw.c: Likewise.
+	* tests/prctl-riscv-icache-flush-ctx-Xverbose.c: Likewise.
+
+2024-07-17  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	prctl: Implement PR_RISCV_V_[GS]ET_CONTROL option decoding.
+	Introduced by Linux commit v6.5-rc1~120^2~17^2~6.
+
+	* src/xlat/pr_riscv_v_inherit.in: New xlat.
+	* src/xlat/pr_riscv_v_states.in: Likewise.
+	* src/prctl.c: Include "xlat/pr_riscv_v_inherit.h"
+	and "xlat/pr_riscv_v_states.h".
+	(sprint_riscv_v_ctrl_val): New function.
+	(SYS_FUNC(prctl)) <case PR_RISCV_V_SET_CONTROL,
+	case PR_RISCV_V_GET_CONTROL>: Implement option decoders.
+	* tests/.gitignore: Add prctl-riscv-v-ctrl, prctl-riscv-v-ctrl-Xabbrev,
+	prctl-riscv-v-ctrl-Xraw, prctl-riscv-v-ctrl-Xverbose,
+	prctl-riscv-v-ctrl-success, prctl-riscv-v-ctrl-success-Xabbrev,
+	prctl-riscv-v-ctrl-success-Xraw,
+	and prctl-riscv-v-ctrl-success-Xverbose.
+	* tests/Makefile.am (check_PROGRAMS): Add prctl-riscv-v-ctrl-success,
+	prctl-riscv-v-ctrl-success-Xabbrev, prctl-riscv-v-ctrl-success-Xraw,
+	and prctl-riscv-v-ctrl-success-Xverbose.
+	* tests/pure_executables.list: Add prctl-riscv-v-ctrl,
+	prctl-riscv-v-ctrl-Xabbrev, prctl-riscv-v-ctrl-Xraw,
+	and prctl-riscv-v-ctrl-Xverbose.
+	* tests/gen_tests.in (prctl-riscv-v-ctrl, prctl-riscv-v-ctrl-Xabbrev,
+	prctl-riscv-v-ctrl-Xraw, prctl-riscv-v-ctrl-Xverbose,
+	prctl-riscv-v-ctrl-success, prctl-riscv-v-ctrl-success-Xabbrev,
+	prctl-riscv-v-ctrl-success-Xraw, prctl-riscv-v-ctrl-success-Xverbose):
+	New tests.
+	* tests/prctl-riscv-v-ctrl.c: New file.
+	* tests/prctl-riscv-v-ctrl-Xabbrev.c: Likewise.
+	* tests/prctl-riscv-v-ctrl-Xraw.c: Likewise.
+	* tests/prctl-riscv-v-ctrl-Xverbose.c: Likewise.
+	* tests/prctl-riscv-v-ctrl-success-Xabbrev.c: Likewise.
+	* tests/prctl-riscv-v-ctrl-success-Xraw.c: Likewise.
+	* tests/prctl-riscv-v-ctrl-success-Xverbose.c: Likewise.
+	* tests/prctl-riscv-v-ctrl-success.c: Likewise.
+	* NEWS: Mention it.
+
+2024-07-17  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	prctl: organise the prctl option switch.
+	It seems to be used to be kept in lexicographical order,
+	but over the time the new options were added to various places,
+	to the point it is not clear where to add it them now.   Let's put
+	groups of common option handlers at the top (and the one
+	that corresponds the default handling at the bottom), and sort the rest
+	in the option number order, so the new options can be added at the end
+	without a doubt.
+
+	* src/prctl.c (SYS_FUNC(prctl)) <switch>: Reorder.
+
+2024-07-17  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	"Implement" PR_[GS]ET_MEMORY_MERGE prctl options.
+	As the decoding of these options does not discernibly differ
+	from the default case, this patch only adds the option names
+	to the option decoding switch and adds the checks to the relevant test.
+
+	* src/prctl.c (SYS_FUNC(prctl)) <case PR_SET_MEMORY_MERGE,
+	case PR_GET_MEMORY_MERGE>: New switch cases.
+	* tests/prctl-no-args.c (main) <options_checking>: Add
+	PR_SET_MEMORY_MERGE and PR_GET_MEMORY_MERGE.
+
+2024-07-17  Eugene Syromyatnikov  <evgsyr@gmail.com>
+
+	tests: expand prctl-no-args test a bit.
+	Amend the test with checking of prctl operations that don't have
+	arguments with any decodable semantics, but perform argument checking
+	for the sake of possible future expandability (thus prompting printing
+	of those arguments by strace), as well as unknown operations (that have
+	the same treatment).
+
+	* prctl-no-args-Xabbrev.c: New file.
+	* prctl-no-args-Xraw.c: Likewise.
+	* prctl-no-args-Xverbose.c: Likewise.
+	* prctl-no-args-success-Xabbrev.c: Likewise.
+	* prctl-no-args-success-Xraw.c: Likewise.
+	* prctl-no-args-success-Xverbose.c: Likewise.
+	* prctl-no-args-success.c: Likewise.
+	* .gitignore: Add prctl-no-args-Xabbrev, prctl-no-args-Xraw,
+	prctl-no-args-Xverbose, prctl-no-args-success,
+	prctl-no-args-success-Xabbrev, prctl-no-args-success-Xraw,
+	and prctl-no-args-success-Xverbose.
+	* Makefile.am (check_PROGRAMS): Add prctl-no-args-success,
+	prctl-no-args-success-Xabbrev, prctl-no-args-success-Xraw,
+	and prctl-no-args-success-Xverbose.
+	* gen_tests.in (prctl-no-args-Xabbrev, prctl-no-args-Xraw,
+	prctl-no-args-Xverbose, prctl-no-args-success,
+	prctl-no-args-success-Xabbrev, prctl-no-args-success-Xraw,
+	prctl-no-args-success-Xverbose): New tests.
+	* pure_executables.list: Add prctl-no-args-Xabbrev, prctl-no-args-Xraw,
+	and prctl-no-args-Xverbose.
+	* prctl-no-args.c: Include <stdlib.h>.
+	(INJ_STR): New macro.
+	(main): Add argc and argv arguments.
+	(main) <options> Change the type to static const struct strval32.
+	(main) <options_checking, options_unknown>: New constants.
+	(main) <rc>: Move the variable declaration outside the loop body.
+	(main): Add the prctl inject boilerplate, checks for options that
+	do not print arguments, and checks for options without decodable
+	arguments that print them.
+
+2024-07-17  Sergei Trofimovich  <slyich@gmail.com>
+
+	print_utils.h: initialize `hex_chars` as an array, not via string.
+	`gcc-15` added a new warning in https://gcc.gnu.org/PR115185:
+
+	    print_utils.h:16:35: error: initializer-string for array of 'char' is too long [-Werror=unterminated-string-initialization]
+	       16 | static const char hex_chars[16] = "0123456789abcdef";
+	          |                                   ^~~~~~~~~~~~~~~~~~
+
+	`strace` does not need to store '\0'. We could either initialize the
+	arrays with individual bytes or allocate extra byte for null.
+
+	This change initializes the array bytewise.
+
+2024-07-17  Dmitry V. Levin  <ldv@strace.io>
+
+	netlink_nlctrl: implement family-specific CTRL_ATTR_OP_ID fallback.
+	* src/netlink_nlctrl.c (family_names): Add fallback strings.
+	(decode_nla_ctrl_attr_op_id): Choose dflt depending on the context.
+	* tests/netlink_nlctrl.c (test_nla_ops_family): Check it.
+
+	Suggested-by: Masatake YAMATO <yamato@redhat.com>
+
+2024-07-16  Masatake YAMATO  <yamato@redhat.com>
+
+	netlink_nlctrl: use nlmsg_type as a key for looking up a decoder.
+	The original implementation uses a string of family as a key for
+	looking up a decoder.  With caching the result of
+	genl_families_xlat(tcp) in src/netlink_generic.c, we can use an
+	integer (nlmsg_type) as a key.
+
+	* src/netlink_generic.c (genl_decoders): New array moved from
+	a function static array defined in lookup_genl_decoder().
+	(initialize_genl_decoders): New function.
+	(lookup_genl_decoder): Use uint16_t value as a key instead of
+	a C string.
+	(decode_netlink_generic): Call initialize_genl_decoders().
+	Use nlmsg_type as a key for looking up the decoder.
+
+2024-07-16  Masatake YAMATO  <yamato@redhat.com>
+
+	xlat: add xrlookup, a reverse version of xlookup.
+	This way one can obtain a key for a value from a xlat.
+
+	* src/defs.h (xrlookup): New declaration.
+	* src/xlat.c (xrlookup): New function.
+
+2024-07-16  Dmitry V. Levin  <ldv@strace.io>
+
+	netlink_nlctrl: implement "thermal" family CTRL_ATTR_OP_ID decoding.
+	* bundled/linux/include/uapi/linux/thermal.h: New file.
+	* bundled/Makefile.am (EXTRA_DIST): Add
+	linux/include/uapi/linux/thermal.h.
+	* src/xlat/genl_thermal_cmd.in: New file.
+	* src/netlink_nlctrl.c: Include <linux/thermal.h>
+	and "xlat/genl_thermal_cmd.h".
+	(family_names): Add THERMAL_GENL_FAMILY_NAME.
+	* tests/netlink_nlctrl.c: Include <linux/thermal.h>.
+	(test_nla_ops_family): Test THERMAL_GENL_FAMILY_NAME.
+
+	netlink_nlctrl: implement "nl80211" family CTRL_ATTR_OP_ID decoding.
+	* bundled/linux/include/uapi/linux/nl80211.h: New file.
+	* bundled/Makefile.am (EXTRA_DIST): Add
+	linux/include/uapi/linux/nl80211.h.
+	* src/xlat/genl_nl80211_cmd.in: New file.
+	* src/netlink_nlctrl.c: Include <linux/nl80211.h>
+	and "xlat/genl_nl80211_cmd.h".
+	(family_names): Add NL80211_GENL_NAME.
+	* tests/netlink_nlctrl.c: Include <linux/nl80211.h>.
+	(test_nla_ops_family): Test NL80211_GENL_NAME.
+
+	netlink_nlctrl: implement "netdev" family CTRL_ATTR_OP_ID decoding.
+	* bundled/linux/include/uapi/linux/netdev.h: New file.
+	* bundled/Makefile.am (EXTRA_DIST): Add
+	linux/include/uapi/linux/netdev.h.
+	* src/xlat/genl_netdev_cmd.in: New file.
+	* src/netlink_nlctrl.c: Include <linux/netdev.h>
+	and "xlat/genl_netdev_cmd.h".
+	(family_names): Add NETDEV_GENL_NAME.
+	* tests/netlink_nlctrl.c: Include <linux/netdev.h>.
+	(test_nla_ops_family): Test NETDEV_GENL_NAME.
+
+2024-07-15  Dmitry V. Levin  <ldv@strace.io>
+
+	netlink_nlctrl: implement "tcp_metrics" family CTRL_ATTR_OP_ID decoding.
+	* bundled/linux/include/uapi/linux/tcp_metrics.h: New file.
+	* bundled/Makefile.am (EXTRA_DIST): Add
+	linux/include/uapi/linux/tcp_metrics.h.
+	* src/xlat/genl_tcp_metrics_cmd.in: New file.
+	* src/netlink_nlctrl.c: Include <linux/tcp_metrics.h>
+	and "xlat/genl_tcp_metrics_cmd.h".
+	(family_names): Add TCP_METRICS_GENL_NAME.
+	* tests/netlink_nlctrl.c: Include <linux/tcp_metrics.h>.
+	(test_nla_ops_family): Test TCP_METRICS_GENL_NAME.
+
+	netlink_nlctrl: implement "mptcp_pm" family CTRL_ATTR_OP_ID decoding.
+	* src/xlat/genl_mptcp_pm_cmd.in: New file.
+	* src/netlink_nlctrl.c: Include <linux/mptcp_pm.h>
+	and "xlat/genl_mptcp_pm_cmd.h".
+	(family_names): Add MPTCP_PM_NAME.
+	* tests/netlink_nlctrl.c: Include <linux/mptcp_pm.h>.
+	(test_nla_ops_family): Test MPTCP_PM_NAME.
+
+	netlink_nlctrl: implement "TASKSTATS" family CTRL_ATTR_OP_ID decoding.
+	* bundled/linux/include/uapi/linux/cgroupstats.h: New file.
+	* bundled/linux/include/uapi/linux/taskstats.h: Likewise.
+	* bundled/Makefile.am (EXTRA_DIST): Add
+	linux/include/uapi/linux/cgroupstats.h and
+	linux/include/uapi/linux/taskstats.h.
+	* src/xlat/genl_taskstats_cmd.in: New file.
+	* src/netlink_nlctrl.c: Include <linux/cgroupstats.h>
+	and "xlat/genl_taskstats_cmd.h".
+	(family_names): Add TASKSTATS_GENL_NAME.
+	* tests/netlink_nlctrl.c: Include <linux/cgroupstats.h>.
+	(test_nla_ops_family): Test TASKSTATS_GENL_NAME.
+
+	netlink_nlctrl: implement "SEG6" family CTRL_ATTR_OP_ID decoding.
+	* bundled/linux/include/uapi/linux/seg6_genl.h: New file.
+	* bundled/Makefile.am (EXTRA_DIST): Add
+	linux/include/uapi/linux/seg6_genl.h.
+	* src/xlat/genl_seg6_cmd.in: New file.
+	* src/netlink_nlctrl.c: Include <linux/seg6_genl.h>
+	and "xlat/genl_seg6_cmd.h".
+	(family_names): Add SEG6_GENL_NAME.
+	* tests/netlink_nlctrl.c: Include <linux/seg6_genl.h>.
+	(test_nla_ops_family): Test SEG6_GENL_NAME.
+
+	netlink_nlctrl: implement "IOAM6" family CTRL_ATTR_OP_ID decoding.
+	* bundled/linux/include/uapi/linux/ioam6_genl.h: New file.
+	* bundled/Makefile.am (EXTRA_DIST): Add
+	linux/include/uapi/linux/ioam6_genl.h.
+	* src/xlat/genl_ioam6_cmd.in: New file.
+	* src/netlink_nlctrl.c: Include <linux/ioam6_genl.h>,
+	and "xlat/genl_ioam6_cmd.h".
+	(family_names): Add IOAM6_GENL_NAME.
+	* tests/netlink_nlctrl.c: Include <linux/ioam6_genl.h>.
+	(test_nla_ops_family): Test IOAM6_GENL_NAME.
+
+2024-07-14  Dmitry V. Levin  <ldv@strace.io>
+
+	netlink_nlctrl: implement "ethtool" family CTRL_ATTR_OP_ID decoding.
+	* bundled/linux/include/uapi/linux/ethtool.h: New file.
+	* bundled/linux/include/uapi/linux/ethtool_netlink.h: Likewise.
+	* bundled/linux/include/uapi/linux/if_ether.h: Likewise.
+	* bundled/Makefile.am (EXTRA_DIST): Add
+	linux/include/uapi/linux/ethtool.h,
+	linux/include/uapi/linux/ethtool_netlink.h, and
+	linux/include/uapi/linux/if_ether.h.
+	* src/xlat/genl_ethtool_msg_send.in: New file.
+	* src/xlat/genl_ethtool_msg_recv.in: Likewise.
+	* src/netlink_nlctrl.c: Include <linux/ethtool_netlink.h>,
+	"xlat/genl_ethtool_msg_send.h", and "xlat/genl_ethtool_msg_recv.h".
+	(family_names): Add ETHTOOL_GENL_NAME.
+	* tests/netlink_nlctrl.c: Include <linux/ethtool_netlink.h>.
+	(test_nla_ops_family): Test ETHTOOL_GENL_NAME.
+
+	netlink_nlctrl: implement "devlink" family CTRL_ATTR_OP_ID decoding.
+	* bundled/linux/include/uapi/linux/devlink.h: New file.
+	* bundled/Makefile.am (EXTRA_DIST): Add
+	linux/include/uapi/linux/devlink.h.
+	* src/xlat/genl_devlink_cmd.in: New file.
+	* src/netlink_nlctrl.c: Include <linux/devlink.h>
+	and "xlat/genl_devlink_cmd.h".
+	(family_names): Add DEVLINK_GENL_NAME.
+	* tests/netlink_nlctrl.c: Include <linux/devlink.h>.
+	(test_nla_ops_family): New function.
+	(main): Use it.
+
+2024-07-13  Dmitry V. Levin  <ldv@strace.io>
+
+	netlink_nlctrl: hook up context-dependent CTRL_ATTR_OP_ID decoding.
+	Unlike traditional netlink protocols, nlctrl uses CTRL_ATTR_FAMILY_NAME
+	attribute to specify the type of subsequent CTRL_ATTR_OP_ID attributes.
+
+	* src/netlink_nlctrl.c: (family_names): New array.
+	(decode_nla_ctrl_attr_family_name): New function.
+	(decode_nla_ctrl_attr_op_id): Choose xlat depending on the context.
+	(decode_nlctrl): Use it.
+
+2024-07-12  Dmitry V. Levin  <ldv@strace.io>
+
+	nlattr: introduce decode_nlattr_notype.
+	* src/nlattr.h (decode_nlattr_notype): New function, a thin wrapper
+	around decode_nlattr.
+	* src/nlattr.c (decode_nlattr_with_data): Extend with size == -1U with
+	the meaning of size == 0 and the type is being passed via opaque_data.
+	* src/netlink_nlctrl.c (decode_nla_ctrl_attr_ops,
+	decode_nla_ctrl_attr_mcast_groups, decode_nla_ctrl_attr_policy_item,
+	decode_nla_ctrl_attr_policy, decode_nla_ctrl_attr_op_policy): Use
+	decode_nlattr_notype instead of decode_nlattr.
+
+2024-07-11  Dmitry V. Levin  <ldv@strace.io>
+
+	netlink_nlctrl: implement CTRL_ATTR_POLICY decoding.
+	* src/xlat/nl_attr_type.in: New file.
+	* src/xlat/nl_policy_type_attr.in: Likewise.
+	* src/netlink_nlctrl.c: Include "xlat/nl_attr_type.h"
+	and "xlat/nl_policy_type_attr.h".
+	(decode_nla_policy_type_attr_type, decode_nla_ctrl_attr_policy_attr,
+	decode_nla_ctrl_attr_policy_item, decode_nla_ctrl_attr_policy):
+	New functions.
+	(ctrl_attr_decoders): Use decode_nla_ctrl_attr_policy.
+	* tests/netlink_nlctrl.c (test_nla_policy): New function.
+	(main): Use it.
+	* NEWS: Mention NETLINK_GENERIC nlctrl protocol decoding.
+
+2024-07-10  Dmitry V. Levin  <ldv@strace.io>
+
+	netlink_nlctrl: implement CTRL_ATTR_OP_POLICY decoding.
+	* src/xlat/genl_ctrl_attr_policy.in: New file.
+	* src/netlink_nlctrl.c: Include "xlat/genl_ctrl_attr_policy.h".
+	(decode_nla_ctrl_attr_op_policy_item,
+	decode_nla_ctrl_attr_op_policy): New functions.
+	(decode_nlctrl): Use decode_nla_ctrl_attr_op_policy.
+	* tests/netlink_nlctrl.c (test_nla_op_policy): New function.
+	(main): Use it.
+
+2024-07-09  Dmitry V. Levin  <ldv@strace.io>
+
+	netlink_nlctrl: implement CTRL_ATTR_MCAST_GROUPS decoding.
+	* src/xlat/genl_ctrl_attr_mcast_grp.in: New file.
+	* src/netlink_nlctrl.c: Include "xlat/genl_ctrl_attr_mcast_grp.h".
+	(decode_nla_ctrl_attr_mcast_group_item,
+	decode_nla_ctrl_attr_mcast_groups): New functions.
+	(decode_nlctrl): Use decode_nla_ctrl_attr_mcast_groups.
+	* tests/netlink_nlctrl.c (test_nla_mcast): New function.
+	(main): Use it.
+
+2024-07-08  Dmitry V. Levin  <ldv@strace.io>
+
+	netlink_nlctrl: implement CTRL_ATTR_OPS decoding.
+	* src/xlat/genl_ctrl_attr_op.in: New file.
+	* src/xlat/genl_ctrl_attr_op_flags.in: Likewise.
+	* src/netlink_nlctrl.c: Include "xlat/genl_ctrl_attr_op.h"
+	and "xlat/genl_ctrl_attr_op_flags.h".
+	(decode_nla_ctrl_attr_op_id, decode_nla_ctrl_attr_op_flags,
+	decode_nla_ctrl_attr_op_item, decode_nla_ctrl_attr_ops): New functions.
+	(decode_nlctrl): Use decode_nla_ctrl_attr_ops.
+	* tests/netlink_nlctrl.c (test_nla_ops): New function.
+	(main): Use it.
+
+2024-07-07  Dmitry V. Levin  <ldv@strace.io>
+
+	nlattr: use DECL_NLA macro in definitions of decode_nla_* functions.
+
+2024-07-06  Dmitry V. Levin  <ldv@strace.io>
+
+	nlattr: remove "extern" storage class from DECL_NLA macro.
+	This would allow to use DECL_NLA in function definitions.
+
+	* src/nlattr.h (DECL_NLA): Remove "extern" storage class, add const
+	qualifier to arguments.
+
+2024-07-05  Dmitry V. Levin  <ldv@strace.io>
+
+	nlattr: add const qualifier to decode_nla_{xval,flags} arguments.
+	* src/nlattr.c (decode_nla_xval, decode_nla_flags): Add const
+	qualifier to the "len" argument.
+
+2024-07-04  Dmitry V. Levin  <ldv@strace.io>
+
+	netlink_nlctrl: implement basic CTRL_ATTR_* decoding.
+	* src/xlat/genl_ctrl_attr.in: New file.
+	* src/netlink_nlctrl.c: Include "xlat/genl_ctrl_attr.h".
+	(decode_nlctrl): Add a nla_decoder_t array and pass it to decode_nlattr.
+	* tests/netlink_nlctrl.c (test_nla): Rename to test_nla_unknown.
+	(test_nla_x16, test_nla_u32, test_nla_str): New functions.
+	(main): Use them.
+
+2024-07-03  Dmitry V. Levin  <ldv@strace.io>
+
+	netlink_generic: hook up a nlctrl decoder.
+	* src/netlink_nlctrl.c: New file.
+	* src/Makefile.am (libstrace_a_SOURCES): Add netlink_nlctrl.c.
+	* src/xlat/genl_ctrl_cmd.in: New file.
+	* src/netlink_generic.h (decode_nlctrl): New prototype.
+	* src/netlink_generic.c (netlink_generic_decoder_t): New type.
+	(lookup_genl_decoder): New function.
+	(decode_netlink_generic): Use it.
+	* tests/netlink_nlctrl.c: Include "xmalloc.h", "test_netlink.h",
+	and "test_nlattr.h".
+	(test_nlmsg_type, test_sendmsg_nlmsg_type): Remove.
+	(test_hdr, test_nla, test_nlmsg_done): New functions.
+	(main): Use them.
+
+	netlink: hook up a NETLINK_GENERIC decoder.
+	* src/netlink_generic.h: New file.
+	* src/netlink_generic.c: Likewise.
+	* src/Makefile.am (libstrace_a_SOURCES): Add netlink_generic.c.
+	* src/defs.h (decode_netlink_generic): New prototype.
+	* src/netlink.c (netlink_decoders): Add NETLINK_GENERIC.
+	* tests/netlink_nlctrl.c (test_nlmsg_type, test_sendmsg_nlmsg_type):
+	Update expected output.
+	* tests/netlink_generic.c: New file.
+	* tests/gen_tests.in (netlink_generic): New test.
+	* tests/pure_executables.list: Add netlink_generic.
+	* tests/.gitignore: Likewise.
+
+2024-07-03  Dmitry V. Levin  <ldv@strace.io>
+
+	tests: rename netlink_generic to netlink_nlctrl.
+	netlink_generic is going to be used later for generic genl tests.
+
+	* tests/netlink_generic.c: Rename to netlink_nlctrl.c.
+	* tests/pure_executables.list (netlink_generic): Rename to netlink_nlctrl.
+	* tests/.gitignore: Likewise.
+	* tests/gen_tests.in: Likewise.
+
+2024-07-03  Dmitry V. Levin  <ldv@strace.io>
+
+	bundled: add linux/genetlink.h.
+	* bundled/linux/include/uapi/linux/genetlink.h: New file.
+	* bundled/Makefile.am (EXTRA_DIST): Add
+	linux/include/uapi/linux/genetlink.h.
+
+	netlink: fix decoding of NETLINK_GENERIC nlmsg_flags.
+	* src/xlat/netlink_genl_flags.in: New file.
+	* src/netlink.c: Include "xlat/netlink_genl_flags.h".
+	(decode_nlmsg_flags_generic): New function.
+	(nlmsg_flags): Use it.
+	* tests/netlink_generic.c (test_nlmsg_type, test_sendmsg_nlmsg_type):
+	Update expected output.
+
+2024-07-03  Gleb Fotengauer-Malinovskiy  <glebfm@altlinux.org>
+
+	Update ioctl entries from linux v6.10.
+	* src/linux/32/ioctls_inc_align16.h: Update from linux v6.10-rc7 using
+	ioctls_gen.sh.
+	* src/linux/32/ioctls_inc_align32.h: Likewise.
+	* src/linux/32/ioctls_inc_align64.h: Likewise.
+	* src/linux/64/ioctls_inc.h: Likewise.
+	* src/linux/x32/ioctls_inc0.h: Likewise.
+	* NEWS: Mention this.
+
+2024-07-03  Brandon Maier  <brandon.maier@collins.com>
+	    Dmitry V. Levin  <ldv@strace.io>
+
+	strace-log-merge: enhance wording of error diagnostics.
+	When running `strace-log-merge` on strace logs created without
+	timestamps, it used to print a message "strace output not found"
+	which sounds like it failed to find the log files.
+
+	Given that `iterate_logfiles process_suffix` has checked the log files
+	for existence already, the second error message can be more specific
+	about the error condition.
+
+	* src/strace-log-merge: Enhance wording of error diagnostics.
+	* tests/strace-log-merge-error.test: Update expected output.
+
+2024-07-03  Brandon Maier  <brandon.maier@collins.com>
+
+	strace-log-merge: support '-h' option.
+	Given that -h is a commonly recognized name for a help option, accept it
+	as synonym of --help.
+
+2024-07-02  Dmitry V. Levin  <ldv@strace.io>
+
+	tests: update ioctl_v4l2 tests.
+	* tests/ioctl_v4l2.c (main): Update the last known ioctl number to take
+	into account VIDIOC_REMOVE_BUFS introduced by Linux kernel commit
+	v6.10-rc1~135^2~302.
+
+2024-07-01  Dmitry V. Levin  <ldv@strace.io>
+
+	tests: fix prlimit64-success test.
+	* tests/gen_tests.in (prlimit64-success): Call check_scno_tampering.
+	Usual -einject= heuristic rules that are used in case of poke-sendfile
+	test are not applicable here because they don't support QUIRK markers.
+
+	tests: fix poke-sendfile test.
+	* tests/gen_tests.in (poke-sendfile): Specify --inject= parameter first
+	to make gen_tests.sh insert a scno_tampering.sh invocation.
+
+2024-06-30  Sahil Siddiq  <icegambit91@gmail.com>
+	    Dmitry V. Levin  <ldv@strace.io>
+
+	tests: check --decode-fds=eventfd.
+	* tests/eventfd-yy.c: New file.
+	* tests/eventfd--decode-fd-eventfd.c: Likewise.
+	* tests/.gitignore: Add eventfd-yy and eventfd--decode-fd-eventfd.
+	* tests/pure_executables.list: Likewise.
+	* tests/gen_tests.in (eventfd-yy, eventfd--decode-fd-eventfd): New tests.
+
+2024-06-30  Sahil Siddiq  <icegambit91@gmail.com>
+	    Dmitry V. Levin  <ldv@strace.io>
+
+	Add eventfd option to --decode-fds.
+	Having an eventfd option for --decode-fds will help examine details
+	of an eventfd object associated with an eventfd file descriptor.
+
+	* src/filter_qualify.c (decode_fd_str_to_uint): Add "eventfd" option.
+	* src/number_set.h: Add DECODE_FD_EVENTFD.
+	* src/util.c: Parse eventfd related details.
+	* src/strace.c (usage): Document "eventfd" option.
+	* doc/strace.1.in: Likewise.
+	* NEWS: Mention this change.
+
+2024-06-30  Sahil Siddiq  <icegambit91@gmail.com>
+	    Dmitry V. Levin  <ldv@strace.io>
+
+	Allow scanning of fdinfo fields in one pass.
+	Implement constructs to scan /proc/<pid>/fdinfo/<fd> in one pass
+	and track which fields are available for display.
+
+	* src/util.c (struct scan_fdinfo): New struct.
+	(scan_fdinfo_lines): Use it.
+	(scan_fdinfo): Wrapper around scan_fdinfo_lines.
+
+2024-06-26  Dmitry V. Levin  <ldv@strace.io>
+
+	riscv64: work around a kernel bug in syscall number tampering.
+	Linux kernel commit v6.5-rc7~13^2~5 introduced a regression:
+	when tracer changes syscall number to -1, the kernel fails to initialize
+	a0 with -ENOSYS and subsequently fails to return the error code of the
+	failed syscall to userspace.  Workaround this by initializing a0
+	ourselves.
+
+	* src/linux/riscv64/arch_defs_.h
+	(ARCH_NEEDS_SET_ERROR_FOR_SCNO_TAMPERING): Define to 1.
+	* syscall.c (tamper_with_syscall_entering)
+	[ARCH_NEEDS_SET_ERROR_FOR_SCNO_TAMPERING]: Remove outdated comment.
+	* NEWS: Mention this.
+
+2024-06-26  Dmitry V. Levin  <ldv@strace.io>
+
+	Implement decoding of mseal syscall.
+	This new syscall was introduced by Linux kernel commit v6.10-rc1~16^2~3.
+
+	* src/linux/generic/syscallent-common.h [BASE_NR + 462]: Wire up mseal.
+	* src/mem.c (SYS_FUNC(mseal)): New function.
+	* tests/mseal.c: New file.
+	* tests/pure_executables.list: Add mseal.
+	* tests/.gitignore: Likewise.
+	* tests/gen_tests.in (mseal): New test.
+	* NEWS: Mention this change.
+
+2024-06-25  Dmitry V. Levin  <ldv@strace.io>
+
+	statx: update decoding of struct statx.
+	* src/statx.h (struct_statx): Add stx_subvol field, update reserved2
+	field.
+	* src/statx.c (SYS_FUNC(statx)): Print stx_subvol field when
+	STATX_SUBVOL bit of stx_mask is set.
+	* tests/xstatx.c (print_stat) [IS_STATX]: Update expected output.
+	* NEWS: Mention this change.
+
+	bpf: update decoding of BPF_RAW_TRACEPOINT_OPEN command.
+	* src/bpf_attr.h (BPF_RAW_TRACEPOINT_OPEN_struct): Add cookie field
+	introduced by Linux kernel commit v6.10-rc1~153^2~432^2~13^2~2.
+	(expected_BPF_RAW_TRACEPOINT_OPEN_struct_size): Update.
+	* src/bpf.c (BEGIN_BPF_CMD_DECODER(BPF_RAW_TRACEPOINT_OPEN)): Decode
+	cookie field.
+	* tests/bpf.c (BPF_RAW_TRACEPOINT_OPEN_checks): Check it.
+	* NEWS: Mention this change.
+
+2024-06-24  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update V4L2_* constants.
+	* src/xlat/v4l2_format_description_flags.in
+	(V4L2_FMT_FLAG_META_LINE_BASED): New constant introduced by Linux kernel
+	commit v6.10-rc1~135^2~85.
+	* src/xlat/v4l2_pix_fmts.in (V4L2_PIX_FMT_Y12P): New constant
+	introduced by Linux kernel commit v6.10-rc1~135^2~76.
+	(V4L2_PIX_FMT_Y14P): New constant introduced by Linux kernel
+	commit v6.10-rc1~135^2~75.
+	* tests/ioctl_v4l2-success.c (main): Update expected output.
+	* NEWS: Mention this change.
+
+	xlat: update TEE_* constants.
+	* src/xlat/tee_ioctl_impl_ids.in (TEE_IMPL_ID_TSTEE): New constant
+	introduced by Linux kernel commit v6.10-rc1~238^2~6^2~2.
+	* NEWS: Mention this change.
+
+2024-06-23  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update TCP_* constants.
+	* src/xlat/sock_tcp_options.in (TCP_IS_MPTCP): New constant introduced
+	by Linux kernel commit v6.10-rc1~153^2~21.
+	* NEWS: Mention this change.
+
+	xlat: update STATX_* constants.
+	* src/xlat/statx_masks.in (STATX_SUBVOL): New constant introduced
+	by Linux kernel commit v6.10-rc1~224^2~29.
+	* tests/xstatx.c (main): Update expected output.
+	* NEWS: Mention this change.
+
+2024-06-22  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update PR_* constants.
+	* src/xlat/prctl_options.in (PR_RISCV_SET_ICACHE_FLUSH_CTX): New
+	constant introduced by Linux kernel commit v6.10-rc1~52^2~7^2~2.
+	(PR_PPC_GET_DEXCR, PR_PPC_SET_DEXCR): New constants introduced
+	by Linux kernel commit v6.10-rc1~129^2~41.
+	* NEWS: Mention this change.
+
+2024-06-21  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update *_MAGIC constants.
+	* src/xlat/fsmagic.in (BCACHEFS_SUPER_MAGIC): New constant introduced
+	by Linux kernel commit v6.10-rc1~99^2~18.
+	* NEWS: Mention this change.
+
+2024-06-20  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update LANDLOCK_ACCESS_FS_* constants.
+	* src/xlat/landlock_ruleset_access_fs.in (LANDLOCK_ACCESS_FS_IOCTL_DEV):
+	New constant introduced by Linux kernel commit v6.10-rc1~116^2~11.
+	* tests/landlock_add_rule.c (main): Update expected output.
+	* tests/landlock_create_ruleset.c: Likewise.
+	* NEWS: Mention this change.
+
+	xlat: update KEXEC_* constants.
+	* src/xlat/kexec_load_flags.in (KEXEC_CRASH_HOTPLUG_SUPPORT):
+	New constant introduced by Linux kernel commit v6.10-rc1~129^2~1^2~5.
+	* tests/kexec_load.c (main): Update expected output.
+	* NEWS: Mention this change.
+
+2024-06-19  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update IORING_* constants.
+	* src/xlat/uring_setup_features.in (IORING_FEAT_RECVSEND_BUNDLE): New
+	constant introduced by Linux kernel commit v6.10-rc1~220^2~15.
+	* NEWS: Mention this change.
+
+	xlat: update KEY_* constants.
+	* src/xlat/evdev_keycode.in (KEY_ACCESSIBILITY): New constant
+	introduced by Linux kernel commit v6.10-rc3~5^2~6.
+	(KEY_DO_NOT_DISTURB): New constant introduced by Linux kernel commit
+	v6.10-rc3~5^2~5.
+	* NEWS: Mention this change.
+
+2024-06-18  Dmitry V. Levin  <ldv@strace.io>
+
+	xlat: update BPF_* constants.
+	* src/xlat/bpf_attach_type.in (BPF_TRACE_KPROBE_SESSION): New constant
+	introduced by Linux kernel commit v6.10-rc1~153^2~13^2~43^2~6.
+	* tests/bpf.c (BPF_PROG_QUERY_checks): Update expected output.
+	* NEWS: Mention this change.
+
+	fcntl: implement F_DUPFD_QUERY decoding.
+	* src/xlat/fcntlcmds.in (F_DUPFD_QUERY): New constant introduced by
+	Linux kernl commit v6.10-rc1~224^2~2.
+	* src/fcntl.c (print_fcntl): Handle F_DUPFD_QUERY.
+	* tests/fcntl-common.c (test_fcntl_others): Check it.
+	* NEWS: Mention this change.
+
+2024-06-17  Dmitry V. Levin  <ldv@strace.io>
+
+	bundled: update linux UAPI headers to v6.10-rc4.
+	* include/uapi/linux/cryptouser.h: Update to headers_install'ed
+	Linux kernel v6.10-rc4.
+	* include/uapi/linux/fcntl.h: Likewise.
+	* include/uapi/linux/if_link.h: Likewise.
+	* include/uapi/linux/input-event-codes.h: Likewise.
+	* include/uapi/linux/io_uring.h: Likewise.
+	* include/uapi/linux/kexec.h: Likewise.
+	* include/uapi/linux/landlock.h: Likewise.
+	* include/uapi/linux/mptcp.h: Likewise.
+	* include/uapi/linux/prctl.h: Likewise.
+	* include/uapi/linux/stat.h: Likewise.
+	* include/uapi/linux/stddef.h: Likewise.
+	* include/uapi/linux/tcp.h: Likewise.
+	* include/uapi/linux/tee.h: Likewise.
+	* include/uapi/linux/version.h: Likewise.
+	* include/uapi/linux/videodev2.h: Likewise.
+
+2024-06-16  Dmitry V. Levin  <ldv@strace.io>
+
+	mem: print the 5th argument of mremap for MREMAP_DONTUNMAP.
+	* src/mem.c (SYS_FUNC(mremap)): Print the 5th argument also for
+	MREMAP_DONTUNMAP which was introduced by Linux kernel commit
+	v5.7-rc1~124^2~49.
+
+	Resolves: https://github.com/strace/strace/issues/306
+
+2024-06-04  Dmitry V. Levin  <ldv@strace.io>
+
+	strace.1: document potential effects of CLONE_UNTRACED on --seccomp-bpf.
+	* doc/strace.1.in (BUGS): Document that by using CLONE_UNTRACED flag
+	tracee can accidentally break guarantee that --seccomp-bpf will not
+	leave any processes with a seccomp program installed for syscall
+	filtering purposes.
+
+	References: https://github.com/strace/strace/issues/303
+
+2024-06-04  Dmitry V. Levin  <ldv@strace.io>
+
+	strace.1: document potential effects of seccomp filters on --seccomp-bpf
+	* doc/strace.1.in (--seccomp-bpf): Document potential side effects of
+	another seccomp filter that returns an action value with a precedence
+	greater than SECCOMP_RET_TRACE.
+
+	References: https://github.com/strace/strace/issues/274
+
+2024-06-03  Dmitry V. Levin  <ldv@strace.io>
+
+	strace.1: enhance formatting of the description of --seccomp-bpf.
+	* doc/strace.1.in (--seccomp-bpf): Use .IP for formatting.
+
+2024-06-02  Dmitry V. Levin  <ldv@strace.io>
+
+	strace.1: fix grammar in the description of --kill-on-exit.
+	* doc/strace.1.in (--kill-on-exit): Fix grammar.
+
+2024-05-27  Dmitry V. Levin  <ldv@strace.io>
+
+	printpathn: change the last argument to include the terminating NUL.
+	This simplifies code both in printpathn itself and in its callers.
+
+	* src/util.c (printpathn): Change the meaning of the last argument to
+	include the terminating NUL.  This essentially replaces "n + 1" with "n"
+	in all cases where "n" is used in printpathn.
+	(printpath): Update printpathn user.
+	* src/dirent.c (decode_dentry_tail, print_old_dirent): Likewise.
+	* src/dirent64.c (decode_dentry_tail): Likewise.
+	* src/getcwd.c (SYS_FUNC(getcwd)): Likewise.
+
+2024-05-26  Dmitry V. Levin  <ldv@strace.io>
+
+	printpathn: do not modify the buffer filled out by umovestr.
+	There is no need to modify the buffer after umovestr:
+	if NUL was seen, then it is written to the buffer, and
+	if NUL was not seen, then the whole buffer is written by umovestr.
+
+	* src/util.c (printpathn): Do not overwrite the trailing byte in the
+	buffer.
+
+2024-05-25  Dmitry V. Levin  <ldv@strace.io>
+
+	Unexport syscall_trap_sig variable.
+	* src/strace.c (syscall_trap_sig): Add static qualifier.
+
+	Complements: v4.10~73 "Remove support for systems without PTRACE_SETOPTIONS"
+
+2024-05-24  Dmitry V. Levin  <ldv@strace.io>
+
+	Rename interrupt_or_stop() to detach_or_interrupt_or_stop()
+	That's what the function actually does.
+
+	* src/strace.c (interrupt_or_stop): Rename to
+	detach_or_interrupt_or_stop.
+	(detach, cleanup): Update callers.
+
+2024-05-23  Dmitry V. Levin  <ldv@strace.io>
+
+	mips: drop sysmips(SETNAME) support.
+	Given that it was removed from the kernel by commit v2.6.17-rc6~57^2~11,
+	it's safe to remove it here as well.
+
+	* src/sysmips.c (SYS_FUNC(sysmips)) <SETNAME>: Remove.
+
+2024-05-23  Dmitry V. Levin  <ldv@strace.io>
+
+	kd_ioctl: use printstr_ex instead of open-coding it.
+	* src/kd_ioctl.c (kd_kbd_str_entry): Use printstr_ex() to print
+	struct kbsentry.kb_string.
+	* tests/ioctl_kd.c (check_kbdsent): Update expected output.
+
+2024-05-23  Dmitry V. Levin  <ldv@strace.io>
+
+	kd_ioctl: workaround linux/kd.h regression.
+	Starting with linux kernel commit 8c467f330059, linux/kd.h uses macros
+	from linux/ioctl.h without including that header.  Workaround this by
+	including <linux/ioctl.h> ourselves.
+
+	* src/kd_ioctl.c: Include <linux/ioctl.h>.
+	* src/kd_mpers_ioctl.c: Likewise.
+
+2024-05-21  Dmitry V. Levin  <ldv@strace.io>
+
+	dm: use sequence_truncation_needed.
+	This means that sequences of objects will be printed abbreviated only
+	in cases when the corresponding syscalls are printed abbreviated.
+
+	* src/dm.c (dm_decode_dm_target_spec, dm_decode_dm_name_list,
+	dm_decode_dm_target_versions): Use sequence_truncation_needed()
+	in printing sequences of objects.
+	* tests/ioctl_dm.c (main): Update expected output.
+
+2024-05-20  Dmitry V. Levin  <ldv@strace.io>
+
+	btrfs: use sequence_truncation_needed.
+	This means that sequences of objects will be printed abbreviated only
+	in cases when the corresponding syscalls are printed abbreviated.
+
+	* src/btrfs.c (decode_search_arg_buf): Use sequence_truncation_needed()
+	in printing sequences of btrfs_ioctl_search_header objects.
+
+2024-05-18  Dmitry V. Levin  <ldv@strace.io>
+
+	Introduce sequence_truncation_needed() helper.
+	* src/defs.h (sequence_truncation_needed): New function declaration.
+	* src/util.c (sequence_truncation_needed): New function.
+	(print_array_ex): Use it.
+	* src/execve.c (printargv): Likewise.
+	* src/lsm.c (decode_lsm_ctx_sequence): Likewise.
+	* src/netlink.c (decode_netlink): Likewise.
+	* src/nlattr.c (decode_nlattr): Likewise.
+	* src/poll.c (decode_poll_exiting): Likewise.
+
+2024-05-17  Dmitry V. Levin  <ldv@strace.io>
+
+	btrfs: fix off-by-one in comparison of iterator with max_strlen.
+	When iterator that started with zero reaches max_strlen, it points
+	to the next element after max_strlen-th.
+
+	* src/btrfs.c (decode_search_arg_buf): Fix comparison of iterator
+	with max_strlen.
+
+2024-05-16  Dmitry V. Levin  <ldv@strace.io>
+
+	Post-release administrivia.
+	* NEWS: Add a header line for the next release.
+	* debian/changelog.in: Add a changelog entry for 6.9-1.
+	* strace.spec.in: Likewise.
+
 2024-05-14  Dmitry V. Levin  <ldv@strace.io>
 
 	Prepare for 6.9 release.

@@ -5,7 +5,7 @@
 # Copyright (c) 2006-2016 Dmitry V. Levin <ldv@strace.io>
 # Copyright (c) 2008-2015 Mike Frysinger <vapier@gentoo.org>
 # Copyright (c) 2015 Elvira Khabirova <lineprinter0@gmail.com>
-# Copyright (c) 2002-2023 The strace developers.
+# Copyright (c) 2002-2024 The strace developers.
 # All rights reserved.
 #
 # SPDX-License-Identifier: LGPL-2.1-or-later
@@ -290,8 +290,8 @@ AC_CACHE_CHECK(
 
 AM_CONDITIONAL([USE_BUNDLED_HEADERS], [test $st_cv_use_bundled_headers = yes])
 AS_IF([test $st_cv_use_bundled_headers = yes],
-      [CPPFLAGS="$CPPFLAGS -I$srcdir/bundled/linux/arch/$karch/include/uapi"
-       CPPFLAGS="$CPPFLAGS -I$srcdir/bundled/linux/include/uapi"
+      [CPPFLAGS="$CPPFLAGS -isystem $srcdir/bundled/linux/arch/$karch/include/uapi"
+       CPPFLAGS="$CPPFLAGS -isystem $srcdir/bundled/linux/include/uapi"
       ]
 )
 
@@ -447,13 +447,11 @@ AC_CHECK_HEADERS(m4_normalize([
 	iconv.h
 	linux/if_alg.h
 	linux/if_xdp.h
-	linux/ipx.h
 	linux/nfc.h
 	linux/qrtr.h
 	linux/rxrpc.h
 	mqueue.h
 	netinet/sctp.h
-	netipx/ipx.h
 	paths.h
 	scsi/sg.h
 	sys/eventfd.h
@@ -464,6 +462,21 @@ AC_CHECK_HEADERS(m4_normalize([
 	sys/xattr.h
 	ustat.h
 ]))
+
+AC_CHECK_HEADERS([linux/ipx.h], [
+	AC_CHECK_TYPES([struct sockaddr_ipx],
+		       [AC_DEFINE([HAVE_STRUCT_SOCKADDR_IPX_IN_LINUX_IPX_H], 1,
+				  [Define to 1 if <linux/ipx.h> header file provides struct sockaddr_ipx.])],,
+		       [#include <linux/ipx.h>])
+	unset ac_cv_type_struct_sockaddr_ipx
+])
+AC_CHECK_HEADERS([netipx/ipx.h], [
+	AC_CHECK_TYPES([struct sockaddr_ipx],
+		       [AC_DEFINE([HAVE_STRUCT_SOCKADDR_IPX_IN_NETIPX_IPX_H], 1,
+				  [Define to 1 if <netipx/ipx.h> header file provides struct sockaddr_ipx.])],,
+		       [#include <netipx/ipx.h>])
+	unset ac_cv_type_struct_sockaddr_ipx
+])
 
 AC_CHECK_HEADERS(m4_normalize([
 	linux/ipc.h

@@ -395,6 +395,13 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define BPF_NETKIT_PEER 55
 #endif
+#if defined(BPF_TRACE_KPROBE_SESSION) || (defined(HAVE_DECL_BPF_TRACE_KPROBE_SESSION) && HAVE_DECL_BPF_TRACE_KPROBE_SESSION)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((BPF_TRACE_KPROBE_SESSION) == (56), "BPF_TRACE_KPROBE_SESSION != 56");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define BPF_TRACE_KPROBE_SESSION 56
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -575,6 +582,9 @@ static const struct xlat_data bpf_attach_type_xdata[] = {
  [BPF_NETKIT_PEER] = XLAT(BPF_NETKIT_PEER),
  #define XLAT_VAL_55 ((unsigned) (BPF_NETKIT_PEER))
  #define XLAT_STR_55 STRINGIFY(BPF_NETKIT_PEER)
+ [BPF_TRACE_KPROBE_SESSION] = XLAT(BPF_TRACE_KPROBE_SESSION),
+ #define XLAT_VAL_56 ((unsigned) (BPF_TRACE_KPROBE_SESSION))
+ #define XLAT_STR_56 STRINGIFY(BPF_TRACE_KPROBE_SESSION)
 };
 static
 const struct xlat bpf_attach_type[1] = { {
@@ -750,6 +760,9 @@ const struct xlat bpf_attach_type[1] = { {
 #  ifdef XLAT_VAL_55
   | XLAT_VAL_55
 #  endif
+#  ifdef XLAT_VAL_56
+  | XLAT_VAL_56
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -920,6 +933,9 @@ const struct xlat bpf_attach_type[1] = { {
 #  ifdef XLAT_STR_55
   + sizeof(XLAT_STR_55)
 #  endif
+#  ifdef XLAT_STR_56
+  + sizeof(XLAT_STR_56)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -1036,6 +1052,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_54
 #  undef XLAT_STR_55
 #  undef XLAT_VAL_55
+#  undef XLAT_STR_56
+#  undef XLAT_VAL_56
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

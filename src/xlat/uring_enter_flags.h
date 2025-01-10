@@ -30,6 +30,9 @@ static const struct xlat_data uring_enter_flags_xdata[] = {
  XLAT(IORING_ENTER_REGISTERED_RING),
  #define XLAT_VAL_4 ((unsigned) (IORING_ENTER_REGISTERED_RING))
  #define XLAT_STR_4 STRINGIFY(IORING_ENTER_REGISTERED_RING)
+ XLAT(IORING_ENTER_ABS_TIMER),
+ #define XLAT_VAL_5 ((unsigned) (IORING_ENTER_ABS_TIMER))
+ #define XLAT_STR_5 STRINGIFY(IORING_ENTER_ABS_TIMER)
 };
 static
 const struct xlat uring_enter_flags[1] = { {
@@ -52,6 +55,9 @@ const struct xlat uring_enter_flags[1] = { {
 #  ifdef XLAT_VAL_4
   | XLAT_VAL_4
 #  endif
+#  ifdef XLAT_VAL_5
+  | XLAT_VAL_5
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -69,6 +75,9 @@ const struct xlat uring_enter_flags[1] = { {
 #  ifdef XLAT_STR_4
   + sizeof(XLAT_STR_4)
 #  endif
+#  ifdef XLAT_STR_5
+  + sizeof(XLAT_STR_5)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -83,6 +92,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_3
 #  undef XLAT_STR_4
 #  undef XLAT_VAL_4
+#  undef XLAT_STR_5
+#  undef XLAT_VAL_5
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

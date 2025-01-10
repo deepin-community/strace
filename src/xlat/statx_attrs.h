@@ -70,6 +70,13 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
 #else
 # define STATX_ATTR_DAX 0x00200000
 #endif
+#if defined(STATX_ATTR_WRITE_ATOMIC) || (defined(HAVE_DECL_STATX_ATTR_WRITE_ATOMIC) && HAVE_DECL_STATX_ATTR_WRITE_ATOMIC)
+DIAG_PUSH_IGNORE_TAUTOLOGICAL_COMPARE
+static_assert((STATX_ATTR_WRITE_ATOMIC) == (0x00400000), "STATX_ATTR_WRITE_ATOMIC != 0x00400000");
+DIAG_POP_IGNORE_TAUTOLOGICAL_COMPARE
+#else
+# define STATX_ATTR_WRITE_ATOMIC 0x00400000
+#endif
 #undef XLAT_PREV_VAL
 
 #ifndef XLAT_MACROS_ONLY
@@ -119,6 +126,9 @@ static const struct xlat_data statx_attrs_xdata[] = {
  XLAT(STATX_ATTR_DAX),
  #define XLAT_VAL_8 ((unsigned) (STATX_ATTR_DAX))
  #define XLAT_STR_8 STRINGIFY(STATX_ATTR_DAX)
+ XLAT(STATX_ATTR_WRITE_ATOMIC),
+ #define XLAT_VAL_9 ((unsigned) (STATX_ATTR_WRITE_ATOMIC))
+ #define XLAT_STR_9 STRINGIFY(STATX_ATTR_WRITE_ATOMIC)
 };
 static
 const struct xlat statx_attrs[1] = { {
@@ -153,6 +163,9 @@ const struct xlat statx_attrs[1] = { {
 #  ifdef XLAT_VAL_8
   | XLAT_VAL_8
 #  endif
+#  ifdef XLAT_VAL_9
+  | XLAT_VAL_9
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -182,6 +195,9 @@ const struct xlat statx_attrs[1] = { {
 #  ifdef XLAT_STR_8
   + sizeof(XLAT_STR_8)
 #  endif
+#  ifdef XLAT_STR_9
+  + sizeof(XLAT_STR_9)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -204,6 +220,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_7
 #  undef XLAT_STR_8
 #  undef XLAT_VAL_8
+#  undef XLAT_STR_9
+#  undef XLAT_VAL_9
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

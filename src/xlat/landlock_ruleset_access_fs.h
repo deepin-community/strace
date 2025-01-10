@@ -60,6 +60,9 @@ static const struct xlat_data landlock_ruleset_access_fs_xdata[] = {
  XLAT(LANDLOCK_ACCESS_FS_TRUNCATE),
  #define XLAT_VAL_14 ((unsigned) (LANDLOCK_ACCESS_FS_TRUNCATE))
  #define XLAT_STR_14 STRINGIFY(LANDLOCK_ACCESS_FS_TRUNCATE)
+ XLAT(LANDLOCK_ACCESS_FS_IOCTL_DEV),
+ #define XLAT_VAL_15 ((unsigned) (LANDLOCK_ACCESS_FS_IOCTL_DEV))
+ #define XLAT_STR_15 STRINGIFY(LANDLOCK_ACCESS_FS_IOCTL_DEV)
 };
 static
 const struct xlat landlock_ruleset_access_fs[1] = { {
@@ -112,6 +115,9 @@ const struct xlat landlock_ruleset_access_fs[1] = { {
 #  ifdef XLAT_VAL_14
   | XLAT_VAL_14
 #  endif
+#  ifdef XLAT_VAL_15
+  | XLAT_VAL_15
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -159,6 +165,9 @@ const struct xlat landlock_ruleset_access_fs[1] = { {
 #  ifdef XLAT_STR_14
   + sizeof(XLAT_STR_14)
 #  endif
+#  ifdef XLAT_STR_15
+  + sizeof(XLAT_STR_15)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -193,6 +202,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_13
 #  undef XLAT_STR_14
 #  undef XLAT_VAL_14
+#  undef XLAT_STR_15
+#  undef XLAT_VAL_15
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

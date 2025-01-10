@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2014 Stefan Sørensen <stefan.sorensen@spectralink.com>
  * Copyright (c) 2014-2015 Dmitry V. Levin <ldv@strace.io>
- * Copyright (c) 2014-2023 The strace developers.
+ * Copyright (c) 2014-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: LGPL-2.1-or-later
@@ -303,7 +303,7 @@ ptp_ioctl(struct tcb *const tcp, const unsigned int code,
 	case PTP_SYS_OFFSET_EXTENDED:
 	case PTP_SYS_OFFSET_EXTENDED2: {
 		struct ptp_sys_offset_extended sysoff;
-		CHECK_TYPE_SIZE(sysoff.rsv, sizeof(unsigned int) * 3);
+		CHECK_TYPE_SIZE(sysoff.rsv, sizeof(unsigned int) * 2);
 		CHECK_IOCTL_SIZE(PTP_SYS_OFFSET_EXTENDED, 1216);
 		CHECK_IOCTL_SIZE(PTP_SYS_OFFSET_EXTENDED2, 1216);
 
@@ -314,6 +314,8 @@ ptp_ioctl(struct tcb *const tcp, const unsigned int code,
 
 			tprint_struct_begin();
 			PRINT_FIELD_U(sysoff, n_samples);
+			tprint_struct_next();
+			PRINT_FIELD_XVAL(sysoff, clockid, clocknames, "CLOCK_???");
 			PRINT_RSV(sysoff, rsv);
 			return 0;
 		}

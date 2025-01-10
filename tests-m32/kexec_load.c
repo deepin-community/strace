@@ -2,7 +2,7 @@
  * Check decoding of kexec_load syscall.
  *
  * Copyright (c) 2016 Eugene Syromyatnikov <evgsyr@gmail.com>
- * Copyright (c) 2016-2023 The strace developers.
+ * Copyright (c) 2016-2024 The strace developers.
  * All rights reserved.
  *
  * SPDX-License-Identifier: GPL-2.0-or-later
@@ -52,9 +52,9 @@ main(void)
 			"0xda7a0000 /* KEXEC_ARCH_??? */|0x",
 			"1050 /* KEXEC_??? */" },
 		{ 0, "", "", "KEXEC_ARCH_DEFAULT" },
-		{ 0x2a0007, "", "",
+		{ 0x2a000f, "", "",
 			"KEXEC_ARCH_SH|KEXEC_ON_CRASH|KEXEC_PRESERVE_CONTEXT"
-			"|KEXEC_UPDATE_ELFCOREHDR" },
+			"|KEXEC_UPDATE_ELFCOREHDR|KEXEC_CRASH_HOTPLUG_SUPPORT" },
 		{ 0xdead0000, "", "", "0xdead0000 /* KEXEC_ARCH_??? */" },
 	};
 

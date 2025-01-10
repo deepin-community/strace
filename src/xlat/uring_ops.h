@@ -183,6 +183,12 @@ static const struct xlat_data uring_ops_xdata[] = {
  [IORING_OP_FTRUNCATE] = XLAT(IORING_OP_FTRUNCATE),
  #define XLAT_VAL_55 ((unsigned) (IORING_OP_FTRUNCATE))
  #define XLAT_STR_55 STRINGIFY(IORING_OP_FTRUNCATE)
+ [IORING_OP_BIND] = XLAT(IORING_OP_BIND),
+ #define XLAT_VAL_56 ((unsigned) (IORING_OP_BIND))
+ #define XLAT_STR_56 STRINGIFY(IORING_OP_BIND)
+ [IORING_OP_LISTEN] = XLAT(IORING_OP_LISTEN),
+ #define XLAT_VAL_57 ((unsigned) (IORING_OP_LISTEN))
+ #define XLAT_STR_57 STRINGIFY(IORING_OP_LISTEN)
 };
 static
 const struct xlat uring_ops[1] = { {
@@ -358,6 +364,12 @@ const struct xlat uring_ops[1] = { {
 #  ifdef XLAT_VAL_55
   | XLAT_VAL_55
 #  endif
+#  ifdef XLAT_VAL_56
+  | XLAT_VAL_56
+#  endif
+#  ifdef XLAT_VAL_57
+  | XLAT_VAL_57
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -528,6 +540,12 @@ const struct xlat uring_ops[1] = { {
 #  ifdef XLAT_STR_55
   + sizeof(XLAT_STR_55)
 #  endif
+#  ifdef XLAT_STR_56
+  + sizeof(XLAT_STR_56)
+#  endif
+#  ifdef XLAT_STR_57
+  + sizeof(XLAT_STR_57)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -644,6 +662,10 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_54
 #  undef XLAT_STR_55
 #  undef XLAT_VAL_55
+#  undef XLAT_STR_56
+#  undef XLAT_VAL_56
+#  undef XLAT_STR_57
+#  undef XLAT_VAL_57
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

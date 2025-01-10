@@ -90,6 +90,9 @@ static const struct xlat_data rtnl_rule_attrs_xdata[] = {
  [FRA_DPORT_RANGE] = XLAT(FRA_DPORT_RANGE),
  #define XLAT_VAL_24 ((unsigned) (FRA_DPORT_RANGE))
  #define XLAT_STR_24 STRINGIFY(FRA_DPORT_RANGE)
+ [FRA_DSCP] = XLAT(FRA_DSCP),
+ #define XLAT_VAL_25 ((unsigned) (FRA_DSCP))
+ #define XLAT_STR_25 STRINGIFY(FRA_DSCP)
 };
 static
 const struct xlat rtnl_rule_attrs[1] = { {
@@ -172,6 +175,9 @@ const struct xlat rtnl_rule_attrs[1] = { {
 #  ifdef XLAT_VAL_24
   | XLAT_VAL_24
 #  endif
+#  ifdef XLAT_VAL_25
+  | XLAT_VAL_25
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -249,6 +255,9 @@ const struct xlat rtnl_rule_attrs[1] = { {
 #  ifdef XLAT_STR_24
   + sizeof(XLAT_STR_24)
 #  endif
+#  ifdef XLAT_STR_25
+  + sizeof(XLAT_STR_25)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -303,6 +312,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_23
 #  undef XLAT_STR_24
 #  undef XLAT_VAL_24
+#  undef XLAT_STR_25
+#  undef XLAT_VAL_25
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

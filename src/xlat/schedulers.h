@@ -50,6 +50,11 @@ static const struct xlat_data schedulers_xdata[] = {
  #define XLAT_VAL_6 ((unsigned) (SCHED_DEADLINE))
  #define XLAT_STR_6 STRINGIFY(SCHED_DEADLINE)
 #endif
+#if defined(SCHED_EXT) || (defined(HAVE_DECL_SCHED_EXT) && HAVE_DECL_SCHED_EXT)
+  XLAT(SCHED_EXT),
+ #define XLAT_VAL_7 ((unsigned) (SCHED_EXT))
+ #define XLAT_STR_7 STRINGIFY(SCHED_EXT)
+#endif
 };
 static
 const struct xlat schedulers[1] = { {
@@ -78,6 +83,9 @@ const struct xlat schedulers[1] = { {
 #  ifdef XLAT_VAL_6
   | XLAT_VAL_6
 #  endif
+#  ifdef XLAT_VAL_7
+  | XLAT_VAL_7
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -101,6 +109,9 @@ const struct xlat schedulers[1] = { {
 #  ifdef XLAT_STR_6
   + sizeof(XLAT_STR_6)
 #  endif
+#  ifdef XLAT_STR_7
+  + sizeof(XLAT_STR_7)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -119,6 +130,8 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_5
 #  undef XLAT_STR_6
 #  undef XLAT_VAL_6
+#  undef XLAT_STR_7
+#  undef XLAT_VAL_7
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */

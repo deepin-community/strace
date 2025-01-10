@@ -45,6 +45,7 @@ strace-devel@lists.strace.io mailing list.
 	Bernhard Reutner-Fischer <rep.dot.nop@gmail.com>
 	Bharath Vedartham <linux.bhar@gmail.com>
 	Bo Kullmar <bk@kullmar.se>
+	Brandon Maier <brandon.maier@collins.com>
 	Bruce Ashfield <bruce.ashfield@gmail.com>
 	Bryan Matsuo <bryan.matsuo@gmail.com>
 	Bryce Gibson <bryce@gibson-consulting.com.au>
@@ -88,6 +89,7 @@ strace-devel@lists.strace.io mailing list.
 	Dr. David Alan Gilbert <dgilbert@redhat.com>
 	Edgar E. Iglesias <edgar.iglesias@gmail.com>
 	Edgar Kaziakhmedov <edgar.kaziakhmedov@virtuozzo.com>
+	Edjunior Machado <emachado@redhat.com>
 	Elliott Hughes <enh@google.com>
 	Elvira Khabirova <lineprinter0@gmail.com>
 	Erik Johansson <erik@ejohansson.se>
@@ -103,6 +105,7 @@ strace-devel@lists.strace.io mailing list.
 	Felix Janda <felix.janda@posteo.de>
 	Fernando Luis Vazquez Cao <fernando@oss.ntt.co.jp>
 	Florian Lohoff <flo@rfc822.org>
+	Florian Weimer <fweimer@redhat.com>
 	Fr. Br. George <george@altlinux.org>
 	Frederik Schüler <fs@debian.org>
 	Gabor Gombas <gombasg@sztaki.hu>
@@ -316,5 +319,6 @@ strace-devel@lists.strace.io mailing list.
 	adrien-n <adrien.nader@canonical.com>
 	donghaobo <donghaobo@kuaishou.com>
 	leedagee <leedageea@gmail.com>
+	tstabrawa <59430211+tstabrawa@users.noreply.github.com>
 	Ákos Uzonyi <uzonyi.akos@gmail.com>
 	Марк Коренберг <socketpair@gmail.com>

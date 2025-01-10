@@ -87,24 +87,30 @@ static const struct xlat_data fcntlcmds_xdata[] = {
  XLAT(F_NOTIFY),
  #define XLAT_VAL_23 ((unsigned) (F_NOTIFY))
  #define XLAT_STR_23 STRINGIFY(F_NOTIFY)
+ XLAT(F_DUPFD_QUERY),
+ #define XLAT_VAL_24 ((unsigned) (F_DUPFD_QUERY))
+ #define XLAT_STR_24 STRINGIFY(F_DUPFD_QUERY)
+ XLAT(F_CREATED_QUERY),
+ #define XLAT_VAL_25 ((unsigned) (F_CREATED_QUERY))
+ #define XLAT_STR_25 STRINGIFY(F_CREATED_QUERY)
  XLAT(F_CANCELLK),
- #define XLAT_VAL_24 ((unsigned) (F_CANCELLK))
- #define XLAT_STR_24 STRINGIFY(F_CANCELLK)
+ #define XLAT_VAL_26 ((unsigned) (F_CANCELLK))
+ #define XLAT_STR_26 STRINGIFY(F_CANCELLK)
  XLAT(F_DUPFD_CLOEXEC),
- #define XLAT_VAL_25 ((unsigned) (F_DUPFD_CLOEXEC))
- #define XLAT_STR_25 STRINGIFY(F_DUPFD_CLOEXEC)
+ #define XLAT_VAL_27 ((unsigned) (F_DUPFD_CLOEXEC))
+ #define XLAT_STR_27 STRINGIFY(F_DUPFD_CLOEXEC)
  XLAT(F_SETPIPE_SZ),
- #define XLAT_VAL_26 ((unsigned) (F_SETPIPE_SZ))
- #define XLAT_STR_26 STRINGIFY(F_SETPIPE_SZ)
+ #define XLAT_VAL_28 ((unsigned) (F_SETPIPE_SZ))
+ #define XLAT_STR_28 STRINGIFY(F_SETPIPE_SZ)
  XLAT(F_GETPIPE_SZ),
- #define XLAT_VAL_27 ((unsigned) (F_GETPIPE_SZ))
- #define XLAT_STR_27 STRINGIFY(F_GETPIPE_SZ)
+ #define XLAT_VAL_29 ((unsigned) (F_GETPIPE_SZ))
+ #define XLAT_STR_29 STRINGIFY(F_GETPIPE_SZ)
  XLAT(F_ADD_SEALS),
- #define XLAT_VAL_28 ((unsigned) (F_ADD_SEALS))
- #define XLAT_STR_28 STRINGIFY(F_ADD_SEALS)
+ #define XLAT_VAL_30 ((unsigned) (F_ADD_SEALS))
+ #define XLAT_STR_30 STRINGIFY(F_ADD_SEALS)
  XLAT(F_GET_SEALS),
- #define XLAT_VAL_29 ((unsigned) (F_GET_SEALS))
- #define XLAT_STR_29 STRINGIFY(F_GET_SEALS)
+ #define XLAT_VAL_31 ((unsigned) (F_GET_SEALS))
+ #define XLAT_STR_31 STRINGIFY(F_GET_SEALS)
 };
 static
 const struct xlat fcntlcmds[1] = { {
@@ -202,6 +208,12 @@ const struct xlat fcntlcmds[1] = { {
 #  ifdef XLAT_VAL_29
   | XLAT_VAL_29
 #  endif
+#  ifdef XLAT_VAL_30
+  | XLAT_VAL_30
+#  endif
+#  ifdef XLAT_VAL_31
+  | XLAT_VAL_31
+#  endif
   ,
  .flags_strsz = 0
 #  ifdef XLAT_STR_0
@@ -294,6 +306,12 @@ const struct xlat fcntlcmds[1] = { {
 #  ifdef XLAT_STR_29
   + sizeof(XLAT_STR_29)
 #  endif
+#  ifdef XLAT_STR_30
+  + sizeof(XLAT_STR_30)
+#  endif
+#  ifdef XLAT_STR_31
+  + sizeof(XLAT_STR_31)
+#  endif
   ,
 } };
 DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
@@ -358,6 +376,10 @@ DIAG_POP_IGNORE_TAUTOLOGICAL_CONSTANT_COMPARE
 #  undef XLAT_VAL_28
 #  undef XLAT_STR_29
 #  undef XLAT_VAL_29
+#  undef XLAT_STR_30
+#  undef XLAT_VAL_30
+#  undef XLAT_STR_31
+#  undef XLAT_VAL_31
 # endif /* !IN_MPERS */
 
 #endif /* !XLAT_MACROS_ONLY */
